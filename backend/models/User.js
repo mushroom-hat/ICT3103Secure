@@ -1,10 +1,9 @@
-// userSchema.js
 const mongoose = require('mongoose');
-const cardSchema = require('./cardSchema');
 
 const userSchema = new mongoose.Schema({
-  id: {
-    type: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    alias: '_id', // Rename _id to userId
     required: true,
   },
   username: {
@@ -15,17 +14,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  roles: [
+  roles:
     {
       type: String,
       enum: ['Admin', 'Donator', 'Organization'],
-      default: 'User',
     },
-  ],
   card: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Card',
-  }, // Include the card schema here
+    ref: 'Card', // Reference to the Card schema
+  },
+  // Additional fields can be added here
 });
 
-module.exports = userSchema;
+module.exports = mongoose.model('User', userSchema);
