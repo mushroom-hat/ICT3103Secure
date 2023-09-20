@@ -1,17 +1,14 @@
-const User = require('../models/User')
-const Article = require('../models/Article')
-const Card = require('../models/Card')
-const Donation = require('../models/Donation')
-const Spending = require('../models/Spending')
-const asyncHandler = require('express-async-handler')
-const bcrypt = require('bcrypt')
+const User = require('../models/User');
+const Donation = require('../models/Donation'); // Import the Donation model
+const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcrypt');
 
 //@desc Get all users
 //@route GET /users
 //@access Private
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-pwd').lean();
-    if (!users || users.length === 0) {
+    if (!users || users.length === 0) {npm 
         return res.status(404).json({ message: 'No users found' });
     }
     res.json(users);
@@ -20,100 +17,139 @@ const getAllUsers = asyncHandler(async (req, res) => {
 //@desc Create new users
 //@route POST /users
 //@access Private
-const createNewUsers = asyncHandler(async(req,res) => {
-    const{ userId, username, pwd, roles, card } = req.body
+const createNewUsers = asyncHandler(async (req, res) => {
+    const { username, pwd, roles, card } = req.body;
 
-    //confirm data
-    if (!userId || !username || !pwd || !roles || !card ){
-        return res.status(400).json({ message: 'All fields are required'})
+    // Confirm data
+    if (!username || !pwd || !roles || !card) {
+        return res.status(400).json({ message: 'All fields are required' });
     }
 
-    //check for duplicates
-
-    const duplicate = await User.findOne({username}).lean().exec()
-    if(duplicate){
-        return res.status(409).json({messsage: 'Duplicate username'})
+    // Check for duplicate username
+    const duplicate = await User.findOne({ username }).lean().exec();
+    if (duplicate) {
+        return res.status(409).json({ message: 'Duplicate username' });
     }
 
-    //Hash pwd
-    const hashedPwd = await bcrypt.hash(pwd, 10) //salt rounds
+    // Hash password
+    const hashedPwd = await bcrypt.hash(pwd, 10); // salt rounds
+    const userObject = { username, pwd: hashedPwd, roles, card };
 
-    const userObject = { userId,username, "pwd": hashedPwd, roles, card}
+    // Create and store the new user
+    const user = await User.create(userObject);
 
-    //Create and store new user
-    const user = await User.create(userObject)
-
-    if(user){
-        res.status(201).json({messsage: `New user ${username} created`})
-    } else{
-        res.status(400).json({messsage: 'Invalid user data received'})
-
+    if (user) {
+        res.status(201).json({ message: `New user ${username} created` });
+    } else {
+        res.status(400).json({ message: 'Invalid user data received' });
     }
-})
+});
 
+//@desc Update a user
+//@route PUT /users/:id
+//@access Private
 const updateUser = asyncHandler(async (req, res) => {
-    const { id, userId, username, roles, pwd, card } = req.body; // Use 'pwd' instead of 'password'
+    const { _id, username, roles, card, pwd, donation } = req.body;
 
-    // Confirm data 
-    if (!id || !userId || !username || !roles || !card) {
-        return res.status(400).json({ message: 'All fields except password are required' })
-    }
-
-    // Does the user exist to update?
-    const user = await User.findById(userId).exec()
+    // Check if the user exists to update based on the _id
+    const user = await User.findById(_id).exec();
 
     if (!user) {
-        return res.status(400).json({ message: 'User not found' })
+        return res.status(400).json({ message: 'User not found' });
     }
 
-    // Check for duplicate 
-    const duplicate = await User.findOne({ username }).lean().exec()
-
-    // Allow updates to the original user 
-    if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate username' })
+    // Check for duplicate username (except for the current user)
+    if (username && username !== user.username) {
+        const duplicate = await User.findOne({ username }).lean().exec();
+        if (duplicate) {
+            return res.status(409).json({ message: 'Duplicate username' });
+        }
     }
 
-    user.userId = userId
-    user.username = username
-    user.roles = roles
-    user.card = card
-
+    // Update user fields if provided in the request body
+    if (username) {
+        user.username = username;
+    }
+    if (roles) {
+        user.roles = roles;
+    }
+    if (card) {
+        user.card = card;
+    }
+    
     if (pwd) {
-        // Hash password 
-        user.pwd = await bcrypt.hash(pwd, 10) // salt rounds 
+        // Hash password
+        user.pwd = await bcrypt.hash(pwd, 10); // salt rounds
     }
 
-    const updatedUser = await user.save()
+    if (donation) {
+        // Update donation reference
+        user.donation = donation;
+    }
 
-    res.json({ message: `${updatedUser.username} updated` })
-})
+    const updatedUser = await user.save();
 
+    res.json({ message: `${updatedUser.username} updated` });
+});
 
-//@desc Delete Users
-//@route PATCH /users
+//@desc Delete a user
+//@route DELETE /users/:id
 //@access Private
-const deleteUser = asyncHandler(async(req,res) => {
-    const{ userId  } = req.body
-    if  (!userId){
-        return res.status(400).json({message: 'User ID required'})
+const deleteUser = asyncHandler(async (req, res) => {
+    const { _id } = req.body;
+
+    // Check if the user exists to delete based on the _id
+    const user = await User.findById(_id).exec();
+
+    if (!user) {
+        return res.status(400).json({ message: 'User not found' });
     }
-    const articles = await Article.findOne({user: userId}).lean().exec()
-    if (articles?.length){
-        return res.status(400).json({message: 'User has written articles'})
+
+    // Check if the user has written articles (if needed)
+    const articles = await Article.findOne({ user: user._id }).lean().exec();
+    if (articles?.length) {
+        return res.status(400).json({ message: 'User has written articles' });
     }
-    const user = await User.findById(userId).exec()
-    if (!user){
-        return res.status(400).json({message: 'User not found'})
+
+    const result = await user.deleteOne();
+    const reply = `Username ${result.username} with ID ${result._id} deleted`;
+    res.json(reply);
+});
+
+//@desc Add a donation to a user
+//@route POST /users/:id/donations
+//@access Private
+const addDonationToUser = asyncHandler(async (req, res) => {
+    const { _id, donation } = req.body;
+
+    // Check if the user exists to add a donation based on the _id
+    const user = await User.findById(_id).exec();
+
+    if (!user) {
+        return res.status(400).json({ message: 'User not found' });
     }
-    const result = await user.deleteOne()
-    const reply = `Username ${result.username} with ID ${result._id} deleted`
-    res.json(reply)
-})
+
+    // Create a new donation
+    const newDonation = new Donation({
+        user: user._id,
+        amount: donation.amount,
+        // Add other donation details as needed
+    });
+
+    // Save the donation
+    await newDonation.save();
+
+    // Update the user's donation reference
+    user.donation = newDonation._id;
+    await user.save();
+
+    res.json({ message: 'Donation added to the user' });
+});
 
 module.exports = {
     getAllUsers,
     createNewUsers,
     updateUser,
-    deleteUser
-}
+    deleteUser,
+    addDonationToUser // Export the new function to add a donation
+};

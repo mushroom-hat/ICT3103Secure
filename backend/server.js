@@ -1,5 +1,5 @@
 
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express')
 const app = express()
 const path = require('path')
@@ -24,6 +24,9 @@ app.use('/', express.static(path.join(__dirname, 'public')))
 app.use('/', require('./routes/root'))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/cards', require('./routes/cardRoutes'))
+app.use('/articles', require('./routes/articlesRoutes'))
+app.use('/donations', require('./routes/donationsRoutes'))
+app.use('/spending', require('./routes/spendingRoutes'))
 app.all('*', (req, res) =>{
     res.status(404)
     if(req.accepts('html')){
