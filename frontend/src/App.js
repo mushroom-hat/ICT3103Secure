@@ -13,7 +13,7 @@ function App() {
       <Route path="/" element={<Layout />}> 
         <Route index element={<Public />} /> 
         <Route path="login" element={<Login />} /> 
- 
+        <Route path="login" element={<ViewOrganizations />} /> 
         <Route path="dash" element={<DashLayout />}> 
  
           <Route index element={<Welcome />} /> 
@@ -21,10 +21,6 @@ function App() {
           <Route path="users"> 
             <Route index element={<UsersList />} /> 
           </Route> 
-
-          <Route path="view-organizations">
-            <Route index element={<ViewOrganizations />} />
-          </Route>
  
         </Route>{/* End Dash */} 
  
