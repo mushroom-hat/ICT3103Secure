@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom' 
 const ViewOrganizations = () => { 
     return ( 
-        <h1>Login</h1>
+        <h1>Organizations</h1>
     ) 
 } 
 export default ViewOrganizations
