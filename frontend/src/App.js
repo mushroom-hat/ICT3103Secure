@@ -5,6 +5,7 @@ import Login from './features/auth/Login';
 import DashLayout from './components/DashLayout' 
 import Welcome from './features/auth/Welcome' 
 import UsersList from './features/users/UsersList' 
+import ViewOrganizations from './features/viewOrganizations/ViewOrganizations';
  
 function App() { 
   return ( 
@@ -20,6 +21,10 @@ function App() {
           <Route path="users"> 
             <Route index element={<UsersList />} /> 
           </Route> 
+
+          <Route path="view-organizations">
+            <Route index element={<ViewOrganizations />} />
+          </Route>
  
         </Route>{/* End Dash */} 
  

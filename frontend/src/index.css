@@ -91,3 +91,8 @@ a:hover,a:focus-visible {
 .dash-footer__button {  font-size: 1rem;
   width: auto;  height: auto;
 }
+.viewOrgs {
+  background-color: white;
+  color: #000;
+  z-index: 1;
+}
