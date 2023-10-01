@@ -91,6 +91,7 @@ a:hover,a:focus-visible {
 .dash-footer__button {  font-size: 1rem;
   width: auto;  height: auto;
 }
+/* View Organizations Page*/
 .organizations-page-container {
   background-color: white;
   color: #000;
@@ -107,21 +108,13 @@ a:hover,a:focus-visible {
   flex-direction: column;
   border-right: 1px solid rgb(152, 152, 152);
 }
-/* Media query for small screens */
-@media screen and (max-width: 768px) {
-  .organizations-page-container {
-    flex-direction: column; /* Change to a column layout */
-  }
-
-  .filters-container {
-    width: 100%; /* Take up the full width */
-    border-right: none; /* Remove the right border */
-    border-bottom: 1px solid rgb(152, 152, 152);;
-  }
-}
 .filters-header {
   padding-bottom: 0.5em;
   font-size: large;
+}
+.filters-list {
+  display: flex;
+  flex-direction: column;
 }
 .organizations-container {
   padding: 0.5em;
@@ -133,7 +126,7 @@ a:hover,a:focus-visible {
   padding-bottom: 0.5em;
   font-size: large;
 }
-.organizations-results {
+.organizations-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -160,4 +153,22 @@ a:hover,a:focus-visible {
   font-weight: bold;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+/* Media query for small screens */
+@media screen and (max-width: 400px) {
+  .organizations-page-container {
+    flex-direction: column; /* Change to a column layout */
+  }
+
+  .filters-container {
+    width: 100%; /* Take up the full width */
+    border-right: none; /* Remove the right border */
+    border-bottom: 1px solid rgb(152, 152, 152);;
+  }
+
+  .filters-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }
