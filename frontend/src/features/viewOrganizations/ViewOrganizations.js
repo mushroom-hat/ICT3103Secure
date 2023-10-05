@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import OrganizationCard from "./OrganizationCard";
 
 const Categories = [
   { categoryName: "Healthcare", isChecked: false },
