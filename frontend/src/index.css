@@ -125,11 +125,11 @@ a:hover,a:focus-visible {
 .organizations-header {
   padding-bottom: 0.5em;
   font-size: large;
-}
-.organizations-list {
+}.organizations-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start; /* Start from the left */
+  gap: 1em; /* Add spacing between cards */
 }
 .organization-card {
   border: 1px solid rgb(152, 152, 152);
@@ -137,8 +137,7 @@ a:hover,a:focus-visible {
   padding: 1em;
   display: flex;
   flex-direction: column;
-  min-width: 250px;
-  max-width: 32%;
+  flex-basis: calc(33.33% - 0.7em); /* Calculate the width for 3 cards with spacing */
   box-shadow: rgba(0, 0, 0, 0.2) 2px 2px;
   margin-bottom: 0.7em;
 }
@@ -153,6 +152,13 @@ a:hover,a:focus-visible {
   font-weight: bold;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+.checkbox {
+  display: flex;
+  flex-direction: row;
+}
+.category-text {
+  margin-left: 10px;
 }
 /* Media query for small screens */
 @media screen and (max-width: 400px) {
