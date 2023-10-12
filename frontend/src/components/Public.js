@@ -19,7 +19,7 @@ const Public = () => {
                 <section className="articles">
                     <h2>Latest Activities!</h2>
 
-                    <Article title="Article Title 1" content="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, at." />
+                    <Article title="Article Title 1" content="FUCKING HELL Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, at." />
                     <Article title="Article Title 2" content="Quod possimus rerum doloremque ullam sapiente ea libero tempora maxime!" />
                     <Article title="Article Title 3" content="Numquam deserunt exercitationem iusto sit asperiores officia a veniam amet." />
                 </section>
