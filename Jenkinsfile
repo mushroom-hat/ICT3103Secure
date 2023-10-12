@@ -27,8 +27,14 @@ pipeline {
         stage('Deploy Backend') {
             steps {
                 dir('backend') {
-                    sh 'docker build -t charsity-backend .'
-                    sh 'docker run -d --rm -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v "$HOME":/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend'
+                    // Use withCredentials to set MY_SECRET_ENV_VARIABLE
+                    withCredentials([
+                        string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
+                        string(credentialsId: 'NODE_ENV', variable: 'NODE_ENV'),
+                        ]) {
+                        sh 'docker build -t charsity-backend .'
+                        sh 'docker run -d --rm -u root -e MY_SECRET_ENV_VARIABLE -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v "$HOME":/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend'
+                    }
                 }
             }
         }
