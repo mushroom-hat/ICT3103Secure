@@ -9,6 +9,9 @@ import ViewOrganizations from './features/viewOrganizations/ViewOrganizations';
 import UserProfile from './features/users/UserProfile';
 import WriteArticle from './features/articles/WriteArticle';
 import CashflowAnalysis from './features/cashflow/CashFlowAnalysis';
+import NewUserForm from './features/users/NewUserForm'
+import EditUser from './features/users/EditUser'
+import Prefetch from './features/auth/Prefetch'
 
 function App() { 
   return ( 
@@ -20,14 +23,20 @@ function App() {
         <Route path="viewOrganizations" element={<ViewOrganizations />} /> 
         <Route path="writeArticle" element={<WriteArticle />} />
         <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
-        <Route path="dash" element={<DashLayout />}> 
- 
-          <Route index element={<Welcome />} /> 
- 
-          <Route path="users"> 
-            <Route index element={<UsersList />} /> 
-          </Route>      
-        </Route>{/* End Dash */} 
+        
+        <Route element={<Prefetch />}>
+          <Route path="dash" element={<DashLayout />}>
+
+            <Route index element={<Welcome />} />
+
+            <Route path="users">
+              <Route index element={<UsersList />} />
+              <Route path=":id" element={<EditUser />} />
+              <Route path="new" element={<NewUserForm />} />
+            </Route>
+
+          </Route>{/* End Dash */}
+        </Route>
  
       </Route> 
     </Routes> 
