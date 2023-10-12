@@ -22,9 +22,11 @@ pipeline {
                     dir('frontend') {
                         sh 'docker build -t charsity-frontend .'
 
-                        // Stop and remove the existing container if it exists
-                        sh "docker stop ${containerName} || true"
-                        sh "docker rm ${containerName} || true"
+                        // Check if the container exists before stopping and removing it
+                        if (sh(script: "docker ps -a --format '{{.Names}}' | grep -E '^${containerName}$'", returnStatus: true) == 0) {
+                            sh "docker stop ${containerName}"
+                            sh "docker rm ${containerName}"
+                        }
 
                         // Start the new container
                         sh "docker run -d --name ${containerName} -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
@@ -45,9 +47,11 @@ pipeline {
                         ]) {
                             sh 'docker build -t charsity-backend .'
 
-                            // Stop and remove the existing container if it exists
-                            sh "docker stop ${containerName} || true"
-                            sh "docker rm ${containerName} || true"
+                            // Check if the container exists before stopping and removing it
+                            if (sh(script: "docker ps -a --format '{{.Names}}' | grep -E '^${containerName}$'", returnStatus: true) == 0) {
+                                sh "docker stop ${containerName}"
+                                sh "docker rm ${containerName}"
+                            }
 
                             // Start the new container
                             sh "docker run -d --name ${containerName} -u root -e DATABASE_URI=\"$DATABASE_URI\" -e NODE_ENV=\"$NODE_ENV\" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend"
