@@ -2,16 +2,32 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     return (
-        <nav className="navbar">
-            <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/viewOrganizations">View Organizations</Link></li>
-                <li><Link to="/profile">User Profile</Link></li>
-                <li><Link to="/writeArticle">Write Article</Link></li>
-                <li><Link to="/cashflowAnalysis">Cashflow Analysis</Link></li>
-                <li className="navbar__login"><Link to="/login">Employee Login</Link></li>
-            </ul>
-        </nav>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		  <a class="navbar-brand"><Link to="/">Home</Link></a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarText">
+			<ul class="navbar-nav mr-auto">
+			  <li class="nav-item active">
+				<a class="nav-link"><Link to="/viewOrganization">View Organizations</Link></a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link"><Link to="/profile">User Profile</Link></a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link"><Link to="/writeArticle">Write Article</Link></a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link"><Link to="/cashflowAnalysis">Cashflow Analysis</Link></a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" className="navbar__login"><Link to="/login">Employee Login</Link></a>
+			  </li>
+
+			</ul>
+		  </div>
+		</nav>
     );
 }
 
