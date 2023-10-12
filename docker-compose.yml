@@ -1,0 +1,21 @@
+version: '3'
+services:
+  frontend:
+    image: charsity-frontend:latest  # Use your actual frontend Docker image
+    ports:
+      - "3000:3000"  # Map the container's port 3000 to the host's port 3000
+    environment:
+      - VIRTUAL_HOST=wazpplabs.com
+      - VIRTUAL_PORT=3000
+    # Add more environment variables as needed
+    # volumes, networks, and other configurations can also be added here
+
+  backend:
+    image: charsity-backend:latest  # Use your actual backend Docker image
+    ports:
+      - "3500:3500"  # Map the container's port 3500 to the host's port 3500
+    environment:
+      - VIRTUAL_HOST=api.wazpplabs.com
+      - VIRTUAL_PORT=3500
+    # Add more environment variables as needed
+    # volumes, networks, and other configurations can also be added here

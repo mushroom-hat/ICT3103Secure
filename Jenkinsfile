@@ -15,29 +15,22 @@ pipeline {
             }
         }
 
-        stage('Deploy Frontend') {
+        stage('Deploy with Docker Compose') {
             steps {
-                dir('frontend') {
-                    sh 'docker build -t charsity-frontend .'
-                    sh 'docker run -d --rm -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v "$HOME":/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend'
-                }
-            }
-        }
+                script {
+                    // Set environment variables for Docker Compose
+                    def envVars = [
+                        "DATABASE_URI=${DATABASE_URI}",
+                        "NODE_ENV=${NODE_ENV}",
+                    ]
+                    
+                    // Path to your Docker Compose file
+                    def composeFilePath = './docker-compose.yml'
 
-        stage('Deploy Backend') {
-            steps {
-                dir('backend') {
-                    // Use withCredentials to set environment variables
-                    withCredentials([
-                        string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
-                        string(credentialsId: 'NODE_ENV', variable: 'NODE_ENV'),
-                    ]) {
-                        sh 'docker build -t charsity-backend .'
-                        sh 'docker run -d --rm -u root -e DATABASE_URI="$DATABASE_URI" -e NODE_ENV="$NODE_ENV" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v "$HOME":/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend'
-                    }
+                    // Build and start services with Docker Compose
+                    sh "docker-compose -f ${composeFilePath} up -d --build ${envVars.join(' ')}"
                 }
             }
         }
     }
-    
 }
