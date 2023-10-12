@@ -1,10 +1,15 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
-                sh 'echo "Building the project..."'
-                // Add your build commands here
+                dir('frontend') {
+                   sh 'docker build -t charsity-frontend .'
+                }
+                dir('backend') {
+                    sh 'docker build -t charsity-backend .'
+                }
             }
         }
 
@@ -20,8 +25,6 @@ pipeline {
                 script {
                     def containerName = 'charsity-frontend-container'
                     dir('frontend') {
-                        sh 'docker build -t charsity-frontend .'
-
                         // Stop and remove the existing container if it exists
                         sh "docker stop ${containerName} || true"
                         sh "docker rm ${containerName} || true"
@@ -43,8 +46,6 @@ pipeline {
                             string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
                             string(credentialsId: 'NODE_ENV', variable: 'NODE_ENV'),
                         ]) {
-                            sh 'docker build -t charsity-backend .'
-
                             // Stop and remove the existing container if it exists
                             sh "docker stop ${containerName} || true"
                             sh "docker rm ${containerName} || true"
