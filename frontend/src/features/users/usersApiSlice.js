@@ -48,8 +48,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: '/users',
                 method: 'PATCH',
                 body: {
-                    ...initialUserData,
-                }
+                    ...initialUserData,}
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: 'User', id: arg.id }

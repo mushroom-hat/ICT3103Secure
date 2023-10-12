@@ -16,11 +16,13 @@ const userSchema = new mongoose.Schema({
     },
   card: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Card' // Reference to the Card schema
+    ref: 'Card', // Reference to the Card schema
+    required: false
   },
   donation: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Donation'
+    ref: 'Donation',
+    required: false
   }
   // Additional fields can be added here
 });
