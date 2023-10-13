@@ -2,6 +2,9 @@ pipeline {
     agent any
 
     stages {
+
+        // Github Webhooks Trigger
+
         stage('Build') {
             steps {
                 dir('frontend') {
@@ -45,6 +48,9 @@ pipeline {
                         withCredentials([
                             string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
                             string(credentialsId: 'NODE_ENV', variable: 'NODE_ENV'),
+                            string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
+                            string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
+
                         ]) {
                             // Stop and remove the existing container if it exists
                             sh "docker stop ${containerName} || true"
