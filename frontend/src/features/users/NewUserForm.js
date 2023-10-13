@@ -20,44 +20,40 @@ const NewUserForm = () => {
 
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
-  const [pwd, setPwd] = useState(''); // Updated field name to pwd
-  const [validPwd, setValidPwd] = useState(false); // Updated field name to validPwd
-  const [roles, setRoles] = useState(["Donator"]);
+  const [pwd, setPwd] = useState('');
+  const [validPwd, setValidPwd] = useState(false);
+  const [roles, setRoles] = useState("Donator"); // Updated to a single string
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username));
   }, [username]);
 
   useEffect(() => {
-    setValidPwd(PWD_REGEX.test(pwd)); // Updated field name to pwd
-  }, [pwd]); // Updated field name to pwd
+    setValidPwd(PWD_REGEX.test(pwd));
+  }, [pwd]);
 
   useEffect(() => {
     if (isSuccess) {
       setUsername('');
-      setPwd(''); // Updated field name to pwd
-      setRoles([]);
+      setPwd('');
+      setRoles("Donator");
       navigate('/dash/users');
     }
   }, [isSuccess, navigate]);
 
   const onUsernameChanged = (e) => setUsername(e.target.value);
-  const onPwdChanged = (e) => setPwd(e.target.value); // Updated field name to pwd
+  const onPwdChanged = (e) => setPwd(e.target.value);
 
   const onRolesChanged = (e) => {
-    const values = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setRoles(values);
+    setRoles(e.target.value);
   };
 
-  const canSave = [roles.length, validUsername, validPwd].every(Boolean) && !isLoading;
+  const canSave = [validUsername, validPwd].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      await addNewUser({ username, pwd, roles }); // Updated field name to pwd
+      await addNewUser({ username, pwd, roles });
     }
   };
 
@@ -72,7 +68,6 @@ const NewUserForm = () => {
   const errClass = isError ? "errmsg" : "offscreen";
   const validUserClass = !validUsername ? 'form__input--incomplete' : '';
   const validPwdClass = !validPwd ? 'form__input--incomplete' : '';
-  const validRolesClass = !Boolean(roles.length) ? 'form__input--incomplete' : '';
 
   const content = (
     <>
@@ -104,16 +99,16 @@ const NewUserForm = () => {
           onChange={onUsernameChanged}
         />
 
-        <label className="form__label" htmlFor="pwd"> {/* Updated field name to pwd */}
+        <label className="form__label" htmlFor="pwd">
           Password: <span className="nowrap">[4-12 chars incl. !@#$%]</span>
         </label>
         <input
           className={`form__input ${validPwdClass}`}
-          id="pwd" // Updated field name to pwd
-          name="pwd" // Updated field name to pwd
+          id="pwd"
+          name="pwd"
           type="password"
-          value={pwd} // Updated field name to pwd
-          onChange={onPwdChanged} // Updated field name to pwd
+          value={pwd}
+          onChange={onPwdChanged}
         />
 
         <label className="form__label" htmlFor="roles">
@@ -122,9 +117,7 @@ const NewUserForm = () => {
         <select
           id="roles"
           name="roles"
-          className={`form__select ${validRolesClass}`}
-          multiple={true}
-          size="3"
+          className={`form__select`}
           value={roles}
           onChange={onRolesChanged}
         >
