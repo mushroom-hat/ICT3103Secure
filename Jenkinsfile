@@ -60,7 +60,7 @@ pipeline {
                             sh "docker rm ${containerName} || true"
 
                             // Get the IP address of the backend container
-                            def backendIp = sh(script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${backendContainerName}", returnStatus: true).trim()
+                            def backendIp = sh(script: "docker inspect -f '{{.NetworkSettings.Networks.bridge.IPAddress}}' ${backendContainerName}", returnStdout: true).trim()
 
                             // Start the new container
                             sh "docker run -d --name ${containerName} -u root -e NODE_ENV=\"$NODE_ENV\" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
