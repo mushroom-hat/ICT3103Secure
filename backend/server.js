@@ -21,12 +21,16 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, 'public')))
+
 app.use('/', require('./routes/root'))
+app.use('/auth', require ('./routes/authRoutes'))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/cards', require('./routes/cardRoutes'))
 app.use('/articles', require('./routes/articlesRoutes'))
 app.use('/donations', require('./routes/donationsRoutes'))
 app.use('/spending', require('./routes/spendingRoutes'))
+
+
 app.all('*', (req, res) =>{
     res.status(404)
     if(req.accepts('html')){

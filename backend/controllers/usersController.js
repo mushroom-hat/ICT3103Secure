@@ -39,7 +39,6 @@ const createNewUsers = asyncHandler(async (req, res) => {
     const user = await User.create(userObject);
 
     if (user) {
-        console.log(user)
         res.status(201).json({ message: `New user ${username} created` });
     } else {
         res.status(400).json({ message: 'Invalid user data received' });
@@ -50,7 +49,7 @@ const createNewUsers = asyncHandler(async (req, res) => {
 //@route PUT /users/:id
 //@access Private
 const updateUser = asyncHandler(async (req, res) => {
-    const { _id, username, roles, card, pwd, donation } = req.body;
+    const { _id, username, pwd, roles } = req.body;
 
     // Check if the user exists to update based on the _id
     const user = await User.findById(_id).exec();
