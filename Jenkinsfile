@@ -5,10 +5,10 @@ pipeline {
         stage('Build') {
             steps {
                 dir('frontend') {
-                    sh 'docker build -t charsity-frontend . --no-cache'
+                    sh 'docker build -t charsity-frontend .'
                 }
                 dir('backend') {
-                    sh 'docker build -t charsity-backend . --no-cache'
+                    sh 'docker build -t charsity-backend .'
                 }
             }
         }
@@ -72,7 +72,7 @@ pipeline {
             steps {
                 script {
                     // Remove dangling docker images
-                    sh "docker rmi \${docker images -f 'dangling=true' -q}"
+                    sh 'docker rmi $(docker images -f \'dangling=true\' -q)'
                 }
             }
         }
