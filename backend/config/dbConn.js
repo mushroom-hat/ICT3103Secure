@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { logEvents } = require('../middleware/logger')
 
 const connectDB = async() => {
     try{
