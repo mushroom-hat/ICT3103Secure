@@ -49,7 +49,7 @@ pipeline {
                 script {
                     def containerName = 'charsity-frontend-container'
                     def backendContainerName = 'charsity-backend-container'
-
+                    def productionOrigin = 'api.wazpplabs.com'
                     dir('frontend') {
                         // Use withCredentials to set environment variables
                         withCredentials([
@@ -66,7 +66,7 @@ pipeline {
                             sh "docker run -d --name ${containerName} -u root -e NODE_ENV=\"$NODE_ENV\" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
 
                             // Modify the /etc/hosts file within the frontend container to add an entry for the backend
-                            sh "docker exec ${containerName} sh -c 'echo \"${backendIp} ${backendContainerName}\" >> /etc/hosts'"
+                            sh "docker exec ${containerName} sh -c 'echo \"${backendIp} ${productionOrigin}\" >> /etc/hosts'"
                         }
                     }
                 }
