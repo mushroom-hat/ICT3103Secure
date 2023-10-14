@@ -20,7 +20,7 @@ const UsersList = () => {
     if (isLoading) content = <p>Loading...</p>
 
     if (isError) {
-        content = <p className="errmsg">{error?.data?.message}</p>
+        content = <p>Not Currently Available</p>
     }
 
     if (isSuccess) {
