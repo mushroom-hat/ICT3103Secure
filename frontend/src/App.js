@@ -12,6 +12,7 @@ import CashflowAnalysis from './features/cashflow/CashFlowAnalysis';
 import NewUserForm from './features/users/NewUserForm'
 import EditUser from './features/users/EditUser'
 import Prefetch from './features/auth/Prefetch'
+import PersistLogin from './features/auth/PersistLogin'
 
 function App() { 
   return ( 
@@ -24,18 +25,19 @@ function App() {
         <Route path="writeArticle" element={<WriteArticle />} />
         <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
         
-        <Route element={<Prefetch />}>
-          <Route path="dash" element={<DashLayout />}>
+        <Route element={<PersistLogin />}>
+          <Route element={<Prefetch />}>
+            <Route path="dash" element={<DashLayout />}>
+              <Route index element={<Welcome />} />
 
-            <Route index element={<Welcome />} />
+              <Route path="users">
+                <Route index element={<UsersList />} />
+                <Route path=":id" element={<EditUser />} />
+                <Route path="new" element={<NewUserForm />} />
+              </Route>
 
-            <Route path="users">
-              <Route index element={<UsersList />} />
-              <Route path=":id" element={<EditUser />} />
-              <Route path="new" element={<NewUserForm />} />
-            </Route>
-
-          </Route>{/* End Dash */}
+            </Route>{/* End Dash */}
+          </Route>
         </Route>
  
       </Route> 
