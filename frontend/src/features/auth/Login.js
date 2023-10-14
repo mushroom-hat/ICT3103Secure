@@ -4,7 +4,6 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from './authSlice'
 import { useLoginMutation } from './authApiSlice'
-import { config } from '../../constants/backend-api'
 import usePersist from '../../hooks/usePersist'
 
 const Login = () => {
