@@ -5,10 +5,10 @@ pipeline {
         stage('Build') {
             steps {
                 dir('frontend') {
-                    sh 'docker build -t charsity-frontend .'
+                    sh 'docker build -t charsity-frontend . --no-cache'
                 }
                 dir('backend') {
-                    sh 'docker build -t charsity-backend .'
+                    sh 'docker build -t charsity-backend . --no-cache'
                 }
             }
         }
@@ -48,6 +48,7 @@ pipeline {
             steps {
                 script {
                     def containerName = 'charsity-frontend-container'
+                    def backendContainerName = 'charsity-backend-container'
                     def backendAPI = 'api.wazpplabs.com'
                     dir('frontend') {
                         // Stop and remove the existing container if it exists
