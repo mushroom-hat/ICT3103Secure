@@ -8,6 +8,8 @@ import { config } from '../../constants/backend-api'
 import usePersist from '../../hooks/usePersist'
 
 const Login = () => {
+    console.log(config.url.API_URL);
+    console.log(process.env.NODE_ENV);
     const userRef = useRef()
     const errRef = useRef()
     const [username, setUsername] = useState('')

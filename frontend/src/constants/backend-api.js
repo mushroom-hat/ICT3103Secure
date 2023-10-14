@@ -6,7 +6,7 @@ const prod = {
   
   const dev = {
     url: {
-      API_URL: 'https://charsity-backend-container:3500'
+      API_URL: 'http://charsity-backend-container:3500'
     }
   };
   
