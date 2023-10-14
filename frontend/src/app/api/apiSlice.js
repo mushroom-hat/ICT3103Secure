@@ -4,7 +4,7 @@ import { config } from '../../constants/backend-api'
 
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://api.wazpplabs.com:3500',
+    baseUrl: config.url.API_URL,
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.token
