@@ -67,6 +67,8 @@ pipeline {
 
                             // Modify the /etc/hosts file within the frontend container to add an entry for the backend
                             sh "docker exec ${containerName} sh -c 'echo \"${backendIp} ${productionOrigin}\" >> /etc/hosts'"
+                            sh "docker exec ${containerName} sh -c 'echo \"localhost ${productionOrigin}\" >> /etc/hosts'"
+
                         }
                     }
                 }
