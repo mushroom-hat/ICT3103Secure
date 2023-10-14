@@ -58,8 +58,8 @@ pipeline {
                         // Get the IP address of the backend container
                         def backendIp = sh(script: "docker inspect -f '{{.NetworkSettings.Networks.charsitynetwork.IPAddress}}' ${backendContainerName}", returnStdout: true).trim()
 
-                        // Start the new container
-                        sh "docker run -d --name ${containerName} --network charsitynetwork -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
+                        // Start the new container, and specify production environment
+                        sh "docker run -d --name ${containerName} --network charsitynetwork --env-file .env.production -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
 
                         // Modify the /etc/hosts file within the frontend container to add an entry for the backend
                         sh "docker exec ${containerName} sh -c 'echo \"${backendIp} ${backendAPI}\" >> /etc/hosts'"
