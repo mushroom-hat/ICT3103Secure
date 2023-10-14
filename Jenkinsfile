@@ -51,17 +51,13 @@ pipeline {
                     def backendContainerName = 'charsity-backend-container'
                     def productionOrigin = 'localhost'
                     dir('frontend') {
-                        // Use withCredentials to set environment variables
-                       {
+                  
                         // Stop and remove the existing container if it exists
                         sh "docker stop ${containerName} || true"
                         sh "docker rm ${containerName} || true"
 
                         // Start the new container
                         sh "docker run -d --name ${containerName} --network charsitynetwork -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
-
-
-                        }
                     }
                 }
             }
