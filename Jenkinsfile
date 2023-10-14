@@ -67,5 +67,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Cleanup'){
+            steps {
+                script {
+                    // Remove dangling docker images
+                    sh "docker rmi $(docker images -f “dangling=true” -q)"
+                }
+            }
+        }
     }
 }
