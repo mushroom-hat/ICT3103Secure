@@ -1,6 +1,6 @@
 const prod = {
     url: {
-      API_URL: 'https://charsity-backend-container:3500',
+      API_URL: 'https://api.wazpplabs.com:3500',
     }
   };
   
