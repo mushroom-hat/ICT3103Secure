@@ -1,11 +1,10 @@
 const developmentOrigin = 'http://localhost:3000';
-const productionOriginHTTP = 'http://charsity-frontend-container';
-const productionOriginHTTPS = 'https://charsity-frontend-container';
+const productionOrigin = 'https://wazpplab.com';
 
 let allowedOrigins;
 
 if (process.env.NODE_ENV === 'production') {
-    allowedOrigins = [productionOriginHTTP, productionOriginHTTPS];
+    allowedOrigins = [productionOrigin];
     
 } else {
     allowedOrigins = [developmentOrigin, "postman"];
