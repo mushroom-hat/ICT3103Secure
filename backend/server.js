@@ -11,12 +11,14 @@ const corsOptions = require('./config/corsOptions')
 const connectDB = require('./config/dbConn')
 const mongoose = require('mongoose')
 const { logEvents } = require('./middleware/logger')
+const credentials = require('./middleware/credentials')
 const PORT = process.env.PORT || 3500
 
 console.log(process.env.NODE_ENV)
 
 connectDB()
 app.use(logger)
+app.use(credentials)
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
