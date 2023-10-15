@@ -1,5 +1,5 @@
 const developmentOrigin = 'http://localhost:3000';
-const productionOrigin = 'https://wazpplab.com';
+const productionOrigin = 'https://wazpplabs.com';
 
 let allowedOrigins;
 
