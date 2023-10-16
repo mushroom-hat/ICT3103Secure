@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Navbar from "../../components/Navbar";
 
 const Categories = [
   { categoryName: "Healthcare", isChecked: false },
@@ -34,11 +35,11 @@ const OrganizationsData = [
   },
 ];
 
-function ViewOrganizations() {
+const ViewOrganizations = () => {
   const [allCategories, setAllCategories] = useState(Categories);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-  function handleChange(categoryName) {
+  const handleChange = (categoryName) => {
     // Change the corresponding isChecked in the list of all categories
     setAllCategories((prevCategories) =>
       prevCategories.map((category) =>
@@ -62,7 +63,8 @@ function ViewOrganizations() {
   }, [selectedCategories]);
 
   return (
-    <section>
+    <div>
+      <Navbar />
       <h1>Organizations</h1>
       <div className="organizations-page-container">
         <div className="filters-container">
@@ -102,7 +104,7 @@ function ViewOrganizations() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
