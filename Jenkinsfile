@@ -24,10 +24,11 @@ pipeline {
                 dependencyCheckPublisher pattern: 'dependency-check-report.xml'
             }
         }
-
+        
         stage('Deploy Backend') {
             steps {
-                cript {                    def containerName = 'charsity-backend-container'
+                script {
+                    def containerName = 'charsity-backend-container'
                     dir('backend') {
                         // Use withCredentials to set environment variables
                         withCredentials([
