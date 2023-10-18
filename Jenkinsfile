@@ -13,18 +13,37 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency-Check Vulnerabilities') {
+        stage('OWASP Dependency-Check Vulnerabilities for Frontend') {
             steps {
-                dependencyCheck additionalArguments: ''' 
-                            -o './'
-                            -s './'
-                            -f 'ALL' 
-                            --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
-                
-                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                dir('frontend') {
+                    sh 'npm install'  // Install frontend dependencies
+                }
+                script {
+                    def scanResults = dependencyCheck additionalArguments: '''-s './' -f 'ALL' --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities', returnStatus: true
+                    if (scanResults != 0) {
+                        error "Vulnerabilities found in frontend dependencies."
+                    }
+                }
+                archiveArtifacts artifacts: 'dependency-check-report.xml', allowEmptyArchive: true
             }
         }
-        
+
+        stage('OWASP Dependency-Check Vulnerabilities for Backend') {
+            steps {
+                dir('backend') {
+                    sh 'npm install'  // Install backend dependencies
+                }
+                script {
+                    def scanResults = dependencyCheck additionalArguments: '''-s './' -f 'ALL' --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities', returnStatus: true
+                    if (scanResults != 0) {
+                        error "Vulnerabilities found in backend dependencies."
+                    }
+                }
+                archiveArtifacts artifacts: 'dependency-check-report.xml', allowEmptyArchive: true
+            }
+        }
+
+
         stage('Deploy Backend') {
             steps {
                 script {
