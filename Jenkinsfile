@@ -19,6 +19,7 @@ pipeline {
             script {
                 // Create a directory to store scan results
                 sh "mkdir -p /trivy-scan-results"
+                sh "chmod 777 /trivy-scan-results"
 
                 // Scan the frontend Docker image and save results in the Jenkins workspace
                 sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/frontend.json charsity-frontend"
