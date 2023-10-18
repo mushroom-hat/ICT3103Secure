@@ -13,39 +13,15 @@ pipeline {
             }
         }
 
+
         stage('Scan Docker Images for Vulnerabilities') {
             steps {
                 script {
-                    // Install trivy
-                    sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3'
-                    sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
+                    // Scan the frontend Docker image
+                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image -o trivy-scan-results-frontend.json charsity-frontend"
 
-                    // Create a directory to store reports
-                    sh 'mkdir -p reports'
-
-                    // Scan frontend Docker image
-                    sh 'trivy filesystem --ignore-unfixed --vuln-type os,library --format template --template "@html.tpl" -o reports/frontend-scan.html charsity-frontend'
-                    publishHTML target: [
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'reports',
-                        reportFiles: 'frontend-scan.html',
-                        reportName: 'Trivy Scan - Frontend',
-                        reportTitles: 'Trivy Scan - Frontend'
-                    ]
-
-                    // Scan backend Docker image
-                    sh 'trivy filesystem --ignore-unfixed --vuln-type os,library --format template --template "@html.tpl" -o reports/backend-scan.html charsity-backend'
-                    publishHTML target: [
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'reports',
-                        reportFiles: 'backend-scan.html',
-                        reportName: 'Trivy Scan - Backend',
-                        reportTitles: 'Trivy Scan - Backend'
-                    ]
+                    // Scan the backend Docker image
+                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image -o trivy-scan-results-backend.json charsity-backend"
                 }
             }
         }
