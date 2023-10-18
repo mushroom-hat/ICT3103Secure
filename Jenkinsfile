@@ -13,35 +13,43 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency-Check Vulnerabilities for Frontend') {
+        stage('Scan Docker Images for Vulnerabilities') {
             steps {
-                dir('frontend') {
-                    sh 'npm install'  // Install frontend dependencies
-                }
                 script {
-                    def scanResults = dependencyCheck additionalArguments: '''-s './' -f 'ALL' --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities', returnStatus: true
-                    if (scanResults != 0) {
-                        error "Vulnerabilities found in frontend dependencies."
-                    }
+                    // Install trivy
+                    sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3'
+                    sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
+
+                    // Create a directory to store reports
+                    sh 'mkdir -p reports'
+
+                    // Scan frontend Docker image
+                    sh 'trivy filesystem --ignore-unfixed --vuln-type os,library --format template --template "@html.tpl" -o reports/frontend-scan.html charsity-frontend'
+                    publishHTML target: [
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'reports',
+                        reportFiles: 'frontend-scan.html',
+                        reportName: 'Trivy Scan - Frontend',
+                        reportTitles: 'Trivy Scan - Frontend'
+                    ]
+
+                    // Scan backend Docker image
+                    sh 'trivy filesystem --ignore-unfixed --vuln-type os,library --format template --template "@html.tpl" -o reports/backend-scan.html charsity-backend'
+                    publishHTML target: [
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'reports',
+                        reportFiles: 'backend-scan.html',
+                        reportName: 'Trivy Scan - Backend',
+                        reportTitles: 'Trivy Scan - Backend'
+                    ]
                 }
-                archiveArtifacts artifacts: 'dependency-check-report.xml', allowEmptyArchive: true
             }
         }
 
-        stage('OWASP Dependency-Check Vulnerabilities for Backend') {
-            steps {
-                dir('backend') {
-                    sh 'npm install'  // Install backend dependencies
-                }
-                script {
-                    def scanResults = dependencyCheck additionalArguments: '''-s './' -f 'ALL' --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities', returnStatus: true
-                    if (scanResults != 0) {
-                        error "Vulnerabilities found in backend dependencies."
-                    }
-                }
-                archiveArtifacts artifacts: 'dependency-check-report.xml', allowEmptyArchive: true
-            }
-        }
 
 
         stage('Deploy Backend') {
