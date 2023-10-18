@@ -13,17 +13,21 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('OWASP Dependency-Check Vulnerabilities') {
             steps {
-                sh 'echo "Running tests..."'
-                // Add your test commands here
+                    dependencyCheck additionalArguments: ''' 
+                    -o './'
+                    -s './'
+                    -f 'ALL' 
+                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+        
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
             }
         }
 
         stage('Deploy Backend') {
             steps {
-                script {
-                    def containerName = 'charsity-backend-container'
+                cript {                    def containerName = 'charsity-backend-container'
                     dir('backend') {
                         // Use withCredentials to set environment variables
                         withCredentials([
