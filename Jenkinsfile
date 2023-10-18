@@ -73,9 +73,13 @@ pipeline {
 
         stage('Cleanup'){
             steps {
-                script {
-                    // Remove dangling docker images
-                    sh 'docker rmi $(docker images -f \'dangling=true\' -q)'
+                    script {
+                        def danglingImages = sh(script: 'docker images -f "dangling=true" -q', returnStdout: true).trim()
+                        if (danglingImages) {
+                            sh "docker rmi $danglingImages"
+                        } else {
+                            echo "No dangling images to remove."
+                        }
                 }
             }
         }
