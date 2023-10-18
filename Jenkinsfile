@@ -19,10 +19,10 @@ pipeline {
                 script {
                     sh "mkdir -p trivy-scan-results"
                     // Scan the frontend Docker image
-                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v trivy-scan-results/:trivy-scan-results aquasec/trivy image -o trivy-scan-results/frontend.json charsity-frontend"
+                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v trivy-scan-results:/trivy-scan-results aquasec/trivy image -o trivy-scan-results/frontend.json charsity-frontend"
 
                     // Scan the backend Docker image
-                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v trivy-scan-results/:trivy-scan-results aquasec/trivy image -o trivy-scan-results/backend.json charsity-backend"
+                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v trivy-scan-results:/trivy-scan-results aquasec/trivy image -o trivy-scan-results/backend.json charsity-backend"
                 }
             }
         }
