@@ -10,7 +10,7 @@ const Navbar = () => {
 		  <div class="collapse navbar-collapse" id="navbarText">
 			<ul class="navbar-nav mr-auto">
 			  <li class="nav-item active">
-				<a class="nav-link"><Link to="/viewOrganization">View Organizations</Link></a>
+				<a class="nav-link"><Link to="/viewOrganizations">View Organizations</Link></a>
 			  </li>
 			  <li class="nav-item">
 				<a class="nav-link"><Link to="/profile">User Profile</Link></a>

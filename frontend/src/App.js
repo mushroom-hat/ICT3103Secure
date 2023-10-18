@@ -13,6 +13,8 @@ import NewUserForm from './features/users/NewUserForm'
 import EditUser from './features/users/EditUser'
 import Prefetch from './features/auth/Prefetch'
 import PersistLogin from './features/auth/PersistLogin'
+import RequireAuth from './features/auth/RequireAuth'
+import { ROLES } from './config/roles'
 
 function App() { 
   return ( 
@@ -30,10 +32,12 @@ function App() {
             <Route path="dash" element={<DashLayout />}>
               <Route index element={<Welcome />} />
 
-              <Route path="users">
-                <Route index element={<UsersList />} />
-                <Route path=":id" element={<EditUser />} />
-                <Route path="new" element={<NewUserForm />} />
+              <Route element = {<RequireAuth allowedRoles={ROLES.Admin} />}>
+                <Route path="users">
+                  <Route index element={<UsersList />} />
+                  <Route path=":id" element={<EditUser />} />
+                  <Route path="new" element={<NewUserForm />} />
+                </Route>
               </Route>
 
             </Route>{/* End Dash */}
