@@ -14,19 +14,20 @@ pipeline {
         }
 
 
-        stage('Scan Docker Images for Vulnerabilities') {
-            steps {
-                script {
-                    sh "mkdir -p trivy-scan-results"
-                    // Scan the frontend Docker image
-                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v trivy-scan-results:/trivy-scan-results aquasec/trivy image -o trivy-scan-results/frontend.json charsity-frontend"
+      stage('Scan Docker Images for Vulnerabilities') {
+        steps {
+            script {
+                // Create a directory to store scan results
+                sh "mkdir -p ${WORKSPACE}/trivy-scan-results"
 
-                    // Scan the backend Docker image
-                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v trivy-scan-results:/trivy-scan-results aquasec/trivy image -o trivy-scan-results/backend.json charsity-backend"
-                }
+                // Scan the frontend Docker image and save results in the Jenkins workspace
+                sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${WORKSPACE}/trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/frontend.json charsity-frontend"
+
+                // Scan the backend Docker image and save results in the Jenkins workspace
+                sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${WORKSPACE}/trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/backend.json charsity-backend"
             }
         }
-
+    }
 
 
         stage('Deploy Backend') {
