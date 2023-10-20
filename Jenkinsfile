@@ -31,7 +31,16 @@ pipeline {
             }
         }
 
-
+        stage('Run unit tests'){
+            steps {
+                // dir('frontend') {
+                //     sh 'docker run -v $PWD:/app charsity-frontend npm run test'
+                // }
+                dir('backend') {
+                    sh 'docker run -v $PWD:/app charsity-backend npm run test'
+                }
+            }
+        }
         stage('Deploy Backend') {
             steps {
                 script {
