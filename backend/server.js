@@ -48,13 +48,25 @@ app.all('*', (req, res) =>{
 
 app.use(errorHandler)
 
-mongoose.connection.once('open', () => {
-    console.log('Connected to MongoDB')
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-})
+async function startServer() {
+    try {
+        mongoose.connection.once('open', () => {
+            console.log('Connected to MongoDB');
+        });
+        console.log('Connected to MongoDB');
 
-mongoose.connection.on('error', err => {
-    console.log(err)
-    logEvents()
-})
+        const server = app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
 
+        // Export the 'server' object if mongoose connection is successful
+        module.exports = server;
+
+    } catch (error) {
+        mongoose.connection.on('error', err => {
+            console.log(err)
+            logEvents()
+        })    }
+}
+
+startServer()

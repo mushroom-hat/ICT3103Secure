@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
     allowedOrigins = [productionOrigin];
     
 } else {
-    allowedOrigins = [developmentOrigin, "postman"];
+    allowedOrigins = ['*'];
 }
 
 
