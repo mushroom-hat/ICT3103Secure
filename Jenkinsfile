@@ -37,7 +37,8 @@ pipeline {
                 //     sh 'docker run -v $PWD:/app charsity-frontend npm run test'
                 // }
                 dir('backend') {
-                    sh 'docker run --user root -v $PWD:/app charsity-backend npm run test'
+                    sh 'chmod 777 $PWD'
+                    sh 'docker run -v $PWD:/app charsity-backend npm run test'
                 }
             }
         }
