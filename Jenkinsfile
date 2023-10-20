@@ -36,7 +36,7 @@ pipeline {
                 dir('backend') {
                     // Run the unit tests in a Docker container
                     script {
-                        def dockerImage = 'charsity-backend:latest' 
+                        def dockerImage = 'charsity-backend' 
                         def dockerCommand = 'npm test' 
 
                         // Create a directory to mount a volume
