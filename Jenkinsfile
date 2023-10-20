@@ -35,6 +35,8 @@ pipeline {
             steps {
                 dir('backend') {
                     // Run the unit tests in a Docker container
+                    def containerName = 'charsity-backend-container'
+
                     script {
                         withCredentials([
                             string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
