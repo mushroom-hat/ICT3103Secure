@@ -76,24 +76,24 @@ pipeline {
             }
         }
 
-        stage('Cleanup'){
+        stage('Cleanup') {
             steps {
-                    script {
-                        // remove dangling images
-                        def danglingImages = sh(script: 'docker images -f "dangling=true" -q', returnStdout: true).trim()
-                        if (danglingImages) {
-                            sh "docker rmi $danglingImages"
-                        } else {
-                            echo "No dangling images to remove."
-                        }
+                script {
+                    // Remove dangling images
+                    def danglingImages = sh(script: 'docker images -f "dangling=true" -q', returnStdout: true).trim()
+                    if (danglingImages) {
+                        sh "docker rmi $danglingImages"
+                    } else {
+                        echo "No dangling images to remove."
+                    }
 
-                         // Remove exited containers
-                        def exitedContainers = sh(script: 'docker ps -a -q -f "status=exited"', returnStdout: true).trim()
-                        if (exitedContainers) {
-                            sh "docker rm $exitedContainers"
-                        } else {
-                            echo "No exited containers to remove."
-                        }
+                    // Remove exited containers
+                    def exitedContainers = sh(script: 'docker ps -q -a -f "status=exited"', returnStdout: true).trim()
+                    if (exitedContainers) {
+                        sh "docker rm $exitedContainers"
+                    } else {
+                        echo "No exited containers to remove."
+                    }
                 }
             }
         }
