@@ -57,33 +57,42 @@ pipeline {
         }
 
 
-    stage('Deploy Frontend') {
-        steps {
-            script {
-                def containerName = 'charsity-frontend-container'
-                def backendContainerName = 'charsity-backend-container'
-                def backendAPI = 'api.wazpplabs.com'
-                dir('frontend') {
-                    // Stop and remove the existing container if it exists
-                    sh "docker stop ${containerName} || true"
-                    sh "docker rm ${containerName} || true"
+        stage('Deploy Frontend') {
+            steps {
+                script {
+                    def containerName = 'charsity-frontend-container'
+                    def backendContainerName = 'charsity-backend-container'
+                    def backendAPI = 'api.wazpplabs.com'
+                    dir('frontend') {
+                        // Stop and remove the existing container if it exists
+                        sh "docker stop ${containerName} || true"
+                        sh "docker rm ${containerName} || true"
 
-                    // Start the new container, and specify production environment
-                    sh "docker run -d --name ${containerName} --network charsitynetwork --env-file .env.production -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
+                        // Start the new container, and specify production environment
+                        sh "docker run -d --name ${containerName} --network charsitynetwork --env-file .env.production -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
 
+                    }
                 }
             }
         }
-    }
 
         stage('Cleanup'){
             steps {
                     script {
+                        // remove dangling images
                         def danglingImages = sh(script: 'docker images -f "dangling=true" -q', returnStdout: true).trim()
                         if (danglingImages) {
                             sh "docker rmi $danglingImages"
                         } else {
                             echo "No dangling images to remove."
+                        }
+
+                         // Remove exited containers
+                        def exitedContainers = sh(script: 'docker ps -a -q -f "status=exited"', returnStdout: true).trim()
+                        if (exitedContainers) {
+                            sh "docker rm $exitedContainers"
+                        } else {
+                            echo "No exited containers to remove."
                         }
                 }
             }
