@@ -87,10 +87,13 @@ pipeline {
                         echo "No dangling images to remove."
                     }
 
-                    // Remove exited containers
+                     // Remove all exited containers
                     def exitedContainers = sh(script: 'docker ps -q -a -f "status=exited"', returnStdout: true).trim()
                     if (exitedContainers) {
-                        sh "docker rm $exitedContainers"
+                        def containerIds = exitedContainers.tokenize("\n")
+                        for (def containerId in containerIds) {
+                            sh "docker rm $containerId"
+                        }
                     } else {
                         echo "No exited containers to remove."
                     }
