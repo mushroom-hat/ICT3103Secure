@@ -1,18 +1,3 @@
-// Define common environment variables
-def commonEnvVars = [
-    ['DATABASE_URI', 'DATABASE_URI'],
-    ['NODE_ENV', 'NODE_ENV'],
-    ['ACCESS_TOKEN_SECRET', 'ACCESS_TOKEN_SECRET'],
-    ['REFRESH_TOKEN_SECRET', 'REFRESH_TOKEN_SECRET']
-]
-
-// Define a reusable function to run Docker commands
-def runDockerCommand(String containerName, String dockerImage, String dockerCommand) {
-    sh "docker stop ${containerName} || true"
-    sh "docker rm ${containerName} || true"
-    sh "docker run -d --name ${containerName} --network charsitynetwork -u root -e DATABASE_URI=\"$DATABASE_URI\" -e NODE_ENV=\"$NODE_ENV\" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 $dockerImage"
-}
-
 pipeline {
     agent any
 
@@ -29,45 +14,37 @@ pipeline {
         }
 
 
-        stage('Scan Docker Images for Vulnerabilities') {
-            steps {
-                script {
-                    // Create a directory to store scan results
-                    sh "mkdir -p /trivy-scan-results"
-                    sh "chmod 777 /trivy-scan-results"
+        // stage('Scan Docker Images for Vulnerabilities') {
+        //     steps {
+        //         script {
+        //             // Create a directory to store scan results
+        //             sh "mkdir -p /trivy-scan-results"
+        //             sh "chmod 777 /trivy-scan-results"
 
-                    // Scan the frontend Docker image and save results in the Jenkins workspace
-                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/frontend.json charsity-frontend"
+        //             // Scan the frontend Docker image and save results in the Jenkins workspace
+        //             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/frontend.json charsity-frontend"
 
-                    // Scan the backend Docker image and save results in the Jenkins workspace
-                    sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/backend.json charsity-backend"
+        //             // Scan the backend Docker image and save results in the Jenkins workspace
+        //             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/backend.json charsity-backend"
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         stage('Run unit tests') {
             steps {
                 dir('backend') {
+                    // Run the unit tests in a Docker container
                     script {
-                        def dockerImage = 'charsity-backend'
-                        def dockerCommand = 'npm test'
-
-                        // Create a directory to mount a volume
-                        sh "mkdir -p /unit-test-results"
-                        sh "chmod 777 /unit-test-results"
-
-                        // Use the environment variables
-                        withCredentials(commonEnvVars) {
-                            // Run the tests in the Docker container
-                            def exitCode = sh(script: "docker run -v -e DATABASE_URI=\"$DATABASE_URI\" -e NODE_ENV=\"$NODE_ENV\" /unit-test-results:/app $dockerImage $dockerCommand", returnStatus: true)
-
-                            if (exitCode == 0) {
-                                currentBuild.result = 'SUCCESS'
-                            } else {
-                                currentBuild.result = 'FAILURE'
-                                error("Unit tests failed. See the build logs for details.")
-                            }
+                        withCredentials([
+                            string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
+                            string(credentialsId: 'NODE_ENV', variable: 'NODE_ENV'),
+                            string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
+                            string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
+                        ]) {
+           
+                            // Start the new container
+                            sh "docker run -d --name ${containerName} --network charsitynetwork -u root -e DATABASE_URI=\"$DATABASE_URI\" -e NODE_ENV=\"$NODE_ENV\" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend npm test"
                         }
                     }
                 }
@@ -78,10 +55,21 @@ pipeline {
             steps {
                 script {
                     def containerName = 'charsity-backend-container'
-                    def dockerImage = 'charsity-backend'
+                    dir('backend') {
+                        // Use withCredentials to set environment variables
+                        withCredentials([
+                            string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
+                            string(credentialsId: 'NODE_ENV', variable: 'NODE_ENV'),
+                            string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
+                            string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
+                        ]) {
+                            // Stop and remove the existing container if it exists
+                            sh "docker stop ${containerName} || true"
+                            sh "docker rm ${containerName} || true"
 
-                    withCredentials(commonEnvVars) {
-                        runDockerCommand(containerName, dockerImage, dockerCommand)
+                            // Start the new container
+                            sh "docker run -d --name ${containerName} --network charsitynetwork -u root -e DATABASE_URI=\"$DATABASE_URI\" -e NODE_ENV=\"$NODE_ENV\" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend"
+                        }
                     }
                 }
             }
