@@ -31,17 +31,33 @@ pipeline {
             }
         }
 
-        stage('Run unit tests'){
+        stage('Run unit tests') {
             steps {
-                // dir('frontend') {
-                //     sh 'docker run -v $PWD:/app charsity-frontend npm run test'
-                // }
                 dir('backend') {
-                    sh 'chmod 777 $PWD'
-                    sh 'docker run -v $PWD:/app charsity-backend npm run test'
+                    // Run the unit tests in a Docker container
+                    script {
+                        def dockerImage = 'charsity-backend:latest' 
+                        def dockerCommand = 'npm test' 
+
+                        // Create a directory to mount a volume
+                        sh "mkdir -p /unit-test-results"
+                        sh "chmod 777 /unit-test-results"
+
+                        // Run the tests in the Docker container
+                        def exitCode = sh(script: "docker run -v /unit-test-results:/app $dockerImage $dockerCommand", returnStatus: true)
+                        
+                        // Check the exit code to determine success or failure
+                        if (exitCode == 0) {
+                            currentBuild.result = 'SUCCESS'
+                        } else {
+                            currentBuild.result = 'FAILURE'
+                            error("Unit tests failed. See the build logs for details.")
+                        }
+                    }
                 }
             }
         }
+
         stage('Deploy Backend') {
             steps {
                 script {
