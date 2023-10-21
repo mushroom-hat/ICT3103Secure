@@ -49,7 +49,7 @@ pipeline {
                         }
 
                         // Run unit tests
-                        sh 'docker exec -it ' + containerName + ' npm run test'
+                        sh 'docker exec ' + containerName + ' npm run test'
 
                         // Stop and remove the existing container if it exists
                         sh "docker stop ${containerName} || true"
@@ -59,9 +59,6 @@ pipeline {
                 }
             }
         }
-
-        
-
 
     
         stage('Deploy Backend') {
