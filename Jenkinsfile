@@ -89,8 +89,6 @@ pipeline {
         stage('Deploy Backend') {
             steps {
                 script {
-                    def containerName = 'charsity-backend-container'
-                    
                     dir('backend') {
                         def containerName = 'charsity-backend-container'
                         cleanAndStartBackendContainer(containerName, 'charsity-backend')
