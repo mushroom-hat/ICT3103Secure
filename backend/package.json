@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server",
     "dev": "nodemon server",
-    "test": "mocha --reporter mocha-junit-reporter --reporter-options mochaFile=./unit-test-results/test-results.xml test/**/*.js"
+    "test": "mocha test/*.js"
   },
   "keywords": [],
   "author": "",

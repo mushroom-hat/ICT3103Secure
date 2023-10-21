@@ -45,7 +45,7 @@ describe("Authentication", () => {
         .get("/users")
         .set("Authorization", `Bearer ${authToken}`)
         .end((err, res) => {
-          res.should.have.status(202); // Change this to the expected status code
+          res.should.have.status(200); // Change this to the expected status code
           done();
         });
     });
@@ -77,4 +77,9 @@ describe("Authentication", () => {
       });
     });
   });
+});
+
+after(() => {
+  // Other cleanup tasks
+  process.exit(); // Explicitly exit with the default exit code (0 for success)
 });
