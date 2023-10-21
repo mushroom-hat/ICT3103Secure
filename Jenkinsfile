@@ -58,6 +58,7 @@ pipeline {
                                 sh "docker rm ${containerName} || true"
                             }
 
+                            echo "Test exit code: ${testExitCode}"
                             // If the test container fails (non-zero exit code), mark the build as failed
                             if (testExitCode != 0) {
                                 currentBuild.result = 'FAILURE'
