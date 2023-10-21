@@ -8,6 +8,10 @@ pipeline {
                     sh 'docker build -t charsity-frontend .'
                 }
                 dir('backend') {
+                    
+                    // Build the Docker image for testing 
+                    sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target development .'
+                    // Build the Docker image for production 
                     sh 'docker build -t charsity-backend --target prod .'
                 }
             }
@@ -43,9 +47,6 @@ pipeline {
                             string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
                             string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
                         ]) {
-
-                            // Build the Docker image for testing (as per your Dockerfile)
-                            sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
 
                             // Start the container for running tests
                             sh 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" -e ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" -e DATABASE_URI="$DATABASE_URI" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test'
