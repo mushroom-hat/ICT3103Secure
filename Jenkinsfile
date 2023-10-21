@@ -70,13 +70,6 @@ pipeline {
             }
         }
 
-        // If the previous stage failed, stop the pipeline
-        catchError {
-            currentBuild.result = 'FAILURE'
-        }
-
-
-
             
         stage('Deploy Backend') {
             steps {
