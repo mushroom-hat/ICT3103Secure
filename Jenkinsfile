@@ -52,7 +52,7 @@ pipeline {
                             sh "docker rm ${containerName} || true"
                           
                             // run npm test in container and capture the exit code
-                            def testExitCode = sh(script: "docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" -e ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" -e DATABASE_URI="$DATABASE_URI" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test npm test", returnStatus: true)
+                            def testExitCode = sh(script: "docker run -d --name ${containerName} --network charsitynetwork -u root -e REFRESH_TOKEN_SECRET='$REFRESH_TOKEN_SECRET' -e ACCESS_TOKEN_SECRET='$ACCESS_TOKEN_SECRET' -e DATABASE_URI='$DATABASE_URI' -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test npm test", returnStatus: true)
                     
                             echo "Test exit code: ${testExitCode}"
                             // If the test container fails (non-zero exit code), mark the build as failed
