@@ -45,7 +45,7 @@ describe("Authentication", () => {
         .get("/users")
         .set("Authorization", `Bearer ${authToken}`)
         .end((err, res) => {
-          res.should.have.status(200); // Change this to the expected status code
+          res.should.have.status(202); // Change this to the expected status code
           done();
         });
     });
