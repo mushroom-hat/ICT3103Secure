@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="0.661" tests="4" failures="0">
-  <testsuite name="Root Suite" timestamp="2023-10-21T09:47:53" tests="0" time="0.000" failures="0">
+<testsuites name="Mocha Tests" time="0.484" tests="4" failures="1">
+  <testsuite name="Root Suite" timestamp="2023-10-21T09:53:56" tests="0" time="0.000" failures="0">
   </testsuite>
-  <testsuite name="Authentication" timestamp="2023-10-21T09:47:53" tests="0" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
+  <testsuite name="Authentication" timestamp="2023-10-21T09:53:56" tests="0" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
   </testsuite>
-  <testsuite name="Test Authentication Middleware" timestamp="2023-10-21T09:47:53" tests="3" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
-    <testcase name="Authentication Test Authentication Middleware It should return a 401 Unauthorized for requests without a token" time="0.020" classname="It should return a 401 Unauthorized for requests without a token">
+  <testsuite name="Test Authentication Middleware" timestamp="2023-10-21T09:53:56" tests="3" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="1">
+    <testcase name="Authentication Test Authentication Middleware It should return a 401 Unauthorized for requests without a token" time="0.019" classname="It should return a 401 Unauthorized for requests without a token">
     </testcase>
-    <testcase name="Authentication Test Authentication Middleware It should allow access to protected routes with a valid token" time="0.558" classname="It should allow access to protected routes with a valid token">
+    <testcase name="Authentication Test Authentication Middleware It should allow access to protected routes with a valid token" time="0.409" classname="It should allow access to protected routes with a valid token">
+      <failure message="expected { Object (_events, _eventsCount, ...) } to have status code 202 but got 200" type="AssertionError"><![CDATA[AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 202 but got 200
+    at C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js:48:27
+    at Request.callback (node_modules\superagent\lib\node\index.js:857:12)
+    at C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\node_modules\superagent\lib\node\index.js:1070:18
+    at IncomingMessage.<anonymous> (node_modules\superagent\lib\node\parsers\json.js:21:7)
+    at IncomingMessage.emit (node:events:525:35)
+    at endReadableNT (node:internal/streams/readable:1359:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+      + expected - actual
+
+      -200
+      +202
+      ]]></failure>
     </testcase>
     <testcase name="Authentication Test Authentication Middleware It should return a 403 Forbidden for requests with an invalid token" time="0.004" classname="It should return a 403 Forbidden for requests with an invalid token">
     </testcase>
   </testsuite>
-  <testsuite name="Get Users" timestamp="2023-10-21T09:47:54" tests="0" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
+  <testsuite name="Get Users" timestamp="2023-10-21T09:53:57" tests="0" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
   </testsuite>
-  <testsuite name="Test GET route /users" timestamp="2023-10-21T09:47:54" tests="1" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.042" failures="0">
-    <testcase name="Authentication Test Authentication Middleware Get Users Test GET route /users It should return all Users" time="0.041" classname="It should return all Users">
+  <testsuite name="Test GET route /users" timestamp="2023-10-21T09:53:57" tests="1" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.014" failures="0">
+    <testcase name="Authentication Test Authentication Middleware Get Users Test GET route /users It should return all Users" time="0.013" classname="It should return all Users">
     </testcase>
   </testsuite>
 </testsuites>
