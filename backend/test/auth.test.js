@@ -78,8 +78,3 @@ describe("Authentication", () => {
     });
   });
 });
-
-after(() => {
-  // Other cleanup tasks
-  process.exit(); // Explicitly exit with the default exit code (0 for success)
-});
