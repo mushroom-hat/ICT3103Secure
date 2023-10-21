@@ -33,7 +33,8 @@ pipeline {
 
         stage('Unit Test'){
             steps {
-                def containerName = 'charsity-backend-container-test'
+                script {
+                    def containerName = 'charsity-backend-container-test'
                     dir('backend') {
                         // Use withCredentials to set environment variables
                         withCredentials([
@@ -55,6 +56,7 @@ pipeline {
                         sh "docker rm ${containerName} || true"
 
                     }
+                }
             }
         }
 
