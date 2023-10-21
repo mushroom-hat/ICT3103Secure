@@ -47,7 +47,10 @@ pipeline {
                             string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
                             string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
                         ]) {
-
+                            // Stop and remove the test container  
+                            sh "docker stop ${containerName} || true"
+                            sh "docker rm ${containerName} || true"
+                          
                             // Start the container for running tests
                             sh 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" -e ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" -e DATABASE_URI="$DATABASE_URI" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test'
 
@@ -60,11 +63,6 @@ pipeline {
                                 currentBuild.result = 'FAILURE'
                                 error("Unit tests failed. See the build logs for details.")
                             }
-
-                            // Stop and remove the test container  
-                            sh "docker stop ${containerName} || true"
-                            sh "docker rm ${containerName} || true"
-                          
                         }
                     }
                 }
