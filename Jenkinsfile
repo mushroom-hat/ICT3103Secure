@@ -8,7 +8,8 @@ pipeline {
                     sh 'docker build -t charsity-frontend .'
                 }
                 dir('backend') {
-                    sh 'docker build -t charsity-backend .'
+                    sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .' // Build the test image
+                    sh 'docker build -t charsity-backend --target prod .'
                 }
             }
         }
@@ -31,10 +32,12 @@ pipeline {
         //     }
         // }
 
-        stage('Unit Test'){
+        stage('Backend Unit Test') {
             steps {
                 script {
                     def containerName = 'charsity-backend-container-test'
+                    def testExitCode
+
                     dir('backend') {
                         // Use withCredentials to set environment variables
                         withCredentials([
@@ -43,18 +46,19 @@ pipeline {
                             string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
                             string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
                         ]) {
-
-                            // Start the new container
-                            sh 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e DATABASE_URI="$DATABASE_URI" -e NODE_ENV="$NODE_ENV" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend'
+                            // Start the new container for running tests
+                            testExitCode = sh(script: 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e DATABASE_URI="$DATABASE_URI" -e NODE_ENV="$NODE_ENV" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test', returnStatus: true)
                         }
 
-                        // Run unit tests
-                        sh 'docker exec ' + containerName + ' npm run test'
+                        // If the test container fails (non-zero exit code), mark the build as failed and stop the pipeline
+                        if (testExitCode != 0) {
+                            currentBuild.result = 'FAILURE'
+                            error("Unit tests failed. See the build logs for details.")
+                        }
 
                         // Stop and remove the existing container if it exists
                         sh "docker stop ${containerName} || true"
                         sh "docker rm ${containerName} || true"
-
                     }
                 }
             }
