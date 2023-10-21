@@ -47,7 +47,7 @@ pipeline {
                             string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
                             string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
                         ]) {
-                            // Stop and remove the test container  
+                            // Stop and remove any pre-existing test container  
                             sh "docker stop ${containerName} || true"
                             sh "docker rm ${containerName} || true"
                           
@@ -63,6 +63,10 @@ pipeline {
                                 currentBuild.result = 'FAILURE'
                                 error("Unit tests failed. See the build logs for details.")
                             }
+
+                            // Stop and remove any newly generated test container  
+                            sh "docker stop ${containerName} || true"
+                            sh "docker rm ${containerName} || true"
 
                         }
                     }
