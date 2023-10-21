@@ -35,7 +35,6 @@ pipeline {
                 script {
                     // Define the name for the test container
                     def containerName = 'backend-test-container'
-                    def testExitCode
 
                     dir('backend'){
                         // Use withCredentials to set environment variables
@@ -50,8 +49,8 @@ pipeline {
                             sh 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e DATABASE_URI="$DATABASE_URI" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test'
 
                             // Wait for the container to start and capture the exit code
-                            testExitCode = sh(script: "docker wait ${containerName}", returnStatus: true)
-                            sh 'echo "Backend test container exited with code ${testExitCode}"'
+                            def testExitCode = sh(script: "docker wait ${containerName}", returnStatus: true)
+                            
                             // If the test container fails (non-zero exit code), mark the build as failed
                             if (testExitCode != 0) {
                                 currentBuild.result = 'FAILURE'
