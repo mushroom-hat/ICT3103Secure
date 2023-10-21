@@ -10,7 +10,7 @@ pipeline {
                 dir('backend') {
                     
                     // Build the Docker image for testing 
-                    sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
+                    sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target dev .'
                     // Build the Docker image for production 
                     sh 'docker build -t charsity-backend --target prod .'
                 }
@@ -51,15 +51,21 @@ pipeline {
                             sh "docker stop ${containerName} || true"
                             sh "docker rm ${containerName} || true"
                           
-                            // run npm test in container and capture the exit code
-                            def testExitCode = sh(script: "docker run -d --name ${containerName} --network charsitynetwork -u root -e REFRESH_TOKEN_SECRET='$REFRESH_TOKEN_SECRET' -e ACCESS_TOKEN_SECRET='$ACCESS_TOKEN_SECRET' -e DATABASE_URI='$DATABASE_URI' -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test npm test", returnStatus: true)
-                    
+                            // Start the container for running tests
+                            def command = 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" -e ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" -e DATABASE_URI="$DATABASE_URI" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test'
+
+                            def exitCode = sh(script: command, returnStatus: true)
+
+                            // Now, 'exitCode' contains the exit code of the executed command
+                            echo "Exit code: ${exitCode}"
+                                                
                             echo "Test exit code: ${testExitCode}"
                             // If the test container fails (non-zero exit code), mark the build as failed
                             if (testExitCode != 0) {
                                 currentBuild.result = 'FAILURE'
                                 error("Unit tests failed. See the build logs for details.")
                             }
+
                         }
                     }
                 }
