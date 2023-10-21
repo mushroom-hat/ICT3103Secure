@@ -1,33 +1,13 @@
-def commonEnvironment = [
-    string(credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'),
-    string(credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'),
-    string(credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET'),
-]
-
-def cleanAndStartBackendContainer(containerName, imageName) {
-    stopAndRemoveContainer(${containerName})
-
-    withCredentials(commonEnvironment) {
-        // Start the container for running tests
-        sh """
-            docker run -d --name ${containerName} --network charsitynetwork -u root \
-            -e REFRESH_TOKEN_SECRET="\${REFRESH_TOKEN_SECRET}" \
-            -e ACCESS_TOKEN_SECRET="\${ACCESS_TOKEN_SECRET}" \
-            -e DATABASE_URI="\${DATABASE_URI}" \
-            -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
-            -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ${imageName}
-        """
-        }
-}
-
-def stopAndRemoveContainer(containerName) {
-    sh "docker stop ${containerName} || true"
-    sh "docker rm -f ${containerName}"
-}
-
-
 pipeline {
     agent any
+
+    environment {
+        commonEnvironment = [
+            [$class: 'StringBinding', credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'],
+            [$class: 'StringBinding', credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'],
+            [$class: 'StringBinding', credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET']
+        ]
+    }
 
     stages {
         stage('Build') {
@@ -36,42 +16,26 @@ pipeline {
                     sh 'docker build -t charsity-frontend .'
                 }
                 dir('backend') {
-                    
-                    // Build the Docker image for testing 
-                    sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
-                    // Build the Docker image for production 
-                    sh 'docker build -t charsity-backend --target prod .'
+                    script {
+                        // Build the Docker image for testing
+                        sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
+                        // Build the Docker image for production
+                        sh 'docker build -t charsity-backend --target prod .'
+                    }
                 }
             }
         }
 
-
-        // stage('Scan Docker Images for Vulnerabilities') {
-        //     steps {
-        //         script {
-        //             // Create a directory to store scan results
-        //             sh "mkdir -p /trivy-scan-results"
-        //             sh "chmod 777 /trivy-scan-results"
-
-        //             // Scan the frontend Docker image and save results in the Jenkins workspace
-        //             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/frontend-dependency-scan.json charsity-frontend"
-
-        //             // Scan the backend Docker image and save results in the Jenkins workspace
-        //             sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image -o /trivy-scan-results/backend-dependency-scan.json charsity-backend"
-
-        //         }
-        //     }
-        // }
-
         stage('Unit Test Backend') {
             steps {
                 script {
+                    def containerName = 'backend-test-container'
+                    def testExitCode
                     dir('backend') {
-                        def containerName = 'backend-test-container'
                         cleanAndStartBackendContainer(containerName, 'charsity-backend-test')
 
                         // run test on container, exit with status code
-                        def testExitCode = sh(script: "docker exec ${containerName} npm test", returnStatus: true)
+                        testExitCode = sh(script: "docker exec ${containerName} npm test", returnStatus: true)
                         echo "Test exit code: ${testExitCode}"
                         if (testExitCode != 0) {
                             currentBuild.result = 'FAILURE'
@@ -79,25 +43,21 @@ pipeline {
                         }
 
                         stopAndRemoveContainer(containerName)
-                        }
                     }
                 }
             }
         }
 
-
         stage('Deploy Backend') {
             steps {
                 script {
+                    def containerName = 'charsity-backend-container'
                     dir('backend') {
-                        def containerName = 'charsity-backend-container'
                         cleanAndStartBackendContainer(containerName, 'charsity-backend')
                     }
                 }
             }
         }
-    
-
 
         stage('Deploy Frontend') {
             steps {
@@ -112,7 +72,6 @@ pipeline {
 
                         // Start the new container, and specify production environment
                         sh "docker run -d --name ${containerName} --network charsitynetwork --env-file .env.production -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
-
                     }
                 }
             }
@@ -132,7 +91,7 @@ pipeline {
                         echo "No dangling images to remove."
                     }
 
-                     // Remove all exited containers
+                    // Remove all exited containers
                     def exitedContainers = sh(script: 'docker ps -q -a -f "status=exited"', returnStdout: true).trim()
                     if (exitedContainers) {
                         def containerIds = exitedContainers.tokenize("\n")
@@ -146,3 +105,25 @@ pipeline {
             }
         }
     }
+}
+
+def cleanAndStartBackendContainer(containerName, imageName) {
+    stopAndRemoveContainer(containerName)
+
+    withCredentials(commonEnvironment) {
+        // Start the container for running tests
+        sh """
+            docker run -d --name ${containerName} --network charsitynetwork -u root \
+            -e REFRESH_TOKEN_SECRET="\${REFRESH_TOKEN_SECRET}" \
+            -e ACCESS_TOKEN_SECRET="\${ACCESS_TOKEN_SECRET}" \
+            -e DATABASE_URI="\${DATABASE_URI}" \
+            -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
+            -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ${imageName}
+        """
+    }
+}
+
+def stopAndRemoveContainer(containerName) {
+    sh "docker stop ${containerName} || true"
+    sh "docker rm -f ${containerName}"
+}
