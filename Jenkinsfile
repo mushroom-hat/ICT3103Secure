@@ -46,7 +46,7 @@ pipeline {
                             sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
 
                             // Start the container for running tests
-                            sh 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e DATABASE_URI="$DATABASE_URI" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test'
+                            sh "docker run -d --name $containerName --network charsitynetwork -u root -e DATABASE_URI=\"$DATABASE_URI\" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test"
 
                             // run npm test in container and capture the exit code
                             def testExitCode
