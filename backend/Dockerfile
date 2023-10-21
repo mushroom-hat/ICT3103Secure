@@ -27,3 +27,4 @@ CMD ["npm", "start"]
 FROM base as test
 ENV NODE_ENV=test
 COPY . .
+CMD ["npm", "test"]
