@@ -51,7 +51,7 @@ pipeline {
                             // Wait for the container to start and capture the exit code
                             def testExitCode
                             try {
-                                testExitCode = sh(script: "docker wait ${containerName}", returnStatus: true)
+                                testExitCode = sh(script: "docker wait ${containerName}", returnStdout: true)
                             } finally {
                                 // Stop and remove the test container
                                 sh "docker stop ${containerName} || true"
