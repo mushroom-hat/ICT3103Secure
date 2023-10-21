@@ -46,24 +46,22 @@ pipeline {
                             sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
 
                             // Start the container for running tests
-                            sh 'docker run -d --name ' + containerName + ' --network charsitynetwork -u root -e DATABASE_URI="$DATABASE_URI" -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test'
-
-                            // Wait for the container to start and capture the exit code
-                            def testExitCode
-                            try {
-                                testExitCode = sh(script: "docker wait ${containerName}", returnStdout: true)
-                            } finally {
-                                // Stop and remove the test container
-                                sh "docker stop ${containerName} || true"
-                                sh "docker rm ${containerName} || true"
-                            }
-
+                            def testExitCode = sh(
+                            script: "docker run -d --name ${containerName} --network charsitynetwork -u root -e DATABASE_URI='${DATABASE_URI}' -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v \$HOME:/home -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 charsity-backend-test",
+                            returnStatus: true
+                            )
+                                                        
                             echo "Test exit code: ${testExitCode}"
                             // If the test container fails (non-zero exit code), mark the build as failed
                             if (testExitCode != 0) {
                                 currentBuild.result = 'FAILURE'
                                 error("Unit tests failed. See the build logs for details.")
                             }
+                           
+                            // Stop and remove the test container
+                            sh "docker stop ${containerName} || true"
+                            sh "docker rm ${containerName} || true"
+                           
                         }
                     }
                 }
