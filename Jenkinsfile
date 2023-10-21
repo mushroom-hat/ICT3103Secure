@@ -51,7 +51,7 @@ pipeline {
 
                             // Wait for the container to start and capture the exit code
                             testExitCode = sh(script: "docker wait ${containerName}", returnStatus: true)
-
+                            sh 'echo "Backend test container exited with code ${testExitCode}"'
                             // If the test container fails (non-zero exit code), mark the build as failed
                             if (testExitCode != 0) {
                                 currentBuild.result = 'FAILURE'
