@@ -10,7 +10,7 @@ pipeline {
                 dir('backend') {
                     
                     // Build the Docker image for testing 
-                    sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target dev .'
+                    sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
                     // Build the Docker image for production 
                     sh 'docker build -t charsity-backend --target prod .'
                 }
