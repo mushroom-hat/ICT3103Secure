@@ -36,8 +36,7 @@ pipeline {
             steps {
                 script {
                     def containerName = 'charsity-backend-container-test'
-                    def testExitCode
-
+                    sh "chmod 777 /var/jenkins_home"
                     dir('backend') {
                         // Use withCredentials to set environment variables
                         withCredentials([
