@@ -14,6 +14,10 @@ import EditUser from './features/users/EditUser'
 import Prefetch from './features/auth/Prefetch'
 import PersistLogin from './features/auth/PersistLogin'
 import RequireAuth from './features/auth/RequireAuth'
+import Spending from './features/spendings/Spending';
+import SpendingsList from './features/spendings/SpendingsList';
+import NewSpendingForm from './features/spendings/NewSpendingForm';
+
 import { ROLES } from './config/roles'
 
 function App() { 
@@ -31,7 +35,12 @@ function App() {
           <Route element={<Prefetch />}>
             <Route path="dash" element={<DashLayout />}>
               <Route index element={<Welcome />} />
-
+              <Route path="spending">
+                  <Route index element={<SpendingsList />} />
+                  <Route path="new" element={<NewSpendingForm />} />
+                  {/*<Route path=":id" element={<EditUser />} />
+                  <Route path="new" element={<NewUserForm />} />*/}
+              </Route>  
               <Route element = {<RequireAuth allowedRoles={ROLES.Admin} />}>
                 <Route path="users">
                   <Route index element={<UsersList />} />
