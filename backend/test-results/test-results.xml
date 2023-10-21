@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.661" tests="4" failures="0">
+  <testsuite name="Root Suite" timestamp="2023-10-21T09:47:53" tests="0" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Authentication" timestamp="2023-10-21T09:47:53" tests="0" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Test Authentication Middleware" timestamp="2023-10-21T09:47:53" tests="3" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
+    <testcase name="Authentication Test Authentication Middleware It should return a 401 Unauthorized for requests without a token" time="0.020" classname="It should return a 401 Unauthorized for requests without a token">
+    </testcase>
+    <testcase name="Authentication Test Authentication Middleware It should allow access to protected routes with a valid token" time="0.558" classname="It should allow access to protected routes with a valid token">
+    </testcase>
+    <testcase name="Authentication Test Authentication Middleware It should return a 403 Forbidden for requests with an invalid token" time="0.004" classname="It should return a 403 Forbidden for requests with an invalid token">
+    </testcase>
+  </testsuite>
+  <testsuite name="Get Users" timestamp="2023-10-21T09:47:54" tests="0" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Test GET route /users" timestamp="2023-10-21T09:47:54" tests="1" file="C:\Users\tayzh\Documents\SIT\Year 3 Trimester 1\ICT3203 Secure Software Development\Projects\ICT3103Secure\backend\test\auth.test.js" time="0.042" failures="0">
+    <testcase name="Authentication Test Authentication Middleware Get Users Test GET route /users It should return all Users" time="0.041" classname="It should return all Users">
+    </testcase>
+  </testsuite>
+</testsuites>
