@@ -59,9 +59,7 @@ pipeline {
                                 currentBuild.result = 'FAILURE'
                                 error("Unit tests failed. See the build logs for details.")
                             }
-                            // Stop and remove the test container
-                                sh "docker stop ${containerName} || true"
-                                sh "docker rm ${containerName} || true"
+                          
                         }
                     }
                 }
