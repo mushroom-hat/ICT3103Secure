@@ -51,7 +51,7 @@ pipeline {
                             // run npm test in container and capture the exit code
                             def testExitCode
                             try {
-                                testExitCode = sh(script: "docker exec ${containerName} npm test; echo $?", returnStatus: true)
+                                testExitCode = sh(script: "docker exec ${containerName} npm test", returnStatus: true)
                             } finally {
                                 // Stop and remove the test container
                                 sh "docker stop ${containerName} || true"
