@@ -23,3 +23,8 @@ ENV NODE_ENV=production
 COPY . .
 CMD ["npm", "start"]
 
+
+# Stage 3: Test
+FROM base as test
+ENV NODE_ENV=test
+COPY . .
