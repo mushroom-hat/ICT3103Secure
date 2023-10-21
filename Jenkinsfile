@@ -2,11 +2,9 @@ pipeline {
     agent any
 
     environment {
-        commonEnvironment = [
-            [$class: 'StringBinding', credentialsId: 'DATABASE_URI', variable: 'DATABASE_URI'],
-            [$class: 'StringBinding', credentialsId: 'ACCESS_TOKEN_SECRET', variable: 'ACCESS_TOKEN_SECRET'],
-            [$class: 'StringBinding', credentialsId: 'REFRESH_TOKEN_SECRET', variable: 'REFRESH_TOKEN_SECRET']
-        ]
+        DATABASE_URI = credentials('DATABASE_URI')
+        ACCESS_TOKEN_SECRET = credentials('ACCESS_TOKEN_SECRET')
+        REFRESH_TOKEN_SECRET = credentials('REFRESH_TOKEN_SECRET')
     }
 
     stages {
@@ -63,13 +61,10 @@ pipeline {
             steps {
                 script {
                     def containerName = 'charsity-frontend-container'
-                    def backendContainerName = 'charsity-backend-container'
-                    def backendAPI = 'api.wazpplabs.com'
                     dir('frontend') {
                         // Stop and remove the existing container if it exists
-                        sh "docker stop ${containerName} || true"
-                        sh "docker rm ${containerName} || true"
-
+                        stopAndRemoveContainer(containerName)
+                        
                         // Start the new container, and specify production environment
                         sh "docker run -d --name ${containerName} --network charsitynetwork --env-file .env.production -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 charsity-frontend"
                     }
@@ -107,20 +102,18 @@ pipeline {
     }
 }
 
+
 def cleanAndStartBackendContainer(containerName, imageName) {
     stopAndRemoveContainer(containerName)
 
-    withCredentials(commonEnvironment) {
-        // Start the container for running tests
-        sh """
-            docker run -d --name ${containerName} --network charsitynetwork -u root \
-            -e REFRESH_TOKEN_SECRET="\${REFRESH_TOKEN_SECRET}" \
-            -e ACCESS_TOKEN_SECRET="\${ACCESS_TOKEN_SECRET}" \
-            -e DATABASE_URI="\${DATABASE_URI}" \
-            -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
-            -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ${imageName}
-        """
-    }
+    sh """
+        docker run -d --name ${containerName} --network charsitynetwork -u root \
+        -e REFRESH_TOKEN_SECRET="${env.REFRESH_TOKEN_SECRET}" \
+        -e ACCESS_TOKEN_SECRET="${env.ACCESS_TOKEN_SECRET}" \
+        -e DATABASE_URI="${env.DATABASE_URI}" \
+        -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
+        -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ${imageName}
+    """
 }
 
 def stopAndRemoveContainer(containerName) {
