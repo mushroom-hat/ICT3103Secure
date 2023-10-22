@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Donation = require('../models/Donation'); // Import the Donation model
+const Donation = require('../models/Donation');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 
@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 //@access Private
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-pwd').lean();
-    if (!users || users.length === 0) {npm 
+    if (!users || users.length === 0) {
         return res.status(404).json({ message: 'No users found' });
     }
     res.json(users);
