@@ -98,8 +98,37 @@ const logout = (req, res) => {
     res.json({ message: 'Cookie cleared' });
 };
 
+const signup = asyncHandler(async (req, res) => {
+    const { username, pwd, roles} = req.body;  // Only extract the username and pwd
+
+    if (!username || !pwd) { 
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    // Check if the user already exists
+    const userExists = await User.findOne({ username });
+    if (userExists) {
+        return res.status(400).json({ message: 'Username already taken' });
+    }
+
+    // Hash the password
+    const hashedPwd = await bcrypt.hash(pwd, 10);
+
+    // Create the new user with the roles attribute set to 'Donator'
+    const newUser = new User({
+        username,
+        pwd: hashedPwd,
+        roles  // Hard-code the roles attribute to 'Donator'
+    });
+
+    await newUser.save();
+
+    res.status(201).json({ message: 'User registered successfully' });
+});
+
 module.exports = {
     login,
     refresh,
-    logout
+    logout,
+    signup
 };

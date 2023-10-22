@@ -44,6 +44,19 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
+        // The new signup endpoint:
+        signup: builder.mutation({
+            query: userDetails => {
+                // Log the payload here
+                console.log("Sending to the server:", userDetails);
+                return {
+                    url: '/auth/signup',
+                    method: 'POST',
+                    body: { ...userDetails, roles: 'Donator' } // Setting roles to 'Donator'
+                };
+            }
+        }),
+        
     })
 })
 
@@ -51,4 +64,5 @@ export const {
     useLoginMutation,
     useSendLogoutMutation,
     useRefreshMutation,
-} = authApiSlice 
+    useSignupMutation // This is the new hook for signup
+} = authApiSlice;

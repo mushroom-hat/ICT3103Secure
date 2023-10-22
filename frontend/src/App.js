@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout' 
 import Public from './components/Public' 
 import Login from './features/auth/Login'; 
+import Signup from './features/auth/Signup'; 
 import DashLayout from './components/DashLayout' 
 import Welcome from './features/auth/Welcome' 
 import UsersList from './features/users/UsersList' 
@@ -30,7 +31,7 @@ function App() {
         <Route path="viewOrganizations" element={<ViewOrganizations />} /> 
         <Route path="writeArticle" element={<WriteArticle />} />
         <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
-        
+        <Route path="signup" element={<Signup />} />
         <Route element={<PersistLogin />}>
           <Route element={<Prefetch />}>
             <Route path="dash" element={<DashLayout />}>

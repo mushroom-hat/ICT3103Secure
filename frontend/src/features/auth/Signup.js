@@ -1,38 +1,34 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';  // Add useSelector
+
+import { useDispatch } from 'react-redux';
 import { setCredentials } from './authSlice';
-import { useLoginMutation } from './authApiSlice';
+import { useSignupMutation } from './authApiSlice';  // Assuming you created a signup mutation
 import usePersist from '../../hooks/usePersist';
 
-const Login = () => {
-    const userRef = useRef();
-    const errRef = useRef();
-    const [username, setUsername] = useState('');
-    const [pwd, setPwd] = useState('');
-    const [errMsg, setErrMsg] = useState('');
-    const [persist, setPersist] = usePersist();
-
+const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [login, { isLoading }] = useLoginMutation();
-    
-    const currentUsername = useSelector((state) => state.auth.username);  // Fetch the username from the state
+    const userRef = useRef();
+    const pwdRef = useRef();
+    const errRef = useRef();
+
+    const [username, setUsername] = useState('');
+    const [pwd, setPwd] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+
+    const [signup, { isLoading }] = useSignupMutation();
 
     useEffect(() => {
         userRef.current.focus();
     }, []);
 
-    useEffect(() => {
-        setErrMsg('');
-    }, [username, pwd]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { accessToken } = await login({ username, pwd }).unwrap();
-            dispatch(setCredentials({ accessToken, username }));
+            const { accessToken } = await signup({ username, pwd, roles: 'Donator' }).unwrap();
+            dispatch(setCredentials({ accessToken }));
             setUsername('');
             setPwd('');
             navigate('/dash');
@@ -40,32 +36,26 @@ const Login = () => {
             if (!err.status) {
                 setErrMsg('No Server Response');
             } else if (err.status === 400) {
-                setErrMsg('Missing Username or Password');
-            } else if (err.status === 401) {
-                setErrMsg('Unauthorized');
+                setErrMsg('Signup Failed');
             } else {
                 setErrMsg(err.data?.message);
             }
             errRef.current.focus();
         }
-    }
-
-    const handleUserInput = (e) => setUsername(e.target.value);
-    const handlePwdInput = (e) => setPwd(e.target.value);
-    const handleToggle = () => setPersist(prev => !prev);
+    };
 
     const errClass = errMsg ? "errmsg" : "offscreen";
 
     if (isLoading) return <p>Loading...</p>;
 
-    const content = (
+    return (
         <section className="public">
             <header>
-                <h1>Employee Login</h1>
-                {currentUsername && <p>Welcome, {currentUsername}!</p>}
+                <h1>Donator Signup</h1>
             </header>
-            <main className="login">
+            <main className="signup">
                 <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
+
                 <form className="form" onSubmit={handleSubmit}>
                     <label htmlFor="username">Username:</label>
                     <input
@@ -74,40 +64,30 @@ const Login = () => {
                         id="username"
                         ref={userRef}
                         value={username}
-                        onChange={handleUserInput}
-                        autoComplete="off"
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                     />
+
                     <label htmlFor="password">Password:</label>
                     <input
                         className="form__input"
                         type="password"
                         id="password"
+                        ref={pwdRef}
                         value={pwd}
-                        onChange={handlePwdInput}
+                        onChange={(e) => setPwd(e.target.value)}
                         required
                     />
-                    <button className="form__submit-button">Sign In</button>
-                    <label htmlFor="persist" className="form__persist">
-                        <input
-                            type="checkbox"
-                            className="form__checkbox"
-                            id="persist"
-                            checked={persist}
-                            onChange={handleToggle}
-                        />
-                        Trust This Device
-                    </label>
+
+                    <button className="form__submit-button">Sign Up</button>
                 </form>
             </main>
             <footer>
                 <Link to="/">Back to Home</Link>
-                <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
+                <p>Already have an account? <Link to="/login">Login</Link></p>
             </footer>
         </section>
     );
-
-    return content;
 }
 
-export default Login;
+export default Signup;

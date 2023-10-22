@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Donation = require('../models/Donation'); // Import the Donation model
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
+const Article = require('../models/Article');
 
 //@desc Get all users
 //@route GET /users
