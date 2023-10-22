@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAddNewUserMutation } from "./usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { ROLES } from "../../config/roles";
+import useAuth from '../hooks/useAuth'; // Adjust the relative path as needed
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
@@ -23,6 +24,13 @@ const NewUserForm = () => {
   const [pwd, setPwd] = useState('');
   const [validPwd, setValidPwd] = useState(false);
   const [roles, setRoles] = useState("Donator"); // Updated to a single string
+  const [accessToken, setAccessToken] = useState(null); // State for storing the access token
+
+  // Use the useEffect hook to retrieve the access token when the component mounts
+  useEffect(() => {
+    const { accessToken } = useAuth();
+    setAccessToken(accessToken);
+  }, []); // The empty dependency array ensures this effect runs once
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username));
@@ -52,10 +60,18 @@ const NewUserForm = () => {
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
-    if (canSave) {
-      await addNewUser({ username, pwd, roles });
+    if (canSave && accessToken) { // Ensure accessToken is available
+      const headers = {
+        Authorization: `Bearer ${accessToken}`
+      };
+  
+      try {
+        await addNewUser({ username, pwd, roles }, { headers });
+      } catch (error) {
+        // Handle any errors that occur during the API request
+      }
     }
-  };
+  }  
 
   const options = Object.values(ROLES).map((role) => {
     return (
