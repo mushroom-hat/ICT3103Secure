@@ -1,6 +1,7 @@
 
 require('dotenv').config();
 const express = require('express')
+const helmet = require('helmet')
 const app = express()
 const path = require('path')
 const { logger } = require('./middleware/logger') // Correct the path and use double quotes
@@ -18,6 +19,19 @@ console.log(process.env.NODE_ENV)
 
 connectDB()
 app.use(logger)
+// Use Helmet middleware
+app.use(
+  helmet({
+    xPermittedCrossDomainPolicies: false,
+    xDnsPrefetchControl: false,
+    xDownloadOptions: false,
+    contentSecurityPolicy: {
+      directives: {
+        "script-src": ["'self'", "wazzpplabs.com"],
+      },
+    },
+  })
+);
 app.use(credentials)
 app.use(cors(corsOptions))
 app.use(express.json())
