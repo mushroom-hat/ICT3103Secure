@@ -27,6 +27,10 @@ pipeline {
         stage('Scan Docker Images for Vulnerabilities') {
             steps {
                 script {
+                    // Stop and remove containers to save space
+                    stopAndRemoveContainer('charsity-frontend-container')
+                    stopAndRemoveContainer('charsity-backend-container')
+
                     // Create a directory to store scan results
                     sh "mkdir -p /trivy-scan-results"
                     sh "chmod 777 /trivy-scan-results"
