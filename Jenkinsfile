@@ -127,18 +127,18 @@ pipeline {
 def cleanAndStartBackendContainer(containerName, imageName) {
     stopAndRemoveContainer(containerName)
 
-    sh '''
+    sh '
     docker run -d --name ${containerName} --network charsitynetwork -u root \
     -e REFRESH_TOKEN_SECRET="${env.REFRESH_TOKEN_SECRET}" \
     -e ACCESS_TOKEN_SECRET="${env.ACCESS_TOKEN_SECRET}" \
     -e DATABASE_URI="${env.DATABASE_URI}" \
     -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
     -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ${imageName}
-    '''
+    '
 
 }
 
 def stopAndRemoveContainer(containerName) {
     sh "docker stop ${containerName} || true"
-    sh "docker rm -f ${containerName}"
+    sh "docker rm -f ${containerName}" 
 }
