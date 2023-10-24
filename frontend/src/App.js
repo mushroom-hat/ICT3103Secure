@@ -21,6 +21,11 @@ import NewSpendingForm from './features/spendings/NewSpendingForm';
 
 import { ROLES } from './config/roles'
 
+import ScrollToTop from "./components/ScrollToTop";
+import "./style.css";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() { 
   return ( 
     <Routes> 
