@@ -6,8 +6,26 @@ pipeline {
         ACCESS_TOKEN_SECRET = credentials('ACCESS_TOKEN_SECRET')
         REFRESH_TOKEN_SECRET = credentials('REFRESH_TOKEN_SECRET')
     }
-
+    properties([
+            parameters([
+                string(name: 'SONAR_PROJECT_KEY', defaultValue: 'ICT3103Secure', description: 'SonarCloud Project Key'),
+                string(name: 'SONAR_ORGANIZATION', defaultValue: 'Charsity', description: 'SonarCloud Organization Key')
+            ])
+        ])
     stages {
+        stage('SonarCloud Code Scan') {
+            steps {
+                script {
+                    def projectKey = env.SONAR_PROJECT_KEY
+                    def organization = env.SONAR_ORGANIZATION
+
+                    withSonarQubeEnv('SonarCloud') {
+                        sh "sonar-scanner -Dsonar.projectKey=${projectKey} -Dsonar.organization=${organization}"
+                    }
+                }
+            }
+        }
+            
         stage('Build') {
             steps {
                 dir('frontend') {
@@ -36,10 +54,10 @@ pipeline {
         //             sh "chmod 777 /trivy-scan-results"
 
         //             // Scan the frontend Docker image and save results in the Jenkins workspace
-        //             sh "docker run -m 2g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/frontend-dependency-scan.json charsity-frontend"
+        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/frontend-dependency-scan.json charsity-frontend"
 
         //             // Scan the backend Docker image and save results in the Jenkins workspace
-        //             sh "docker run -m 2g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/backend-dependency-scan.json charsity-backend"
+        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/backend-dependency-scan.json charsity-backend"
 
         //         }
         //     }
@@ -49,9 +67,10 @@ pipeline {
             steps {
                 script {
                     def containerName = 'backend-test-container'
+                    def imageName = 'charsity-backend-test'
                     def testExitCode
                     dir('backend') {
-                        cleanAndStartBackendContainer(containerName, 'charsity-backend-test')
+                        cleanAndStartBackendContainer(containerName, imageName)
 
                         // run test on container, exit with status code
                         testExitCode = sh(script: "docker exec ${containerName} npm test", returnStatus: true)
@@ -71,8 +90,9 @@ pipeline {
             steps {
                 script {
                     def containerName = 'charsity-backend-container'
+                    def imageName = 'charsity-backend'
                     dir('backend') {
-                        cleanAndStartBackendContainer(containerName, 'charsity-backend')
+                        cleanAndStartBackendContainer(containerName, imageName)
                     }
                 }
             }
