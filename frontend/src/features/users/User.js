@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
 import { selectUserById } from './usersApiSlice'
+import useAuth from '../../hooks/useAuth'
 
 const User = ({ userId }) => {
     const user = useSelector(state => selectUserById(state, userId));
-    const currentUserRole = useSelector(state => selectCurrentUserRole(state));
+    const {currentUserRole} = useAuth()
 
     const navigate = useNavigate();
 

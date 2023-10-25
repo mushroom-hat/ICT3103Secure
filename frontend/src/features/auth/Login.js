@@ -10,7 +10,13 @@ import Particle from "../../components/Particle";
 import Navbar from "../../components/Navbar";
 import Card from "react-bootstrap/Card";
 import FormControl from "react-bootstrap/FormControl";
+<<<<<<< Updated upstream
 
+=======
+import FormCheck from "react-bootstrap/FormCheck";
+import { current } from '@reduxjs/toolkit';
+import useAuth from '../../hooks/usePersist';
+>>>>>>> Stashed changes
 const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
@@ -24,8 +30,6 @@ const Login = () => {
     const dispatch = useDispatch();
 
     const [login, { isLoading }] = useLoginMutation();
-    
-    const currentUsername = useSelector((state) => state.auth.username);  // Fetch the username from the state
 
     useEffect(() => {
         userRef.current.focus();
