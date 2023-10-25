@@ -6,12 +6,12 @@ pipeline {
         ACCESS_TOKEN_SECRET = credentials('ACCESS_TOKEN_SECRET')
         REFRESH_TOKEN_SECRET = credentials('REFRESH_TOKEN_SECRET')
     }
-    properties([
-            parameters([
-                string(name: 'SONAR_PROJECT_KEY', defaultValue: 'ICT3103Secure', description: 'SonarCloud Project Key'),
-                string(name: 'SONAR_ORGANIZATION', defaultValue: 'Charsity', description: 'SonarCloud Organization Key')
-            ])
+    options([
+        parameters([
+            string(name: 'SONAR_PROJECT_KEY', defaultValue: 'ICT3103Secure', description: 'SonarCloud Project Key'),
+            string(name: 'SONAR_ORGANIZATION', defaultValue: 'Charsity', description: 'SonarCloud Organization Key')
         ])
+    ])
     stages {
         stage('SonarCloud Code Scan') {
             steps {
