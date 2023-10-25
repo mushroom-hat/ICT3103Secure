@@ -59,41 +59,19 @@ function NavBar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/viewOrganizations"
+                to="/profile"
                 onClick={() => updateExpanded(false)}
               >
-                <AiOutlineFundProjectionScreen
-                  style={{ marginBottom: "2px" }}
-                />{" "}
-                Organizations
+                <AiOutlineUser style={{ marginBottom: "2px" }} /> Profile
               </Nav.Link>
             </Nav.Item>
 
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/writeArticle"
-                onClick={() => updateExpanded(false)}
+                to="/"
               >
-                <CgFileDocument style={{ marginBottom: "2px" }} /> Article
-              </Nav.Link>
-            </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                href=""
-                rel="noreferrer"
-              >
-                <ImBlog style={{ marginBottom: "2px" }} /> Cashflow
-              </Nav.Link>
-            </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/login"
-              >
-                <FaSignInAlt style={{ marginBottom: "2px" }} /> Login
+                <FaSignInAlt style={{ marginBottom: "2px" }} /> Logout
               </Nav.Link>
             </Nav.Item>
 
