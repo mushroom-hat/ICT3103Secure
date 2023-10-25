@@ -16,7 +16,7 @@ pipeline {
                     echo "MY_PROPERTY: $projectKey"
 
                     withEnv(["PATH+SONAR=${scannerHome}/bin"]) {
-                        sh 'sonar-scanner -Dsonar.projectKey=${projectKey} -Dsonar.organization=${organization}'
+                        sh 'sonar-scanner -Dsonar.projectKey=ICT3103Secure -Dsonar.organization=Charsity'
                     }   
                 }
             }
