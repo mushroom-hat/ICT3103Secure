@@ -27,7 +27,8 @@ const login = asyncHandler(async (req, res) => {
         {
             "UserInfo": {
                 "username": foundUser.username,
-                "roles": foundUser.roles
+                "roles": foundUser.roles,
+                "id":foundUser._id
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -76,7 +77,8 @@ const refresh = (req, res) => {
                 {
                     "UserInfo": {
                         "username": foundUser.username,
-                        "roles": foundUser.roles
+                        "roles": foundUser.roles,
+                        "id": foundUser._id
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -101,7 +103,7 @@ const logout = (req, res) => {
 const signup = asyncHandler(async (req, res) => {
     const { username, pwd, roles} = req.body;  // Only extract the username and pwd
 
-    if (!username || !pwd) { 
+    if (!username || !pwd ) { 
         return res.status(400).json({ message: 'All fields are required' });
     }
 

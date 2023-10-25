@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Card = require('./Card');
 const userSchema = new mongoose.Schema({
   username: {
     type: String,

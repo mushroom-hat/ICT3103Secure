@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const Donation = require('../models/Donation'); // Import the Donation model
+const Card = require('../models/Card'); // Import the Card model if needed
+
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const Article = require('../models/Article');
@@ -49,8 +51,11 @@ const createNewUsers = asyncHandler(async (req, res) => {
 //@desc Update a user
 //@route PUT /users/:id
 //@access Private
+//@desc Update a user
+//@route PUT /users/:id
+//@access Private
 const updateUser = asyncHandler(async (req, res) => {
-    const { _id, username, pwd, roles } = req.body;
+    const { _id, username, pwd, roles, card } = req.body; // Include 'card' in the destructuring
 
     // Check if the user exists to update based on the _id
     const user = await User.findById(_id).exec();
@@ -75,7 +80,7 @@ const updateUser = asyncHandler(async (req, res) => {
         user.roles = roles;
     }
     if (card) {
-        user.card = card;
+        user.card = card; // Update the 'card' field
     }
     
     if (pwd) {
@@ -83,15 +88,13 @@ const updateUser = asyncHandler(async (req, res) => {
         user.pwd = await bcrypt.hash(pwd, 10); // salt rounds
     }
 
-    if (donation) {
-        // Update donation reference
-        user.donation = donation;
-    }
+    // Handle the 'donation' field if needed (similar to 'card')
 
     const updatedUser = await user.save();
 
     res.json({ message: `${updatedUser.username} updated` });
 });
+
 
 //@desc Delete a user
 //@route DELETE /users/:id
