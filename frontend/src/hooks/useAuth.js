@@ -6,10 +6,13 @@ const useAuth = () => {
     const token = useSelector(selectCurrentToken);
     let username = '';
     let roles = '';
+    let id = '';
 
     if (token) {
         const decoded = jwtDecode(token);
-        const { username: decodedUsername, roles: decodedRoles } = decoded.UserInfo;
+        const { id: decodedId, username: decodedUsername, roles: decodedRoles } = decoded.UserInfo;
+
+        id = decodedId;
 
         // Assuming the user has only one role, you can modify this part for multiple roles
         if (decodedRoles) {
@@ -19,7 +22,7 @@ const useAuth = () => {
         username = decodedUsername;
     }
 
-    return { username, roles };
+    return { id, username, roles };
 };
 
 export default useAuth;

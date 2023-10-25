@@ -18,6 +18,7 @@ import RequireAuth from './features/auth/RequireAuth'
 import Spending from './features/spendings/Spending';
 import SpendingsList from './features/spendings/SpendingsList';
 import NewSpendingForm from './features/spendings/NewSpendingForm';
+import NewDonationForm from './features/donations/NewDonationForm'
 
 import { ROLES } from './config/roles'
 
@@ -52,6 +53,9 @@ function App() {
                   <Route index element={<UsersList />} />
                   <Route path=":id" element={<EditUser />} />
                   <Route path="new" element={<NewUserForm />} />
+                </Route>
+                <Route path="donations">
+                  <Route path="new" element={<NewDonationForm />} />
                 </Route>
               </Route>
 
