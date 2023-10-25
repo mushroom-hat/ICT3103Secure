@@ -11,14 +11,13 @@ pipeline {
         stage('SonarCloud Code Scan') {
             steps {
                 script {
-                    def projectKey = env.SONAR_PROJECT_KEY
-                    def organization = env.SONAR_ORGANIZATION
-                    echo "MY_PROPERTY: $projectKey"
-
-                    withEnv(["PATH+SONAR=${scannerHome}/bin"]) {
-                        sh 'sonar-scanner -Dsonar.projectKey=ICT3103Secure -Dsonar.organization=Charsity'
-                    }   
+                withSonarQubeEnv('SonarCloud') {
+                def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                withEnv(["PATH+SONAR=${scannerHome}/bin"]) {
+                    sh 'sonar-scanner -Dsonar.projectKey=ICT3103Secure -Dsonar.organization=Charsity'
                 }
+            }
+        }
             }
         }
 
