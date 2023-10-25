@@ -82,11 +82,10 @@ async function startServer() {
 }
 
 startServer()
-        // Upload logs once then upload it once daily to S3
-        const {job} = require('./helper/dailyUploadLogs')
-        
-        if (process.env.NODE_ENV === 'production'){
-            job()
-        }
-  
-        
+// Upload logs once then upload it once daily to S3
+const {job} = require('./helper/dailyUploadLogs')
+
+if (process.env.NODE_ENV === 'production'){
+    job()
+}
+

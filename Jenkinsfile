@@ -134,6 +134,9 @@ pipeline {
                     } else {
                         echo "No exited containers to remove."
                     }
+                    
+                    // Remove unused volumes
+                    sh "docker system prune -f"
                 }
             }
         }
