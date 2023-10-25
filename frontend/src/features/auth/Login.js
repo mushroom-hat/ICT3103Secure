@@ -28,9 +28,7 @@ const Login = () => {
     const dispatch = useDispatch();
 
     const [login, { isLoading }] = useLoginMutation();
-    
-    const { isManager, isAdmin } = useAuth()    
-    console.log("roles", roles)
+
     useEffect(() => {
         userRef.current.focus();
     }, []);
