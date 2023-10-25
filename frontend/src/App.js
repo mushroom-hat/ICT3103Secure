@@ -27,6 +27,9 @@ import "./style.css";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import CardList from './features/cards/CardList';
+import EditCard from './features/cards/EditCard';
+import EditCardForm from './features/cards/EditCardForm';
 function App() { 
   return ( 
     <Routes> 
@@ -39,16 +42,24 @@ function App() {
         <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
         <Route path="signup" element={<Signup />} />
         <Route element={<PersistLogin />}>
-          <Route element={<Prefetch />}>
+        <Route element = {<RequireAuth allowedRoles={[ROLES.Donator,ROLES.Admin, ROLES.Organization]} />}>
             <Route path="dash" element={<DashLayout />}>
               <Route index element={<Welcome />} />
               <Route path="spending">
                   <Route index element={<SpendingsList />} />
                   <Route path="new" element={<NewSpendingForm />} />
-                  {/*<Route path=":id" element={<EditUser />} />
-                  <Route path="new" element={<NewUserForm />} />*/}
+              </Route>
+              <Route element = {<RequireAuth allowedRoles={[ROLES.Donator]} />}>
+                <Route path="card">
+                  <Route index element={<CardList />} />
+                  <Route path=":id" element={<EditCard />} />
+                  <Route path="new" element={<EditCardForm />} />
+                </Route>
+                <Route path="donations">
+                  <Route path="new" element={<NewDonationForm />} />
+                </Route>
               </Route>  
-              <Route element = {<RequireAuth allowedRoles={ROLES.Admin} />}>
+              <Route element = {<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                 <Route path="users">
                   <Route index element={<UsersList />} />
                   <Route path=":id" element={<EditUser />} />
@@ -60,7 +71,7 @@ function App() {
               </Route>
 
             </Route>{/* End Dash */}
-          </Route>
+        </Route>
         </Route>
  
       </Route> 
