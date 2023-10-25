@@ -55,10 +55,10 @@ const createNewUsers = asyncHandler(async (req, res) => {
 //@route PUT /users/:id
 //@access Private
 const updateUser = asyncHandler(async (req, res) => {
-    const { _id, username, pwd, roles, card } = req.body; // Include 'card' in the destructuring
+    const { id, username, pwd, roles, card } = req.body; // Include 'card' in the destructuring
 
     // Check if the user exists to update based on the _id
-    const user = await User.findById(_id).exec();
+    const user = await User.findById(id).exec();
 
     if (!user) {
         return res.status(400).json({ message: 'User not found' });
@@ -100,10 +100,10 @@ const updateUser = asyncHandler(async (req, res) => {
 //@route DELETE /users/:id
 //@access Private
 const deleteUser = asyncHandler(async (req, res) => {
-    const { _id } = req.body;
+    const { id } = req.body;
 
     // Check if the user exists to delete based on the _id
-    const user = await User.findById(_id).exec();
+    const user = await User.findById(id).exec();
 
     if (!user) {
         return res.status(400).json({ message: 'User not found' });
@@ -124,10 +124,10 @@ const deleteUser = asyncHandler(async (req, res) => {
 //@route POST /users/:id/donations
 //@access Private
 const addDonationToUser = asyncHandler(async (req, res) => {
-    const { _id, donation } = req.body;
+    const { id, donation } = req.body;
 
     // Check if the user exists to add a donation based on the _id
-    const user = await User.findById(_id).exec();
+    const user = await User.findById(id).exec();
 
     if (!user) {
         return res.status(400).json({ message: 'User not found' });
