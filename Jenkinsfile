@@ -14,7 +14,7 @@ pipeline {
                     withSonarQubeEnv('SonarCloud') {
                         def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                         withEnv(["PATH+SONAR=${scannerHome}/bin"]) {
-                            sh 'sonar-scanner -Dsonar.projectKey=${projectKey} -Dsonar.organization=${organization}'
+                            sh "sonar-scanner -Dsonar.projectKey=${projectKey} -Dsonar.organization=${organization}"
                         }
                     }
                 }
