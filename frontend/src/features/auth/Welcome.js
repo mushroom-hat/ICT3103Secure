@@ -22,7 +22,7 @@ const Welcome = () => {
 
             <p><Link to="/dash/spending">View Spending</Link></p>
 
-            <p><Link to="/dash/users">View Spending</Link></p>
+            <p><Link to="/dash/users">View Users</Link></p>
 
 
             <p><Link to="/dash/spending/new">Add New Spending</Link></p>

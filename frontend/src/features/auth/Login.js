@@ -4,12 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';  // Add useSelector
 import { setCredentials } from './authSlice';
 import { useLoginMutation } from './authApiSlice';
 import usePersist from '../../hooks/usePersist';
+import useAuth from '../../hooks/useAuth';
 
 const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
+    const {roles} = useAuth();
     const [username, setUsername] = useState('');
     const [pwd, setPwd] = useState('');
+    const [id, setId] = useState('');
+
     const [errMsg, setErrMsg] = useState('');
     const [persist, setPersist] = usePersist();
 
@@ -31,11 +35,12 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { accessToken } = await login({ username, pwd }).unwrap();
+            const { accessToken } = await login({ username, pwd, id}).unwrap();
             dispatch(setCredentials({ accessToken, username }));
             setUsername('');
             setPwd('');
             navigate('/dash');
+            console.log("Roles", {roles})
         } catch (err) {
             if (!err.status) {
                 setErrMsg('No Server Response');
@@ -62,7 +67,7 @@ const Login = () => {
         <section className="public">
             <header>
                 <h1>Employee Login</h1>
-                {currentUsername && <p>Welcome, {currentUsername}!</p>}
+                {currentUsername && <p>Welcome, {currentUsername}, {roles}!</p>}
             </header>
             <main className="login">
                 <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
