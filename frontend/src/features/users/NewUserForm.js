@@ -4,11 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { ROLES } from "../../config/roles";
-<<<<<<< Updated upstream
-=======
-// If useAuth.js is in a parent directory of NewUserForm.js
-import useAuth from '../../hooks/useAuth';
->>>>>>> Stashed changes
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
@@ -22,7 +17,6 @@ const NewUserForm = () => {
   }] = useAddNewUserMutation();
 
   const navigate = useNavigate();
-  const { accessToken } = useAuth(); // Retrieve the dynamic token using the useAuth hook
 
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
@@ -59,19 +53,7 @@ const NewUserForm = () => {
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-<<<<<<< Updated upstream
       await addNewUser({ username, pwd, roles });
-=======
-      const headers = {
-        Authorization: `Bearer ${accessToken}`
-      };
-
-      try {
-        await addNewUser({ username, pwd, roles }, { headers }); // Include headers in the API request
-      } catch (error) {
-        // Handle any errors that occur during the API request
-      }
->>>>>>> Stashed changes
     }
   };
 
@@ -141,16 +123,6 @@ const NewUserForm = () => {
         >
           {options}
         </select>
-        <button
-    type="submit" // Add this line to make it a submit button
-    className="icon-button"
-    title="Save"
-    onClick={onSaveUserClicked}
-    disabled={!canSave}
->
-    <FontAwesomeIcon icon={faSave} />
-</button>
-
       </form>
     </>
   );
