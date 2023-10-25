@@ -6,18 +6,13 @@ pipeline {
         ACCESS_TOKEN_SECRET = credentials('ACCESS_TOKEN_SECRET')
         REFRESH_TOKEN_SECRET = credentials('REFRESH_TOKEN_SECRET')
     }
-    options([
-        parameters([
-            string(name: 'SONAR_PROJECT_KEY', defaultValue: 'ICT3103Secure', description: 'SonarCloud Project Key'),
-            string(name: 'SONAR_ORGANIZATION', defaultValue: 'Charsity', description: 'SonarCloud Organization Key')
-        ])
-    ])
+
     stages {
         stage('SonarCloud Code Scan') {
             steps {
                 script {
-                    def projectKey = env.SONAR_PROJECT_KEY
-                    def organization = env.SONAR_ORGANIZATION
+                    def projectKey = params.SONAR_PROJECT_KEY
+                    def organization = params.SONAR_ORGANIZATION
 
                     withSonarQubeEnv('SonarCloud') {
                         sh "sonar-scanner -Dsonar.projectKey=${projectKey} -Dsonar.organization=${organization}"
