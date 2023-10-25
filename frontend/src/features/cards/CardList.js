@@ -1,4 +1,4 @@
-import { useGetCardsQuery } from "./cardApiSlice"
+import { useGetCardsQuery } from "./cardsApiSlice"
 import Card from './Card'
 
 const CardsList = () => {
