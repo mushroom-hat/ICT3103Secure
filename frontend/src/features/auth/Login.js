@@ -7,13 +7,9 @@ import usePersist from '../../hooks/usePersist';
 
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import Particle from "../../components/Particle";
-import profile from "../../Assets/Profile/Profile.png";
-import { text } from '@fortawesome/fontawesome-svg-core';
 import Navbar from "../../components/Navbar";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
-import FormCheck from "react-bootstrap/FormCheck";
 
 const Login = () => {
     const userRef = useRef();
