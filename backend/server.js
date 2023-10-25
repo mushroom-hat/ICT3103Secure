@@ -46,7 +46,6 @@ app.use('/articles', require('./routes/articlesRoutes'))
 app.use('/donations', require('./routes/donationsRoutes'))
 app.use('/spending', require('./routes/spendingRoutes'))
 
-
 app.all('*', (req, res) =>{
     res.status(404)
     if(req.accepts('html')){
@@ -67,12 +66,11 @@ async function startServer() {
         mongoose.connection.once('open', () => {
             console.log('Connected to MongoDB');
         });
-        console.log('Connected to MongoDB');
-
+        
         const server = app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
-
+    
         // Export the 'server' object if mongoose connection is successful
         module.exports = server;
 
@@ -84,3 +82,11 @@ async function startServer() {
 }
 
 startServer()
+        // Upload logs once then upload it once daily to S3
+        const {job} = require('./helper/dailyUploadLogs')
+        
+        if (process.env.NODE_ENV === 'production'){
+            job()
+        }
+  
+        
