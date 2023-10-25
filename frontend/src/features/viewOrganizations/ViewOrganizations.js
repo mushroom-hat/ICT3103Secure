@@ -3,8 +3,6 @@ import Navbar from "../../components/Navbar";
 import { Container, Row, Col } from "react-bootstrap";
 import Particle from "../../components/Particle";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
-import { CgWebsite } from "react-icons/cg";
 import hopfulImg from "../../Assets/Organisation/HopefulHeartsFoundation.png";
 import greenEarthImg from "../../Assets/Organisation/GreenEarthAlliance.png";
 import helpingHandsImg from "../../Assets/Organisation/HelpingHandsInitiative.png"; 
@@ -103,7 +101,7 @@ const ViewOrganizations = () => {
                     height: '20px' // set a specific height
                   }}
                 />
-                <span className="category-text" style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <span className="category-text" style={{ marginLeft: "10px", marginRight: "10px"}}>
                   {category.categoryName}
                 </span>
               </label>
@@ -118,9 +116,11 @@ const ViewOrganizations = () => {
             selectedCategories.length === 0 ||
             selectedCategories.includes(organization.category)
         ).map((organization) => (
-          <Col sm={10} md={4} lg={4} key={organization.organizationName}>
-            <Card className="project-card-view organization-card">
-              <Card.Img variant="top" src={organization.imagePath} alt="card-img" />
+          <Col sm={10} md={4} lg={4} key={organization.organizationName} style={{ padding: "20px" }}>
+            <Card className="project-card-view organization-card text-center">
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50%" }}>
+                <Card.Img variant="top" src={organization.imagePath} alt="card-img" style={{ maxWidth: "200px", maxHeight: "200px" }} />
+              </div>
               <Card.Body>
                 <Card.Title>{organization.organizationName}</Card.Title>
                 <Card.Text style={{ textAlign: "justify" }}>
