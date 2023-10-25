@@ -11,15 +11,15 @@ pipeline {
         stage('SonarCloud Code Scan') {
             steps {
                 script {
-                withSonarQubeEnv('SonarCloud') {
-                def nodeTool = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${sonarScannerTool}/bin"]) {
-                    sh 'node -v'  // Check Node.js version (optional)
-                    sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity'
-                }
-            }
-        } 
+                    def nodeTool = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    withSonarQubeEnv('SonarCloud') {
+                        def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${scannerTool}/bin"]) {
+                            sh 'node -v'  // Check Node.js version (optional)
+                            sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity'
+                        }
+                    }
+                } 
             }
         }
 
