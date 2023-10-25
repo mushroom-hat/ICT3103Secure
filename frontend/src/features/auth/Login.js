@@ -7,16 +7,14 @@ import usePersist from '../../hooks/usePersist';
 
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import Particle from "../../components/Particle";
+import profile from "../../Assets/Profile/Profile.png";
+import { text } from '@fortawesome/fontawesome-svg-core';
 import Navbar from "../../components/Navbar";
 import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
-<<<<<<< Updated upstream
-
-=======
 import FormCheck from "react-bootstrap/FormCheck";
 import { current } from '@reduxjs/toolkit';
-import useAuth from '../../hooks/usePersist';
->>>>>>> Stashed changes
 const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
@@ -30,7 +28,9 @@ const Login = () => {
     const dispatch = useDispatch();
 
     const [login, { isLoading }] = useLoginMutation();
-
+    
+    const { isManager, isAdmin } = useAuth()    
+    console.log("roles", roles)
     useEffect(() => {
         userRef.current.focus();
     }, []);
