@@ -3,8 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from './authSlice';
 import { useSignupMutation } from './authApiSlice';
-import usePersist from '../../hooks/usePersist';
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
 
 import { Container, Row, Col, Card, FormControl, Button, Toast } from "react-bootstrap";
 import Particle from "../../components/Particle";
@@ -141,7 +140,7 @@ const Signup = () => {
                                         onChange={(e) => setConfirmPwd(e.target.value)}
                                         required style={{ marginLeft: "10px", marginRight: "10px", width: "-webkit-fill-available" }}
                                     />
-                                    <ReCAPTCHA sitekey="6Lc-y9AoAAAAAMiiqyIGm7bTg0Yu-fP65ikmncft" onChange={(value) => setcaptchaValue(value)} style={{marginTop:"10px", marginLeft:"10px"}}/>
+                                    {/* <ReCAPTCHA sitekey="6Lc-y9AoAAAAAMiiqyIGm7bTg0Yu-fP65ikmncft" onChange={(value) => setcaptchaValue(value)} style={{marginTop:"10px", marginLeft:"10px"}}/> */}
                                     <button
                                         className="form__submit-button btn btn-primary btn-block btn-lg"
                                         style={{
