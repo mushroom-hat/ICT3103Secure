@@ -21,23 +21,28 @@ const getAllUsers = asyncHandler(async (req, res) => {
 //@route POST /users
 //@access Private
 const createNewUsers = asyncHandler(async (req, res) => {
-    const { username, pwd, roles } = req.body;
+    const { name, username, email, pwd, roles } = req.body;
+
+    console.log(req.body);
+    console.log(req.body);
+
 
     // Confirm data
-    if (!username || !pwd || !roles ) {
+    if (!name || !username || !email || !pwd || !roles ) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Check for duplicate username
     const duplicate = await User.findOne({ username }).lean().exec();
     if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate username' });
+        return res.status(409).json({ message: 'Duplicate user' });
     }
+    
 
     // Hash password
     const hashedPwd = await bcrypt.hash(pwd, 10); // salt rounds
-    const userObject = { username, pwd: hashedPwd, roles };
-
+    const userObject = { name, username, email, pwd: hashedPwd, roles };
+    console.log(userObject);
     // Create and store the new user
     const user = await User.create(userObject);
 
@@ -55,7 +60,7 @@ const createNewUsers = asyncHandler(async (req, res) => {
 //@route PUT /users/:id
 //@access Private
 const updateUser = asyncHandler(async (req, res) => {
-    const { id, username, pwd, roles, card } = req.body; // Include 'card' in the destructuring
+    const { id, name, username, email, pwd, roles, card } = req.body; // Include 'card' in the destructuring
 
     // Check if the user exists to update based on the _id
     const user = await User.findById(id).exec();

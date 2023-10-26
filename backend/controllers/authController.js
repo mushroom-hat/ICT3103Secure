@@ -28,7 +28,7 @@ const login = asyncHandler(async (req, res) => {
             "UserInfo": {
                 "username": foundUser.username,
                 "roles": foundUser.roles,
-                "id":foundUser._id
+                "id": foundUser._id
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -101,15 +101,50 @@ const logout = (req, res) => {
 };
 
 const signup = asyncHandler(async (req, res) => {
-    const { username, pwd, roles} = req.body;  // Only extract the username and pwd
-
-    if (!username || !pwd ) { 
+    const { name, username, email, pwd, roles, captchaValue } = req.body;  // Only extract the username and pwd
+    console.log("Value: " + req.body.pwd)
+    console.log("Value Name: " + name)
+    console.log("Value Username: " + username)
+    console.log("Value Email: " + email)
+    console.log("Value Pwd: " + pwd)
+    console.log("Value Roles: " + roles)
+    console.log("Value Captcha: " + captchaValue)
+    if (!name || !username || !email || !pwd) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
+    // Verify reCAPTCHA
+    if (!captchaValue) {
+        console.log("No reCAPTCHA...")
+        return res.status(400).send("reCAPTCHA error!");
+    }
+
+    console.log("Validating reCAPTCHA...")
+
+    const axios = require('axios');
+    const verifyRecaptcha = async (recaptchaValue) => {
+        const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
+            params: {
+                secret: '6Lc-y9AoAAAAAJYVWnolS1nHHMVhuRc870G1MvNp',
+                response: recaptchaValue
+            }
+        });
+        return response.data;
+    };
+
+    const { success, score } = await verifyRecaptcha(captchaValue);
+    console.log("Captcha Success: " + success)
+    if (!success) {
+        // reCAPTCHA validation failed
+        return res.status(400).send("reCAPTCHA verification failed");
+    }
+
+    console.log("Done validating reCAPTCHA...")
+
     // Check if the user already exists
     const userExists = await User.findOne({ username });
-    if (userExists) {
+    const userExistsEmail = await User.findOne({ email });
+    if (userExists || userExistsEmail) {
         return res.status(400).json({ message: 'Username already taken' });
     }
 
@@ -118,7 +153,9 @@ const signup = asyncHandler(async (req, res) => {
 
     // Create the new user with the roles attribute set to 'Donator'
     const newUser = new User({
+        name,
         username,
+        email,
         pwd: hashedPwd,
         roles  // Hard-code the roles attribute to 'Donator'
     });
