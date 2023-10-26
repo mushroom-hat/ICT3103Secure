@@ -30,6 +30,7 @@
     "mongoose-sequence": "^5.3.1",
     "node-schedule": "^2.1.1",
     "react-router-dom": "^6.16.0",
+    "react-google-recaptcha": "^3.1.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
