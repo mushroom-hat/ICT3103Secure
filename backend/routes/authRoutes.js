@@ -17,4 +17,7 @@ router.route('/logout')
 router.route('/signup')
     .post(requestLogger, setDonatorRole, authController.signup); // Apply the middlewares here
 
+router.route('/activate/:encryptedToken')
+    .post(authController.activate);
+
 module.exports = router;

@@ -26,8 +26,8 @@ const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // Captcha Initialization
     const [captchaValue, setcaptchaValue] = useState(null);
-
 
     // State for controlling toast visibility
     const [showToast, setShowToast] = useState(false);
@@ -45,15 +45,14 @@ const Signup = () => {
                 setShowToast(true);
                 return;
             }
-
-            const { accessToken } = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue });
+            const { accessToken } = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue, token: ' ', tokenKey: '' });
             dispatch(setCredentials({ accessToken }));
             setName('');
             setUsername('');
             setEmail('');
             setPwd('');
             setConfirmPwd('');
-            navigate('/dash');
+            navigate('/login');
         } catch (err) {
             if (!err.status) {
                 setErrMsg('No Server Response');
@@ -179,8 +178,8 @@ const Signup = () => {
                 onClose={() => setShowToast(false)}
                 style={{
                     position: 'absolute',
-                    top: '10px',
-                    right: '10px',
+                    top: '10em',
+                    right: '20px',
                 }}
                 autohide
             >

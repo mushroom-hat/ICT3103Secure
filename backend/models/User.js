@@ -31,6 +31,18 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Donation',
     required: false
+  },
+  isActive: {
+    type: Boolean,
+    required: true
+  },
+  token: {
+    type: String,
+    required: true
+  },
+  tokenKey: {
+    type: String,
+    required: true
   }
   // Additional fields can be added here
 });
