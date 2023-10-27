@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios'; // Make sure to import axios
 
 const ActivationLandingPage = () => {
   const [activationStatus, setActivationStatus] = useState('');
@@ -9,22 +10,23 @@ const ActivationLandingPage = () => {
     const encryptedToken = urlParams.get('token');
 
     // Make POST request to activate account
-    const fetchURL = `https://api.wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`;
-    console.log("Fetch URL:" + fetchURL);
-    fetch(fetchURL, { 
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ encryptedToken: encryptedToken }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        setActivationStatus(data.message);
+    // Make POST request to activate the account using Axios
+    axios.post(`https://api.wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`, {
+      encryptedToken: encryptedToken
+    }).then(response => {
+      if (typeof response.data.message === 'object') {
+        // Extract specific field from the object
+        setActivationStatus(response.data.message.message);
+      } else {
+        // Set activation status as is
+        setActivationStatus(response.data.message);
+      }
     })
     .catch(() => {
       setActivationStatus('An error occurred. Please try again.');
-    });
+
+
+      });
   }, []);
 
   return (
