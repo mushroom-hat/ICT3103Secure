@@ -54,7 +54,7 @@ const Signup = () => {
             setEmail('');
             setPwd('');
             setConfirmPwd('');
-            navigate('/dash');
+            navigate('/emailverification');
         } catch (err) {
             if (!err.status) {
                 setErrMsg('No Server Response');

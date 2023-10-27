@@ -1,41 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Make sure to import axios
+import axios from 'axios';
+import { Link } from "react-router-dom";
+import { XCircleFill } from 'react-bootstrap-icons';
 
 const ActivationLandingPage = () => {
   const [activationStatus, setActivationStatus] = useState('');
 
   useEffect(() => {
-    // Parse the URL to get the token
     const urlParams = new URLSearchParams(window.location.search);
     const encryptedToken = urlParams.get('token');
-
-    // Make POST request to activate account
-    // Make POST request to activate the account using Axios
     const backendAPI = process.env.REACT_APP_API_BASE_URL;
-    console.log("Backend: ",backendAPI)
-    console.log(`${backendAPI}/auth/activate/${encodeURIComponent(encryptedToken)}`)
+
     axios.post(`${backendAPI}/auth/activate/${encodeURIComponent(encryptedToken)}`, {
       encryptedToken: encryptedToken
-    }).then(response => {
+    })
+    .then(response => {
       if (typeof response.data.message === 'object') {
-        // Extract specific field from the object
         setActivationStatus(response.data.message.message);
       } else {
-        // Set activation status as is
         setActivationStatus(response.data.message);
       }
     })
     .catch(() => {
       setActivationStatus('An error occurred. Please try again.');
-
-
-      });
+    });
   }, []);
 
   return (
-    <div>
-      <h1>Account Activation</h1>
-      <p>{activationStatus}</p>
+    <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+      <div className="text-center" style={{color:"white"}}>
+        {activationStatus === 'An error occurred. Please try again.' ? 
+          <XCircleFill color="red" size={48} style={{marginBottom:"10px"}}/> : 
+          null
+        }
+        <h1>Account Activation</h1>
+        <p>{activationStatus}</p>
+        <Link to="/login" className="btn btn-primary">Go to Login</Link>
+      </div>
     </div>
   );
 };

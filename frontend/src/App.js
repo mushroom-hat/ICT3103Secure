@@ -18,6 +18,7 @@ import SpendingsList from './features/spendings/SpendingsList';
 import NewSpendingForm from './features/spendings/NewSpendingForm';
 import NewDonationForm from './features/donations/NewDonationForm';
 import ActivationLandingPage from './features/auth/ActivationLandingPage';
+import EmailVerification from './features/auth/EmailVerification';
 
 import { ROLES } from './config/roles'
 
@@ -41,6 +42,7 @@ function App() {
         <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
         <Route path="signup" element={<Signup />} />
         <Route path="/landing-page" element={<ActivationLandingPage />} />
+        <Route path="emailverification" element={<EmailVerification />} />
         <Route element={<PersistLogin />}>
         <Route element = {<RequireAuth allowedRoles={[ROLES.Donator,ROLES.Admin, ROLES.Organization]} />}>
             <Route path="dash" element={<DashLayout />}>
