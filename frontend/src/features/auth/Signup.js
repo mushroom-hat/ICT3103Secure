@@ -3,9 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from './authSlice';
 import { useSignupMutation } from './authApiSlice';
+import usePersist from '../../hooks/usePersist';
 import ReCAPTCHA from "react-google-recaptcha";
 
-import { Container, Row, Col, Card, FormControl, Toast } from "react-bootstrap";
+import { Container, Row, Col, Card, FormControl, Button, Toast } from "react-bootstrap";
 import Particle from "../../components/Particle";
 import Navbar from "../../components/Navbar";
 
@@ -26,8 +27,8 @@ const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    // Captcha Initialization
     const [captchaValue, setcaptchaValue] = useState(null);
+
 
     // State for controlling toast visibility
     const [showToast, setShowToast] = useState(false);
@@ -45,14 +46,15 @@ const Signup = () => {
                 setShowToast(true);
                 return;
             }
-            const { accessToken } = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue, token: ' ', tokenKey: '' });
+
+            const { accessToken } = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue });
             dispatch(setCredentials({ accessToken }));
             setName('');
             setUsername('');
             setEmail('');
             setPwd('');
             setConfirmPwd('');
-            navigate('/login');
+            navigate('/dash');
         } catch (err) {
             if (!err.status) {
                 setErrMsg('No Server Response');
@@ -178,8 +180,8 @@ const Signup = () => {
                 onClose={() => setShowToast(false)}
                 style={{
                     position: 'absolute',
-                    top: '10em',
-                    right: '20px',
+                    top: '10px',
+                    right: '10px',
                 }}
                 autohide
             >

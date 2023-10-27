@@ -11,7 +11,7 @@ const Article = require('../models/Article');
 //@access Private
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-pwd').lean();
-    if (!users || users.length === 0) { 
+    if (!users || users.length === 0) {npm 
         return res.status(404).json({ message: 'No users found' });
     }
     res.json(users);

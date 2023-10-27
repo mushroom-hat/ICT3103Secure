@@ -6,7 +6,7 @@ const connectDB = async() => {
         await mongoose.connect(process.env.DATABASE_URI)
     } catch (err){
         console.log(err)
-        logEvents(`${err.no}: ${err.code}\t${er.syscall}\t${err.hostname}`, 'mongoErrLog.log')
+        logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErrLog.log')
 
     }
 } 

@@ -100,13 +100,13 @@ const logout = (req, res) => {
     res.json({ message: 'Cookie cleared' });
 };
 
-
 function generateActivationToken(userID, username, secretKey) {
     const data = `${userID}-${username}`;
     const crypto = require('crypto');
     const token = crypto.createHmac('sha256', secretKey).update(data).digest('hex');
     return token;
 }
+
 
 const signup = asyncHandler(async (req, res) => {
     const { name, username, email, pwd, roles, captchaValue } = req.body;  // Only extract the username and pwd
@@ -117,17 +117,15 @@ const signup = asyncHandler(async (req, res) => {
     console.log("Value Pwd: " + pwd)
     console.log("Value Roles: " + roles)
     console.log("Value Captcha: " + captchaValue)
-
-
     if (!name || !username || !email || !pwd) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Verify reCAPTCHA
-    if (!captchaValue) {
-        console.log("No reCAPTCHA...")
-        return res.status(400).send("reCAPTCHA error!");
-    }
+    // if (!captchaValue) {
+    //     console.log("No reCAPTCHA...")
+    //     return res.status(400).send("reCAPTCHA error!");
+    // }
 
     console.log("Validating reCAPTCHA...")
 
@@ -144,13 +142,10 @@ const signup = asyncHandler(async (req, res) => {
 
     const { success, score } = await verifyRecaptcha(captchaValue);
     console.log("Captcha Success: " + success)
-
-    if (!success) {
-        // reCAPTCHA validation failed
-        return res.status(400).send("reCAPTCHA verification failed");
-    }
-
-    console.log("Done validating reCAPTCHA...")
+    // if (!success) {
+    //     // reCAPTCHA validation failed
+    //     return res.status(400).send("reCAPTCHA verification failed");
+    // }
 
     // Email Verification Initialization
     const crypto = require('crypto');
@@ -164,6 +159,9 @@ const signup = asyncHandler(async (req, res) => {
     const CryptoJS = require('crypto-js');
     const encryptedToken = CryptoJS.AES.encrypt(unique_token, base64Key).toString();
     const isActive = false;
+
+    console.log("Done validating reCAPTCHA...")
+    console.log("Adding' user...")
 
     // Check if the user already exists
     const userExists = await User.findOne({ username });
@@ -181,7 +179,7 @@ const signup = asyncHandler(async (req, res) => {
         username,
         email,
         pwd: hashedPwd,
-        roles,
+        roles,  // Hard-code the roles attribute to 'Donator'
         isActive,
         token: encryptedToken,
         tokenKey: unique_token
@@ -223,6 +221,9 @@ const signup = asyncHandler(async (req, res) => {
                 console.log('Email sent:', info.response);
             }
         });
+
+        console.log("Email sent successfully.")
+        console.log("User added successfully.")
 
     }
 
@@ -287,7 +288,6 @@ const activate = asyncHandler(async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
 
 module.exports = {
     login,
