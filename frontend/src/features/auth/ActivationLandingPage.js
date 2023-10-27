@@ -9,7 +9,9 @@ const ActivationLandingPage = () => {
     const encryptedToken = urlParams.get('token');
     console.log(encryptedToken);
     // Make POST request to activate account
-    fetch(`https://api.wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`, { 
+    const fetchURL = `https://api.wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`;
+    console.log("Fetch URL:", fetchURL);
+    fetch(fetchURL, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
