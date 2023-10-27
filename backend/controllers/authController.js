@@ -196,7 +196,7 @@ const signup = asyncHandler(async (req, res) => {
                 pass: 'xtyr bfet oftx jxtc'
             }
         });
-        const activationURL = `wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`;
+        const activationURL = `https://wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`;
         console.log("Activation URL: " + activationURL);
         const emailTemplate = {
             from: 'ssdsecuresoftware@gmail.com',
