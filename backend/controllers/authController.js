@@ -133,7 +133,7 @@ const signup = asyncHandler(async (req, res) => {
     const verifyRecaptcha = async (recaptchaValue) => {
         const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
             params: {
-                secret: '6Lc-y9AoAAAAAJYVWnolS1nHHMVhuRc870G1MvNp',
+                secret: process.env.RECAPTCHA_SECRET_KEY,
                 response: recaptchaValue
             }
         });
@@ -149,7 +149,7 @@ const signup = asyncHandler(async (req, res) => {
 
     // Email Verification Initialization
     const crypto = require('crypto');
-    const secretKey = "aa53acbe9ef36849b2172ba54b021cb7fad26cf582b1f25913b409db8f4277f911f4519c0ee31fad6307fb95a0ed97efa7216cff0cd846da94dce69a6a3d1a8a34cc90f5cddcd9f93de9e823a1b8c2c0331050d61d6fd04dfae972495a146b34c37d8edb3adf61225fffc0492eb856e4640865b9c747ce605a27658f4a78da9282745c5f6cd94a080b91692ca8d137a91fe7ad4962f60a53a056e358b4f548e2a23049372d925093d299c5ed9a44fe6511dce053910f03f60caa0cb5146e85cc6bf883f9f289a64891556885675732fb641b289eaa492de59190c82cec4b57451961d3d21bb25b0268a748409a7f306c6a299ac82542666fd4ce278c77212ec1be094bf4865517dba5fdecea41ef58b40ac32d7f91adfe236f50402e03c6c6537adb1b4e55e96a7d8b595c0fbdc455b58d4314dd00cd4d61e774bcc30fb74c0f"
+    const secretKey = process.env.SECRET_KEY 
     unique_token = generateActivationToken(name, username, secretKey);
     const combinedString = `${username}${name}`
     // Convert the combined string to base64
@@ -193,7 +193,7 @@ const signup = asyncHandler(async (req, res) => {
             secure: true,
             requireTLS: true,
             port: 465,
-            secured: true
+            secured: true,
             service: 'gmail',
             auth: {
                 user: 'ssdsecuresoftware@gmail.com',

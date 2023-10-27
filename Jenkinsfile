@@ -6,6 +6,7 @@ pipeline {
         ACCESS_TOKEN_SECRET = credentials('ACCESS_TOKEN_SECRET')
         REFRESH_TOKEN_SECRET = credentials('REFRESH_TOKEN_SECRET')
         SECRET_KEY = credentials('SECRET_KEY')
+        RECAPTCHA_SECRET_KEY = credentials('RECAPTCHA_SECRET_KEY')
 
     }
 
@@ -18,12 +19,20 @@ pipeline {
                         def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                         withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${scannerTool}/bin"]) {
                             sh 'node -v'  // Check Node.js version (optional)
-                            sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity'
+                            sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity -Dsonar.javascript.lcov.reportPaths=./lcov.info'
                         }
                     }
                 } 
             }
         }
+        // stage("SonarCloud Quality Gate"){
+        //     timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+        //         def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+        //         if (qg.status != 'OK') {
+        //         error "Pipeline aborted due to quality gate failure: ${qg.status}"
+        //         }
+        //     }
+        // }
 
         stage('Build-Test') {
             steps {
@@ -165,6 +174,7 @@ def cleanAndStartBackendContainer(containerName, imageName) {
     -e ACCESS_TOKEN_SECRET="${ACCESS_TOKEN_SECRET}" \
     -e DATABASE_URI="${DATABASE_URI}" \
     -e SECRET_KEY="${SECRET_KEY}" \
+    -e RECAPTCHA_SECRET_KEY="${RECAPTCHA_SECRET_KEY}" \
     -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
     -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ''' +  imageName
 
