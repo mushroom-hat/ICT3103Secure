@@ -190,6 +190,10 @@ const signup = asyncHandler(async (req, res) => {
 
 
         const transporter = nodemailer.createTransport({
+            secure: true,
+            requireTLS: true,
+            port: 465,
+            secured: true
             service: 'gmail',
             auth: {
                 user: 'ssdsecuresoftware@gmail.com',

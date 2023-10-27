@@ -5,60 +5,57 @@ pipeline {
         DATABASE_URI = credentials('DATABASE_URI')
         ACCESS_TOKEN_SECRET = credentials('ACCESS_TOKEN_SECRET')
         REFRESH_TOKEN_SECRET = credentials('REFRESH_TOKEN_SECRET')
+        SECRET_KEY = credentials('SECRET_KEY')
+
     }
 
     stages {
-        // stage('SonarCloud Code Scan') {
-        //     steps {
-        //         script {
-        //             def nodeTool = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-        //             withSonarQubeEnv('SonarCloud') {
-        //                 def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-        //                 withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${scannerTool}/bin"]) {
-        //                     sh 'node -v'  // Check Node.js version (optional)
-        //                     sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity'
-        //                 }
-        //             }
-        //         } 
-        //     }
-        // }
-
-        stage('Build') {
+        stage('SonarCloud Code Scan') {
             steps {
-                dir('frontend') {
-                    sh 'docker build -t charsity-frontend .'
-                }
+                script {
+                    def nodeTool = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    withSonarQubeEnv('SonarCloud') {
+                        def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${scannerTool}/bin"]) {
+                            sh 'node -v'  // Check Node.js version (optional)
+                            sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity'
+                        }
+                    }
+                } 
+            }
+        }
+
+        stage('Build-Test') {
+            steps {
                 dir('backend') {
                     script {
                         // Build the Docker image for testing
                         sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
-                        // Build the Docker image for production
-                        sh 'docker build -t charsity-backend --target prod .'
                     }
                 }
             }
         }
         
-        // stage('Scan Docker Images for Vulnerabilities') {
-        //     steps {
-        //         script {
-        //             // Stop and remove containers to save space
-        //             stopAndRemoveContainer('charsity-frontend-container')
-        //             stopAndRemoveContainer('charsity-backend-container')
+        stage('Scan Docker Images for Vulnerabilities') {
+            steps {
+                script {
+                    // Stop and remove containers to save space
+                    stopAndRemoveContainer('charsity-frontend-container')
+                    stopAndRemoveContainer('charsity-backend-container')
 
-        //             // Create a directory to store scan results
-        //             sh "mkdir -p /trivy-scan-results"
-        //             sh "chmod 777 /trivy-scan-results"
+                    // Create a directory to store scan results
+                    sh "mkdir -p /trivy-scan-results"
+                    sh "chmod 777 /trivy-scan-results"
 
-        //             // Scan the frontend Docker image and save results in the Jenkins workspace
-        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/frontend-dependency-scan.json charsity-frontend"
+                    // Scan the frontend Docker image and save results in the Jenkins workspace
+                    sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/frontend-dependency-scan.json charsity-frontend"
 
-        //             // Scan the backend Docker image and save results in the Jenkins workspace
-        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/backend-dependency-scan.json charsity-backend"
+                    // Scan the backend Docker image and save results in the Jenkins workspace
+                    sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln --skip-dirs --skip-files -o /trivy-scan-results/backend-dependency-scan.json charsity-backend"
 
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
         
         stage('Unit Test Backend') {
             steps {
@@ -67,7 +64,7 @@ pipeline {
                     def imageName = 'charsity-backend-test'
                     def testExitCode
                     dir('backend') {
-                        cleanAndStartBackendContainer(containerName, imageName)
+                        cleanAndStartBackendContainer(  containerName, imageName)
 
                         // run test on container, exit with status code
                         testExitCode = sh(script: "docker exec ${containerName} npm test", returnStatus: true)
@@ -78,6 +75,21 @@ pipeline {
                         }
 
                         stopAndRemoveContainer(containerName)
+                    }
+                }
+            }
+        }
+
+        
+        stage('Build-Prod') {
+            steps {
+                dir('frontend') {
+                    sh 'docker build -t charsity-frontend .'
+                }
+                dir('backend') {
+                    script {
+                        // Build the Docker image for production
+                        sh 'docker build -t charsity-backend --target prod .'
                     }
                 }
             }
@@ -152,6 +164,7 @@ def cleanAndStartBackendContainer(containerName, imageName) {
     -e REFRESH_TOKEN_SECRET="${REFRESH_TOKEN_SECRET}" \
     -e ACCESS_TOKEN_SECRET="${ACCESS_TOKEN_SECRET}" \
     -e DATABASE_URI="${DATABASE_URI}" \
+    -e SECRET_KEY="${SECRET_KEY}" \
     -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
     -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ''' +  imageName
 
