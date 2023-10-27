@@ -11,7 +11,10 @@ const ActivationLandingPage = () => {
 
     // Make POST request to activate account
     // Make POST request to activate the account using Axios
-    axios.post(`https://api.wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`, {
+    const backendAPI = process.env.REACT_APP_API_BASE_URL;
+    console.log("Backend: ",backendAPI)
+    console.log(`${backendAPI}/auth/activate/${encodeURIComponent(encryptedToken)}`)
+    axios.post(`${backendAPI}/auth/activate/${encodeURIComponent(encryptedToken)}`, {
       encryptedToken: encryptedToken
     }).then(response => {
       if (typeof response.data.message === 'object') {
