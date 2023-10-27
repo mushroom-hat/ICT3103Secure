@@ -205,7 +205,7 @@ const signup = asyncHandler(async (req, res) => {
             html: `
               <p>Dear "${name}",</p>
               <p>Click the following button to activate your account:</p>
-              <a href="wazpplabs.com/landing-page?token=${encodeURIComponent(encryptedToken)}" style="display: inline-block; padding: 10px 20px; background-color: blue; color: white; text-decoration: none;">
+              <a href="https://wazpplabs.com/landing-page?token=${encodeURIComponent(encryptedToken)}" style="display: inline-block; padding: 10px 20px; background-color: blue; color: white; text-decoration: none;">
                 Activate Your Account
               </a>
             `
