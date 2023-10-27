@@ -236,7 +236,7 @@ const activate = asyncHandler(async (req, res) => {
     console.log("Activating user...");
 
     // Extract the encryptedToken from the URL parameter and decode it
-    const encryptedToken = decodeURIComponent(req.params.encryptedToken);
+    const encryptedToken = decodeURIComponent(req.body.encryptedToken);
 
 
 
