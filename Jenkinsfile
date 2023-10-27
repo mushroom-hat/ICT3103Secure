@@ -19,7 +19,7 @@ pipeline {
                         def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                         withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${scannerTool}/bin"]) {
                             sh 'node -v'  // Check Node.js version (optional)
-                            sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity -Dsonar.javascript.lcov.reportPaths=./lcov.info'
+                            sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info'
                         }
                     }
                 } 
