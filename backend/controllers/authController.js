@@ -50,6 +50,7 @@ const login = asyncHandler(async (req, res) => {
     });
 
     // Send accessToken containing username and roles
+    console.log("login success")
     res.json({ accessToken });
 });
 

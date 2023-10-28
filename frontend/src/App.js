@@ -8,7 +8,6 @@ import Welcome from './features/auth/Welcome';
 import UsersList from './features/users/UsersList' ;
 import ViewOrganizations from './features/viewOrganizations/ViewOrganizations';
 import UserProfile from './features/users/UserProfile';
-import WriteArticle from './features/articles/WriteArticle';
 import CashflowAnalysis from './features/cashflow/CashFlowAnalysis';
 import NewUserForm from './features/users/NewUserForm';
 import EditUser from './features/users/EditUser';
@@ -19,6 +18,7 @@ import NewSpendingForm from './features/spendings/NewSpendingForm';
 import NewDonationForm from './features/donations/NewDonationForm';
 import ActivationLandingPage from './features/auth/ActivationLandingPage';
 import EmailVerification from './features/auth/EmailVerification';
+import WriteArticle from './features/articles/WriteArticle';
 
 import { ROLES } from './config/roles'
 
@@ -38,7 +38,6 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="profile" element={<UserProfile />} />
         <Route path="viewOrganizations" element={<ViewOrganizations />} /> 
-        <Route path="writeArticle" element={<WriteArticle />} />
         <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
         <Route path="signup" element={<Signup />} />
         <Route path="/landing-page" element={<ActivationLandingPage />} />
@@ -67,11 +66,15 @@ function App() {
                   <Route path=":id" element={<EditUser />} />
                   <Route path="new" element={<NewUserForm />} />
                 </Route>
+              </Route>
+              <Route element = {<RequireAuth allowedRoles={[ROLES.Donator]} />}>
                 <Route path="donations">
                   <Route path="new" element={<NewDonationForm />} />
                 </Route>
               </Route>
-
+                <Route path="articles">
+                  <Route path="new" element={<WriteArticle />} />
+                </Route>
             </Route>{/* End Dash */}
         </Route>
         </Route>
