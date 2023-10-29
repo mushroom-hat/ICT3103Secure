@@ -60,6 +60,8 @@ const Signup = () => {
                 setErrMsg('No Server Response');
             } else if (err.status === 400) {
                 setErrMsg('Signup Failed');
+            } else if (err.status === 422) {
+                setErrMsg('Try again');
             } else {
                 setErrMsg(err.data?.message);
             }
