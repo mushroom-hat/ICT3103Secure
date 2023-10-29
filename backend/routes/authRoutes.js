@@ -16,7 +16,7 @@ router.route('/logout')
     .post(authController.logout);
 
 router.route('/signup')
-    .post(requestLogger, setDonatorRole, bouncer, authController.signup); // Apply the middlewares here
+    .post(requestLogger, setDonatorRole, authController.signup); // Apply the middlewares here
 
 router.route('/activate/:token')
     .post(authController.activate);
