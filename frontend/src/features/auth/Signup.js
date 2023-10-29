@@ -46,8 +46,31 @@ const Signup = () => {
                 setShowToast(true);
                 return;
             }
+            console.log("Route Handler: Try block begins");
 
-            const { accessToken } = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue });
+            let accessToken;
+            let customerror;
+
+            const response = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue });
+            console.log(response.error)
+            if (response.error) {
+                console.log("it came here error")
+                setErrMsg(response.error);
+                errRef.current.focus();
+                customerror = response.error;
+
+            }else{
+                // No error
+                accessToken = response;
+            }
+
+            if (customerror) {
+                //Force an error
+                throw new Error(customerror);
+              }
+
+            console.log("Route Handler: Signup successful");
+            console.log("this is the accesstoken", accessToken)
             dispatch(setCredentials({ accessToken }));
             setName('');
             setUsername('');
@@ -56,13 +79,18 @@ const Signup = () => {
             setConfirmPwd('');
             navigate('/emailverification');
         } catch (err) {
+            console.log("Route Handler: Catch block begins");
             if (!err.status) {
+                console.log("Route Handler: No Server Response");
                 setErrMsg('No Server Response');
             } else if (err.status === 400) {
+                console.log("Route Handler: Signup Failed");
                 setErrMsg('Signup Failed');
             } else if (err.status === 422) {
+                console.log("Route Handler: Try again");
                 setErrMsg('Try again');
             } else {
+                console.log("others");
                 setErrMsg(err.data?.message);
             }
             errRef.current.focus();
