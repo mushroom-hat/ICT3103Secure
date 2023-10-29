@@ -14,6 +14,7 @@ pipeline {
         stage('SonarCloud Code Scan') {
             steps {
                 script {
+                    // update to test
                     def nodeTool = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                     withSonarQubeEnv('SonarCloud') {
                         def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
