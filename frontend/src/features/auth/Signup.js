@@ -56,7 +56,7 @@ const Signup = () => {
             setConfirmPwd('');
             navigate('/emailverification');
         } catch (err) {
-            if (!err.status) {
+            if (err.status) {
                 setErrMsg('No Server Response');
             } else if (err.status === 400) {
                 setErrMsg('Signup Failed');
