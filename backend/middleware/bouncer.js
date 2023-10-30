@@ -1,8 +1,17 @@
 const { check, validationResult } = require('express-validator');
 
+
 // Password validation
 const validatePassword = () => {
-  return check('pwd', 'Password must be at least 7 characters long').isLength({ min: 7 });
+  return check('pwd', 'Password must be at least 7 characters long').isLength({ min: 7 })
+    .custom((value) => {
+      const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
+      if (re.test(value)) {
+        return true; // Password matches the pattern
+      } else {
+        throw new Error('Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.');
+      }
+    });
 };
 
 const bouncer = (req, res, next) => {

@@ -128,7 +128,7 @@ const Signup = () => {
                 setShowToast(true);
             } else if (errorCode == 422) {
                 // Set toast message and make it visible
-                setToastMsg('Please Enter ensure password is > 7 character');
+                setToastMsg('Please Enter ensure password is > 7 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
                 setShowToast(true);
             } else {
                 // Set toast message and make it visible
