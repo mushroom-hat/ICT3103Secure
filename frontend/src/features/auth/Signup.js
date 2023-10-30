@@ -92,6 +92,7 @@ const Signup = () => {
 
             if (customerror) {
                 //Force an error
+                console.log(customerror.data);
                 throw new Error(customerror.status);
               }
 
