@@ -35,8 +35,11 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { accessToken } = await login({ username, pwd }).unwrap();
-            dispatch(setCredentials({ accessToken, username }));
+            // Cast to variables of res.json({ accessToken, username: foundUser.username, roles: foundUser.roles });
+            const {accessToken, roles} = await login({ username, pwd }).unwrap();
+            console.log("Res Data: " + accessToken + " " + username + " " + roles);
+            // Get roles from accessToken
+            dispatch(setCredentials({ accessToken, username, roles }));
             setUsername('');
             setPwd('');
             navigate('/dash');
