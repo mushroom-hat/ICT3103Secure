@@ -1,133 +1,140 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Col, Container, Row, Toast } from 'react-bootstrap';
+import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 import { useAddNewUserMutation } from "./usersApiSlice";
-import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave } from "@fortawesome/free-solid-svg-icons";
-import { ROLES } from "../../config/roles";
+import { useNavigate } from 'react-router-dom';
 
-const USER_REGEX = /^[A-z]{3,20}$/;
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
-
-const NewUserForm = () => {
-  const [addNewUser, {
-    isLoading,
-    isSuccess,
-    isError,
-    error
-  }] = useAddNewUserMutation();
-
-  const navigate = useNavigate();
-
-  const [username, setUsername] = useState('');
-  const [validUsername, setValidUsername] = useState(false);
-  const [pwd, setPwd] = useState('');
-  const [validPwd, setValidPwd] = useState(false);
-  const [roles, setRoles] = useState("Donator"); // Updated to a single string
-
-  useEffect(() => {
-    setValidUsername(USER_REGEX.test(username));
-  }, [username]);
-
-  useEffect(() => {
-    setValidPwd(PWD_REGEX.test(pwd));
-  }, [pwd]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setUsername('');
-      setPwd('');
-      setRoles("Donator");
-      navigate('/dash/users');
-    }
-  }, [isSuccess, navigate]);
-
-  const onUsernameChanged = (e) => setUsername(e.target.value);
-  const onPwdChanged = (e) => setPwd(e.target.value);
-
-  const onRolesChanged = (e) => {
-    setRoles(e.target.value);
-  };
-
-  const canSave = [validUsername, validPwd].every(Boolean) && !isLoading;
-
-  const onSaveUserClicked = async (e) => {
-    e.preventDefault();
-    if (canSave) {
-      await addNewUser({ username, pwd, roles });
-    }
-  };
-
-  const options = Object.values(ROLES).map((role) => {
-    return (
-      <option key={role} value={role}>
-        {role}
-      </option>
-    );
+const AddUserForm = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    username: '',
+    email: '',
+    pwd: '',
+    confirmpwd: '',
+    isActive: true,
+    token: '',
+    tokenKey: '',
+    roles: 'Donator',
   });
 
-  const errClass = isError ? "errmsg" : "offscreen";
-  const validUserClass = !validUsername ? 'form__input--incomplete' : '';
-  const validPwdClass = !validPwd ? 'form__input--incomplete' : '';
+  const [showToast, setShowToast] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [addNewUser, { isSuccess: mutationSuccess }] = useAddNewUserMutation();
+  const navigate = useNavigate();
 
-  const content = (
-    <>
-      <p className={errClass}>{error?.data?.message}</p>
+  useEffect(() => {
+    if (mutationSuccess) {
+      setIsSuccess(true);
+      setTimeout(() => {
+        navigate('/dash/users');
+      }, 3000);
+    }
+  }, [mutationSuccess, navigate]);
 
-      <form className="form" onSubmit={onSaveUserClicked}>
-        <div className="form__title-row">
-          <h2>New User</h2>
-          <div className="form__action-buttons">
-            <button
-              className="icon-button"
-              title="Save"
-              disabled={!canSave}
-            >
-              <FontAwesomeIcon icon={faSave} />
-            </button>
-          </div>
-        </div>
-        <label className="form__label" htmlFor="username">
-          Username: <span className="nowrap">[3-20 letters]</span>
-        </label>
-        <input
-          className={`form__input ${validUserClass}`}
-          id="username"
-          name="username"
-          type="text"
-          autoComplete="off"
-          value={username}
-          onChange={onUsernameChanged}
-        />
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-        <label className="form__label" htmlFor="pwd">
-          Password: <span className="nowrap">[4-12 chars incl. !@#$%]</span>
-        </label>
-        <input
-          className={`form__input ${validPwdClass}`}
-          id="pwd"
-          name="pwd"
-          type="password"
-          value={pwd}
-          onChange={onPwdChanged}
-        />
+  const addNewUserClick = async () => {
+    try {
+      await addNewUser(formData);
+      setIsSuccess(mutationSuccess);
+    } catch (error) {
+      setIsSuccess(false);
+    }
+    setShowToast(true);
+  };
 
-        <label className="form__label" htmlFor="roles">
-          ASSIGNED ROLES:
-        </label>
-        <select
-          id="roles"
-          name="roles"
-          className={`form__select`}
-          value={roles}
-          onChange={onRolesChanged}
-        >
-          {options}
-        </select>
-      </form>
-    </>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addNewUserClick();
+  };
+
+  return (
+    <Container fluid className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh', color: "white" }}>
+      <Row className="w-100">
+        <Col xs={12} md={8} lg={6} className="mx-auto">
+          <Form onSubmit={handleSubmit}>
+            <Row className="mb-3 text-white justify-content-center">
+              <h2>Add User</h2>
+            </Row>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Name</Form.Label>
+              <Form.Control type="text" name="name" value={formData.name} onChange={handleInputChange} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" name="username" value={formData.username} onChange={handleInputChange} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" name="email" value={formData.email} onChange={handleInputChange} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" name="pwd" value={formData.pwd} onChange={handleInputChange} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control type="password" name="confirmpwd" value={formData.confirmpwd} onChange={handleInputChange} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>roles</Form.Label>
+              <Form.Select name="roles" value={formData.roles} onChange={handleInputChange}>
+                <option value="Donator">Donator</option>
+                <option value="Admin">Admin</option>
+                <option value="Organization">Organization</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Is Active</Form.Label>
+              <Form.Check type="checkbox" name="isActive" checked={formData.isActive} onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })} />
+            </Form.Group>
+
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+
+          <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            minWidth: 200,
+            color: "black"
+          }}>
+            <Toast.Header>
+              <strong className="mr-auto">Notification</strong>
+            </Toast.Header>
+            <Toast.Body>
+              {isSuccess ? (
+                <>
+                  <CheckCircleFill color="green" className="mr-2" style={{ marginRight: "10px" }} />
+                  Create user successful
+                </>
+              ) : (
+                <>
+                  <XCircleFill color="red" className="mr-2" style={{ marginRight: "10px" }} />
+                  Fail to create user
+                </>
+              )}
+            </Toast.Body>
+          </Toast>
+        </Col>
+      </Row>
+    </Container>
   );
-
-  return content;
 };
 
-export default NewUserForm;
+export default AddUserForm;

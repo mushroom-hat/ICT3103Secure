@@ -71,7 +71,7 @@ export const {
     useGetUsersQuery,
     useAddNewUserMutation,
     useUpdateUserMutation,
-    useDeleteUserMutation,
+    useDeleteUserMutation
 } = usersApiSlice
 
 // returns the query result object

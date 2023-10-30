@@ -21,27 +21,28 @@ const getAllUsers = asyncHandler(async (req, res) => {
 //@route POST /users
 //@access Private
 const createNewUsers = asyncHandler(async (req, res) => {
-    const { name, username, email, pwd, roles } = req.body;
+    const { name, username, email, pwd, roles, isActive } = req.body;
 
     console.log(req.body);
-    console.log(req.body);
-
+    const token = 'NA'
+    const tokenKey = 'NA'
 
     // Confirm data
-    if (!name || !username || !email || !pwd || !roles ) {
+    if (!name || !username || !email || !pwd || !roles || !isActive ) {
         return res.status(400).json({ message: 'All fields are required' });
     }
-
+    console.log("Checking for duplicate username")
     // Check for duplicate username
     const duplicate = await User.findOne({ username }).lean().exec();
     if (duplicate) {
         return res.status(409).json({ message: 'Duplicate user' });
     }
     
+    console.log("Done checking for duplicate username")
 
     // Hash password
     const hashedPwd = await bcrypt.hash(pwd, 10); // salt rounds
-    const userObject = { name, username, email, pwd: hashedPwd, roles };
+    const userObject = { name, username, email, pwd: hashedPwd, roles, isActive, token, tokenKey };
     console.log(userObject);
     // Create and store the new user
     const user = await User.create(userObject);
