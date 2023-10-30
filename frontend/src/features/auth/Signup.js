@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from './authSlice';
 import { useSignupMutation } from './authApiSlice';
-import usePersist from '../../hooks/usePersist';
 import ReCAPTCHA from "react-google-recaptcha";
 
 import { Container, Row, Col, Card, FormControl, Button, Toast } from "react-bootstrap";
@@ -32,6 +31,8 @@ const Signup = () => {
 
     // State for controlling toast visibility
     const [showToast, setShowToast] = useState(false);
+    const [toastMsg, setToastMsg] = useState('');  // New state for Toast message
+
 
     useEffect(() => {
         if (nameRef.current) {
@@ -39,13 +40,42 @@ const Signup = () => {
         }
     }, []);
 
+    // Validate the name
+    const validateName = (name) => {
+        // Disallow special characters
+        const re = /^[a-zA-Z ]*$/;
+        return re.test(name);
+    };
+
+    // Validate the password
+    const validatePassword = (password) => {
+        // Require at least one uppercase, one lowercase, one number, and one special character
+        const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
+        return re.test(password);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (pwd !== confirmPwd) {
+                setToastMsg('The passwords you entered do not match. Please try again.');
                 setShowToast(true);
                 return;
             }
+            
+            if (!validateName(name)) {
+                setToastMsg('Name can only contain letters and spaces.');
+                setShowToast(true);
+                return;
+            }
+            
+            if (!validatePassword(pwd)) {
+                setToastMsg('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+                setShowToast(true);
+                return;
+            }
+
+
             console.log("Route Handler: Try block begins");
 
             let accessToken;
@@ -205,20 +235,26 @@ const Signup = () => {
             </section>
 
             {/* Bootstrap Toast for password mismatch */}
+            
             <Toast
                 show={showToast}
                 onClose={() => setShowToast(false)}
                 style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
+                    // Top right of the screen no matter where it is rendered
+                    // Now when scroll down its not at the top anymore,
+                    // i also want it to be at the front of all elements
+                    position: 'fixed',
+                    top: 20,
+                    right: 20,
+                    zIndex: 9999,
+                    backgroundColor: 'white',
                 }}
                 autohide
             >
                 <Toast.Header>
-                    <strong className="mr-auto">Password Mismatch</strong>
+                    <strong className="mr-auto">Error!</strong>
                 </Toast.Header>
-                <Toast.Body>The passwords you entered do not match. Please try again.</Toast.Body>
+                <Toast.Body>{toastMsg}</Toast.Body>
             </Toast>
         </Container>
     );

@@ -7,8 +7,7 @@ import { Link } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
 import {
   AiOutlineHome,
-  AiOutlineFundProjectionScreen,
-  AiOutlineUser,
+  AiOutlineFundProjectionScreen
 } from "react-icons/ai";
 import { FaSignInAlt } from 'react-icons/fa';
 import { CgFileDocument } from "react-icons/cg";

@@ -10,10 +10,6 @@ import Particle from '../../components/Particle'
 
 
 const Welcome = () => {
-
-    const date = new Date()
-    const today = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' }).format(date)
-
     const content = (
         <><NavBar />
             <Container fluid className="home-section" id="home">

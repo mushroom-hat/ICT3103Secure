@@ -9,7 +9,6 @@ const SpendingsList = () => {
     isLoading,
     isSuccess,
     isError,
-    error,
   } = useGetSpendingsQuery(undefined, {
     pollingInterval: 60000,
     refetchOnFocus: true,

@@ -1,20 +1,15 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';  // Add useSelector
+import { useDispatch } from 'react-redux';  // Add useSelector
 import { setCredentials } from './authSlice';
 import { useLoginMutation } from './authApiSlice';
 import usePersist from '../../hooks/usePersist';
 
-import { Container, Row, Col, Nav } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import Particle from "../../components/Particle";
-import profile from "../../Assets/Profile/Profile.png";
-import { text } from '@fortawesome/fontawesome-svg-core';
 import Navbar from "../../components/Navbar";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
-import FormCheck from "react-bootstrap/FormCheck";
-import { current } from '@reduxjs/toolkit';
 const Login = () => {
     const userRef = useRef();
     const errRef = useRef();

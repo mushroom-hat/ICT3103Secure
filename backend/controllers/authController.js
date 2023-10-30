@@ -150,7 +150,7 @@ const signup = asyncHandler(async (req, res) => {
 
     // Email Verification Initialization
     const crypto = require('crypto');
-    const secretKey = process.env.SECRET_KEY 
+    const secretKey = crypto.randomBytes(64).toString('hex');
     unique_token = generateActivationToken(name, username, secretKey);
     const combinedString = `${username}${name}`
     // Convert the combined string to base64

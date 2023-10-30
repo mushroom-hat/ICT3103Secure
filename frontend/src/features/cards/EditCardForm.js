@@ -3,7 +3,6 @@ import { useUpdateCardMutation, useDeleteCardMutation } from "./cardsApiSlice";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import useAuth from "../../hooks/useAuth";
 
 const CARD_NUMBER_REGEX = /^[0-9]{16}$/;
 const CARD_HOLDER_NAME_REGEX = /^[A-z ]{3,}$/;
@@ -34,7 +33,6 @@ const EditCardForm = ({ card }) => {
   const [validExpiryDate, setValidExpiryDate] = useState(false);
   const [cvc, setCVC] = useState(card.cvc);
   const [validCVC, setValidCVC] = useState(false);
-  const { userId } = useAuth();
 
   useEffect(() => {
     setValidCardNumber(CARD_NUMBER_REGEX.test(cardNumber));
