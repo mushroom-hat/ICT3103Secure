@@ -3,6 +3,8 @@ FROM node:latest as base
 
 # Set the working directory
 WORKDIR /usr/src/app
+# Update package lists and upgrade system packages
+RUN apt-get update && apt-get upgrade -y
 
 # Expose the port
 EXPOSE 3500
