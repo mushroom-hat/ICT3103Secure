@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAddNewArticleMutation } from './articlesApitSlice';
+import { useAddNewArticleMutation } from './articlesApiSlice';
 import useAuth from "../../hooks/useAuth";
 
 function WriteArticle() {

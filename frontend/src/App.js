@@ -30,6 +30,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CardList from './features/cards/CardList';
 import EditCard from './features/cards/EditCard';
 import EditCardForm from './features/cards/EditCardForm';
+import Article from './features/articles/Article';
 function App() { 
   return ( 
     <Routes> 
@@ -43,6 +44,9 @@ function App() {
         <Route path="/landing-page" element={<ActivationLandingPage />} />
         <Route path="emailverification" element={<EmailVerification />} />
         <Route element={<PersistLogin />}>
+        <Route path="article">
+          <Route path=":id" element={<Article />} />
+        </Route>
         <Route element = {<RequireAuth allowedRoles={[ROLES.Donator,ROLES.Admin, ROLES.Organization]} />}>
             <Route path="dash" element={<DashLayout />}>
               <Route index element={<Welcome />} />
