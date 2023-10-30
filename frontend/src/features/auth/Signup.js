@@ -92,7 +92,6 @@ const Signup = () => {
 
             if (customerror) {
                 //Force an error
-                console.log(customerror.data);
                 throw new Error(customerror.status);
               }
 
@@ -123,11 +122,11 @@ const Signup = () => {
                 // Set toast message and make it visible
                 setToastMsg('No Server Response');
                 setShowToast(true);
-            } else if (errorCode == 400) {
+            } else if (errorCode === 400) {
                 // Set toast message and make it visible
                 setToastMsg('Signup Failed');
                 setShowToast(true);
-            } else if (errorCode == 422) {
+            } else if (errorCode === 422) {
                 // Set toast message and make it visible
                 setToastMsg('Please Enter ensure password is > 7 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
                 setShowToast(true);

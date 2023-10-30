@@ -10,7 +10,6 @@ import ViewOrganizations from './features/viewOrganizations/ViewOrganizations';
 import UserProfile from './features/users/UserProfile';
 import CashflowAnalysis from './features/cashflow/CashFlowAnalysis';
 import NewUserForm from './features/users/NewUserForm';
-import EditUser from './features/users/EditUser';
 import PersistLogin from './features/auth/PersistLogin';
 import RequireAuth from './features/auth/RequireAuth';
 import SpendingsList from './features/spendings/SpendingsList';
@@ -22,7 +21,6 @@ import WriteArticle from './features/articles/WriteArticle';
 
 import { ROLES } from './config/roles'
 
-import ScrollToTop from "./components/ScrollToTop";
 import "./style.css";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -67,7 +65,6 @@ function App() {
               <Route element = {<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                 <Route path="users">
                   <Route index element={<UsersList />} />
-                  <Route path=":id" element={<EditUser />} />
                   <Route path="new" element={<NewUserForm />} />
                 </Route>
               </Route>

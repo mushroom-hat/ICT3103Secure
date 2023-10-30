@@ -5,7 +5,10 @@ import NavBar from "../../components/Navbar_logon";
 import Particle from "../../components/Particle";
 import { Container, Col, Row, Pagination, Form } from "react-bootstrap";
 
+
+
 const UsersList = () => {
+    
     const {
         data: users,
         isLoading,
@@ -20,6 +23,8 @@ const UsersList = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(9);
+
+    
 
     let content;
 
