@@ -4,11 +4,13 @@ import User from "./User";
 import NavBar from "../../components/Navbar_logon";
 import Particle from "../../components/Particle";
 import { Container, Col, Row, Pagination, Form } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 
 
 const UsersList = () => {
-    
+
     const {
         data: users,
         isLoading,
@@ -24,7 +26,7 @@ const UsersList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(9);
 
-    
+
 
     let content;
 
@@ -81,16 +83,27 @@ const UsersList = () => {
                 </Container>
                 <Container>
                     <Row className="justify-content-md-center">
-                        <Col sm={10} md={10} lg={10} style={{ padding: "20px" }}>
-                            <Form.Group controlId="searchQuery">
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Search"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
+                        <Col sm={8} md={8} lg={8} style={{ padding: "20px" }}>
+                            <Form.Group as={Row} controlId="searchQuery">
+                                <Col sm={2}>
+                                    <Link to="/dash/users/new">
+                                        <Button variant="primary">Add Users</Button>
+                                    </Link>
+                                </Col>
+                                <Col sm={10}>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Search"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                </Col>
                             </Form.Group>
-                            <div className="table-responsive" style={{ marginTop: "20px" }}>
+                        </Col>
+                    </Row>
+                    <Row className="justify-content-md-center">
+                        <Col sm={8} md={8} lg={8}>
+                            <div className="table-responsive">
                                 <table className="table table--users">
                                     <thead className="table__thead">
                                         <tr>
