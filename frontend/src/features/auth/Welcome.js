@@ -8,8 +8,16 @@ import { Col, Card } from 'react-bootstrap'
 import { Row } from 'react-bootstrap'
 import Particle from '../../components/Particle'
 
+import { useSelector } from 'react-redux';
+
+
 
 const Welcome = () => {
+    const username = useSelector((state) => state.auth.username);
+    const roles = useSelector((state) => state.auth.roles);
+
+    console.log(username)
+    console.log(roles)
     const content = (
         <><NavBar />
             <Container fluid className="home-section" id="home">

@@ -164,12 +164,18 @@ const signup = asyncHandler(async (req, res) => {
     console.log("Done validating reCAPTCHA...")
     console.log("Adding' user...")
 
-    // Check if the user already exists
-    const userExists = await User.findOne({ username });
-    const userExistsEmail = await User.findOne({ email });
-    if (userExists || userExistsEmail) {
-        return res.status(400).json({ message: 'Username already taken' });
+    try {
+        // Check if the user already exists
+        const userExists = await User.findOne({ username });
+        const userExistsEmail = await User.findOne({ email });
+        if (userExists || userExistsEmail) {
+            return res.status(400).json({ message: 'Username already taken' , error: 'Username already taken'});
+        }
+    } catch (error) {
+        console.log("Error: " + error)
+        return res.status(500).json({ message: 'Internal server error', error: "Internal server error"});
     }
+
 
     // Hash the password
     const hashedPwd = await bcrypt.hash(pwd, 10);
@@ -214,7 +220,7 @@ const signup = asyncHandler(async (req, res) => {
                 Activate Your Account
               </a>
             `
-          };
+        };
 
         console.log("Sending email...")
         console.log("Email: " + emailTemplate.to)
@@ -222,6 +228,7 @@ const signup = asyncHandler(async (req, res) => {
         transporter.sendMail(emailTemplate, (error, info) => {
             if (error) {
                 console.error('Error sending email:', error);
+                return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error"});
             } else {
                 console.log('Email sent:', info.response);
             }
@@ -231,10 +238,7 @@ const signup = asyncHandler(async (req, res) => {
         console.log("User added successfully.")
 
     }
-
-
-
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ message: 'User registered successfully' , success: 'User registered successfully'});
 });
 
 const activate = asyncHandler(async (req, res) => {

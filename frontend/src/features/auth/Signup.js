@@ -5,7 +5,7 @@ import { setCredentials } from './authSlice';
 import { useSignupMutation } from './authApiSlice';
 import ReCAPTCHA from "react-google-recaptcha";
 
-import { Container, Row, Col, Card, FormControl, Button, Toast } from "react-bootstrap";
+import { Container, Row, Col, Card, FormControl, Toast } from "react-bootstrap";
 import Particle from "../../components/Particle";
 import Navbar from "../../components/Navbar";
 
@@ -15,13 +15,11 @@ const Signup = () => {
     const emailRef = useRef(null);
     const pwdRef = useRef(null);
     const confirmPwdRef = useRef(null);
-    const errRef = useRef();
     const [name, setName] = useState(''); // Add state for Name
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [confirmPwd, setConfirmPwd] = useState('');
-    const [errMsg, setErrMsg] = useState('');
     const [signup, { isLoading }] = useSignupMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -82,13 +80,10 @@ const Signup = () => {
             let customerror;
 
             const response = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue });
-            console.log(response.error)
             if (response.error) {
-                console.log("it came here error")
-                setErrMsg(response.error);
-                errRef.current.focus();
-                customerror = response.error;
-
+                //  Set toast message and make it visible
+                setToastMsg(response.error.data.message);
+                setShowToast(true);
             }else{
                 // No error
                 accessToken = response;
@@ -111,23 +106,24 @@ const Signup = () => {
         } catch (err) {
             console.log("Route Handler: Catch block begins");
             if (!err.status) {
-                console.log("Route Handler: No Server Response");
-                setErrMsg('No Server Response');
+                // Set toast message and make it visible
+                setToastMsg('No Server Response');
+                setShowToast(true);
             } else if (err.status === 400) {
-                console.log("Route Handler: Signup Failed");
-                setErrMsg('Signup Failed');
+                // Set toast message and make it visible
+                setToastMsg('Signup Failed');
+                setShowToast(true);
             } else if (err.status === 422) {
-                console.log("Route Handler: Try again");
-                setErrMsg('Try again');
+                // Set toast message and make it visible
+                setToastMsg('Try again');
+                setShowToast(true);
             } else {
-                console.log("others");
-                setErrMsg(err.data?.message);
+                // Set toast message and make it visible
+                setToastMsg('Signup Failed');
+                setShowToast(true);
             }
-            errRef.current.focus();
         }
     };
-
-    const errClass = errMsg ? "errmsg" : "offscreen";
 
     if (isLoading) return <p>Loading...</p>;
 
@@ -146,7 +142,6 @@ const Signup = () => {
                     <Row style={{ justifyContent: "center", padding: "10px" }}>
                         <Col sm={10} md={8} lg={6} className="project-card">
                             <Card className="signup profile-update-card bg-dark text-white">
-                                <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
                                 <form className="form" onSubmit={handleSubmit}>
                                     <label style={{ marginTop: "20px", marginLeft: "10px", marginRight: "10px" }} htmlFor="name">Name:</label>
                                     <FormControl
