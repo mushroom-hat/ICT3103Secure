@@ -84,6 +84,7 @@ const Signup = () => {
                 //  Set toast message and make it visible
                 setToastMsg(response.error.data.message);
                 setShowToast(true);
+                customerror = response.error;
             }else{
                 // No error
                 accessToken = response;
@@ -91,7 +92,7 @@ const Signup = () => {
 
             if (customerror) {
                 //Force an error
-                throw new Error(customerror);
+                throw new Error(customerror.status);
               }
 
             console.log("Route Handler: Signup successful");
@@ -104,18 +105,30 @@ const Signup = () => {
             setConfirmPwd('');
             navigate('/emailverification');
         } catch (err) {
+            let errorCode;
             console.log("Route Handler: Catch block begins");
-            if (!err.status) {
+
+            // Extract error code
+            const errorCodeMatch = err.message.match(/\d+/);
+
+            if (errorCodeMatch) {
+                errorCode = errorCodeMatch[0];
+                console.log("Error Code:", errorCode);
+            }
+
+            console.log(errorCode);
+
+            if (!errorCode) {
                 // Set toast message and make it visible
                 setToastMsg('No Server Response');
                 setShowToast(true);
-            } else if (err.status === 400) {
+            } else if (errorCode == 400) {
                 // Set toast message and make it visible
                 setToastMsg('Signup Failed');
                 setShowToast(true);
-            } else if (err.status === 422) {
+            } else if (errorCode == 422) {
                 // Set toast message and make it visible
-                setToastMsg('Try again');
+                setToastMsg('Please Enter ensure password is > 7 character');
                 setShowToast(true);
             } else {
                 // Set toast message and make it visible
