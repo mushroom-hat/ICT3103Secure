@@ -9,7 +9,7 @@ const errLog = 'errLog.log';
 const reqLog = 'reqLog.log';
 
 // Create a scheduled job
-const job = schedule.scheduleJob(dailySchedule, function () {
+const job = schedule.scheduleJob(hourlySchedule, function () {
     // Call the uploadFile function and inject the parameter
     uploadLogs(errLog);
     uploadLogs(reqLog);
