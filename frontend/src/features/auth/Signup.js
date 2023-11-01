@@ -51,10 +51,16 @@ const Signup = () => {
         return re.test(password);
     };
 
-    // Validate the password
+    const validatePwLength = (password) => {
+        // Require at least one uppercase, one lowercase, one number, and one special character
+        if (password.length <= 64 ) {
+            return true;
+        }
+    };
+
+    // Validate common/weak password
     const isPasswordWeak = (password) => {
         // Promise to asynchronously check if user password is weak
-        //fetch('../../Assets/Login/10-million-password-list-top-1000.txt')
         return fetch('https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/10-million-password-list-top-1000.txt')
         .then(response => {
         if (!response.ok) {
@@ -98,6 +104,12 @@ const Signup = () => {
             
             if (await isPasswordWeak(pwd) === true) {
                 setToastMsg('Password is commonly used, please set a stronger password');
+                setShowToast(true);
+                return;
+            }
+
+            if (!validatePwLength(pwd)) {
+                setToastMsg('Password should not exceed 64 characters');
                 setShowToast(true);
                 return;
             }

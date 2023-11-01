@@ -10,10 +10,15 @@ import Particle from "../../components/Particle";
 import Navbar from "../../components/Navbar";
 import Card from "react-bootstrap/Card";
 import FormControl from "react-bootstrap/FormControl";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
     const [username, setUsername] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [persist, setPersist] = usePersist();
@@ -23,6 +28,10 @@ const Login = () => {
     const dispatch = useDispatch();
 
     const [login, { isLoading }] = useLoginMutation();
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     useEffect(() => {
         userRef.current.focus();
@@ -96,11 +105,26 @@ const Login = () => {
                                     <label style={{ marginTop: "20px", marginLeft: "10px" , marginRight: "10px"}} htmlFor="password">Password:</label>
                                     <FormControl
                                         className="form__input"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         id="password"
                                         value={pwd}
                                         onChange={handlePwdInput}
                                         required style={{ marginLeft: "10px", marginRight: "10px", width: "-webkit-fill-available"}}
+                                    />
+                                    <FontAwesomeIcon
+                                        icon={showPassword ? faEyeSlash : faEye} // Toggle eye icon based on showPassword state
+                                        onClick={togglePasswordVisibility}
+                                        className="eye-icon"
+                                        style={{
+                                            cursor: 'pointer',
+                                            position: 'absolute',
+                                            right: '20px', // Adjust the right margin as needed
+                                            top: '50%', // Center vertically
+                                            transform: 'translateY(-50%)', // Center vertically
+                                            zIndex: 1, // Ensure the icon is above other elements
+                                            color: 'rgba(0, 0, 0, 0.5)', // Adjust the color if needed
+                                            fontSize: '1rem', // Adjust the font size if needed
+                                        }}
                                     />
                                     <label 
                                         htmlFor="persist" 
