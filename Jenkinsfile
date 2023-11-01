@@ -7,6 +7,9 @@ pipeline {
         REFRESH_TOKEN_SECRET = credentials('REFRESH_TOKEN_SECRET')
         SECRET_KEY = credentials('SECRET_KEY')
         RECAPTCHA_SECRET_KEY = credentials('RECAPTCHA_SECRET_KEY')
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_DEFAULT_REGION = credentials('AWS_DEFAULT_REGION')
 
     }
 
@@ -173,6 +176,9 @@ def cleanAndStartBackendContainer(containerName, imageName) {
     -e DATABASE_URI="${DATABASE_URI}" \
     -e SECRET_KEY="${SECRET_KEY}" \
     -e RECAPTCHA_SECRET_KEY="${RECAPTCHA_SECRET_KEY}" \
+    -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
+    -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
+    -e AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" \
     -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
     -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ''' +  imageName
 
