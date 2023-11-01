@@ -52,6 +52,11 @@ const Signup = () => {
         return re.test(password);
     };
 
+    const validateEmail = (email) => {
+        const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return re.test(email);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -60,15 +65,21 @@ const Signup = () => {
                 setShowToast(true);
                 return;
             }
-            
+
             if (!validateName(name)) {
                 setToastMsg('Name can only contain letters and spaces.');
                 setShowToast(true);
                 return;
             }
-            
+
             if (!validatePassword(pwd)) {
                 setToastMsg('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+                setShowToast(true);
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                setToastMsg('Please enter a valid email address.');
                 setShowToast(true);
                 return;
             }
@@ -85,7 +96,7 @@ const Signup = () => {
                 setToastMsg(response.error.data.message);
                 setShowToast(true);
                 customerror = response.error;
-            }else{
+            } else {
                 // No error
                 accessToken = response;
             }
@@ -93,7 +104,7 @@ const Signup = () => {
             if (customerror) {
                 //Force an error
                 throw new Error(customerror.status);
-              }
+            }
 
             console.log("Route Handler: Signup successful");
             console.log("this is the accesstoken", accessToken)
@@ -209,7 +220,7 @@ const Signup = () => {
                                         onChange={(e) => setConfirmPwd(e.target.value)}
                                         required style={{ marginLeft: "10px", marginRight: "10px", width: "-webkit-fill-available" }}
                                     />
-                                    <ReCAPTCHA sitekey="6Lc-y9AoAAAAAMiiqyIGm7bTg0Yu-fP65ikmncft" onChange={(value) => setcaptchaValue(value)} style={{marginTop:"10px", marginLeft:"10px"}}/>
+                                    <ReCAPTCHA sitekey="6Lc-y9AoAAAAAMiiqyIGm7bTg0Yu-fP65ikmncft" onChange={(value) => setcaptchaValue(value)} style={{ marginTop: "10px", marginLeft: "10px" }} />
                                     <button
                                         className="form__submit-button btn btn-primary btn-block btn-lg"
                                         style={{
@@ -243,7 +254,7 @@ const Signup = () => {
             </section>
 
             {/* Bootstrap Toast for password mismatch */}
-            
+
             <Toast
                 show={showToast}
                 onClose={() => setShowToast(false)}

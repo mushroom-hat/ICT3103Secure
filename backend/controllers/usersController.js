@@ -17,6 +17,17 @@ const getAllUsers = asyncHandler(async (req, res) => {
     res.json(users);
 });
 
+//@desc Get all organizations
+//@route GET /users/organizations
+//@access Public
+const getAllOrganizations = asyncHandler(async (req, res) => {
+    const organizations = await User.find({ roles: 'Organization' }).select('username').lean();
+    if (!organizations || organizations.length === 0) {
+        return res.status(404).json({ message: 'No organizations found' });
+    }
+    res.json(organizations);
+});
+
 //@desc Create new users
 //@route POST /users
 //@access Private
@@ -158,6 +169,7 @@ const addDonationToUser = asyncHandler(async (req, res) => {
 
 module.exports = {
     getAllUsers,
+    getAllOrganizations,
     createNewUsers,
     updateUser,
     deleteUser,
