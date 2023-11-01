@@ -6,13 +6,12 @@ const validatePassword = () => {
     .custom((value) => {
       const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
       if (re.test(value) && value.length >= 7) {
-        return true; // Password matches both the pattern and length criteria
+        return true; 
       } else {
         return false;
       }
     });
 };
-
 
 // Username validation
 const validateUsername = () => {
@@ -22,31 +21,61 @@ const validateUsername = () => {
     .escape();
 };
 
-const bouncer = (req, res, next) => {
+const bouncer = async (req, res, next) => {
   console.log("the validation begins");
-  
-  // Password validation
+
   const passwordValidation = validatePassword();
-  passwordValidation(req, res, () => {
-    const passwordErrors = validationResult(req);
+  const usernameValidation = validateUsername();
 
-    // Username validation
-    const usernameValidation = validateUsername();
-    usernameValidation(req, res, () => {
-      const usernameErrors = validationResult(req);
+  let passwordValid = false;
+  let usernameValid = false;
+  let passwordErrors;
 
-      if (!passwordErrors.isEmpty() || !usernameErrors.isEmpty()) {
-        const passwordErrorsArray = passwordErrors.array().map((err) => ({ [err.param]: err.msg }));
-        const usernameErrorsArray = usernameErrors.array().map((err) => ({ [err.param]: err.msg }));
-        const combinedErrors = [...passwordErrorsArray, ...usernameErrorsArray];
-        
-        return res.status(422).json({
-          errors: combinedErrors,
-        });
+  // Password validation
+  await new Promise((resolve) => {
+    passwordValidation(req, res, () => {
+      passwordErrors = validationResult(req);
+      if (!passwordErrors.isEmpty()) {
+        console.log("Password validation errors:", passwordErrors.array());
+      } else {
+        passwordValid = true;
       }
-
-      next();
+      resolve(); // Resolve the promise
     });
+  });
+
+  // Clear the current validation context
+  validationResult(req).errors = [];
+
+  // Username validation
+  usernameValidation(req, res, () => {
+    
+    const usernameErrors = validationResult(req);
+    if (!usernameErrors.isEmpty()) {
+      console.log("Username validation errors:", usernameErrors.array());
+    } else {
+      usernameValid = true;
+    }
+
+    if (!passwordValid && !usernameValid) {
+      // Handle the case where both validations fail
+      return res.status(422).json({
+        errors: [...passwordErrors.array(), ...usernameErrors.array()],
+      });
+    } else if (!passwordValid) {
+      // Handle the case where only password validation fails
+      return res.status(422).json({
+        errors: passwordErrors.array(),
+      });
+    } else if (!usernameValid) {
+      // Handle the case where only username validation fails
+      return res.status(422).json({
+        errors: usernameErrors.array(),
+      });
+    }
+
+    // If both password and username are valid, continue with the next middleware
+    next();
   });
 };
 

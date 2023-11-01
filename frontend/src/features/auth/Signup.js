@@ -103,6 +103,7 @@ const Signup = () => {
 
             if (customerror) {
                 //Force an error
+                console.log(customerror);
                 throw new Error(customerror.status);
             }
 
