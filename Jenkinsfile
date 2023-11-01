@@ -42,8 +42,14 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        // Build the Docker image for testing
+                        // Build the Docker image for testing backend
                         sh 'docker build -t charsity-backend-test --progress=plain --no-cache --target test .'
+                    }
+                }
+                dir('frontend'){
+                    script {
+                        // Build Docker image for testing frontend
+                        sh 'docker build -t charsity-frontend-test --progress=plain --no-cache .'
                     }
                 }
             }
@@ -72,6 +78,27 @@ pipeline {
             }
         }
 
+        stage('Unit Test Frontend') {
+            steps {
+                script {
+                    def containerName = 'frontend-test-container'
+                    def imageName = 'charsity-frontend-test'
+                    def testExitCode
+                    dir('frontend') {
+                        sh "docker run -d --name ${containerName} --network charsitynetwork --env-file .env.production -u root -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home -e VIRTUAL_HOST=wazpplabs.com -e VIRTUAL_PORT=3000 ${imageName}"
+
+                        // run test on container, exit with status code
+                        testExitCode = sh(script: "docker exec ${containerName} npm test", returnStatus: true)
+                        echo "Test exit code: ${testExitCode}"
+                        if (testExitCode != 0) {
+                            currentBuild.result = 'FAILURE'
+                            error("Unit tests failed. See the build logs for details.")
+                        }
+                        stopAndRemoveContainer(containerName)
+                    }
+                }
+            }
+        }
         
         stage('Build-Prod') {
             steps {
