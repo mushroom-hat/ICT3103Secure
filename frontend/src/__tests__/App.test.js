@@ -1,38 +1,43 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../app/store';
-import App from '../App';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "../app/store";
+import App from "../App";
 
-test('Renders the App component', () => {
+test("Renders the App component", () => {
   render(
-    <MemoryRouter>
-      <App />
-    </MemoryRouter>
+    <Provider store={store}>
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    </Provider>
   );
 });
 
-test('Renders the Login route', () => {
-  const { getByText } = render( // Destructure getByText from render
+test("Renders the Login route", () => {
+  const { getByText } = render(
     <Provider store={store}>
-      <MemoryRouter initialEntries={['/login']}>
+      <MemoryRouter initialEntries={["/login"]}>
         <App />
       </MemoryRouter>
     </Provider>
   );
 
-  expect(getByText('Employee Login')).toBeInTheDocument();
+  expect(getByText("Employee Login")).toBeInTheDocument();
 });
 
-test('Renders the ViewOrganizations route', () => {
-  const { getByText } = render( // Destructure getByText from render
+test("Renders the Organizations route", async () => {
+  render(
     <Provider store={store}>
-      <MemoryRouter initialEntries={['/viewOrganizations']}>
+      <MemoryRouter initialEntries={["/organizations"]}>
         <App />
       </MemoryRouter>
     </Provider>
   );
 
-  expect(getByText('Organizations', { selector: 'h1' })).toBeInTheDocument();
+  const organizationsElement = screen.getByText("Organizations", {
+    selector: "h1",
+  });
+  expect(organizationsElement).toBeInTheDocument();
 });

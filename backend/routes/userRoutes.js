@@ -3,7 +3,7 @@ const router = express.Router()
 const usersController = require('../controllers/usersController')
 const verifyJWT = require('../middleware/verifyJWT')
 
-router.use(verifyJWT)
+//router.use(verifyJWT)
 
 router.route('/')
     .get(usersController.getAllUsers) //READ
@@ -11,5 +11,8 @@ router.route('/')
     .patch(usersController.updateUser) //UPDATE
     .delete(usersController.deleteUser) //DELETE
     .delete(usersController.addDonationToUser)
-    
+
+router.route('/organizations')
+.get(usersController.getAllOrganizations) //READ
+
 module.exports = router
