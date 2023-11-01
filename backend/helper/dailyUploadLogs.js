@@ -2,7 +2,7 @@ const schedule = require('node-schedule');
 const uploadLogs = require('./s3Upload');
 
 // Define the time of day you want the function to run (e.g., at midnight)
-const dailySchedule = '0 0 * * *'; // Runs at 00:00 every day
+const hourlySchedule = '0 * * * *'; // Runs every hour on the hour
 
 // Parameter to inject into the uploadFile function
 const errLog = 'errLog.log';
