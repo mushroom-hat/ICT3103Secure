@@ -31,7 +31,6 @@ const Signup = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMsg, setToastMsg] = useState('');  // New state for Toast message
 
-
     useEffect(() => {
         if (nameRef.current) {
             nameRef.current.focus();
@@ -50,6 +49,31 @@ const Signup = () => {
         // Require at least one uppercase, one lowercase, one number, and one special character
         const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
         return re.test(password);
+    };
+
+    // Validate the password
+    const isPasswordWeak = (password) => {
+        // Promise to asynchronously check if user password is weak
+        //fetch('../../Assets/Login/10-million-password-list-top-1000.txt')
+        return fetch('https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/10-million-password-list-top-1000.txt')
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+        })
+        .then(fileContent => {
+        const weakPasswords = fileContent.split('\n');
+        const userEnteredPassword = password;
+        if (weakPasswords.includes(userEnteredPassword)) {
+            return true;
+        } else {
+            return false;
+        }
+        })
+        .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+        });
     };
 
     const validateEmail = (email) => {
@@ -71,6 +95,12 @@ const Signup = () => {
                 setShowToast(true);
                 return;
             }
+            
+            if (await isPasswordWeak(pwd) === true) {
+                setToastMsg('Password is commonly used, please set a stronger password');
+                setShowToast(true);
+                return;
+            }
 
             if (!validatePassword(pwd)) {
                 setToastMsg('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
@@ -83,7 +113,6 @@ const Signup = () => {
                 setShowToast(true);
                 return;
             }
-
 
             console.log("Route Handler: Try block begins");
 
