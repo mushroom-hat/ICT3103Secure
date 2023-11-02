@@ -62,6 +62,8 @@ const Login = () => {
                         'Content-Type': 'application/json',
                     }, body: JSON.stringify({ username })
                 });
+                console.log("Res: " + response);
+                console.log("Res Body: " + response.body);
                 if (response.status === 200) {
                     dispatch(setCredentials({ accessToken, username, roles }));
                     setUsername('');
@@ -75,10 +77,12 @@ const Login = () => {
                     setIsLoadingUI(false);
                     setErrMsg('Account Locked Out. Please contact administrator.');
                 } else if(response.body.error === 445){
+                    console.log("Error: " + response.body);
                     setIsLoadingUI(false);
                     dispatch(setCredentials({ username }));
                     navigate('/sendemailverification');
                 } else {
+                    console.log("Error: " + response.body);
                     setUsername('');
                     setPwd('');
                     navigate('/login-error');
