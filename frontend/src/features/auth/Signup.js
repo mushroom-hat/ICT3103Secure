@@ -130,6 +130,8 @@ const Signup = () => {
 
             let accessToken;
             let customerror;
+            let restructureError;
+            
 
             const response = await signup({ name, username, email, pwd, roles: 'Donator', captchaValue });
             if (response.error) {
@@ -145,7 +147,24 @@ const Signup = () => {
             if (customerror) {
                 //Force an error
                 console.log(customerror);
-                throw new Error(customerror.status);
+                console.log(customerror.data.errors.length)
+                restructureError = {
+                    status: null,
+                    errors: []
+                };
+
+                restructureError.status = customerror.status;
+                console.log("To test restructure", restructureError);
+
+                for (let i = 0; i < customerror.data.errors.length; i++){
+                    restructureError.errors.push(customerror.data.errors[i].msg);
+                };
+
+                console.log(restructureError);
+
+
+                throw new Error(JSON.stringify(restructureError));
+                
             }
 
             console.log("Route Handler: Signup successful");
@@ -159,7 +178,31 @@ const Signup = () => {
             navigate('/emailverification');
         } catch (err) {
             let errorCode;
+            let combinedErrors
+
             console.log("Route Handler: Catch block begins");
+            console.log("This the thrown error", err);
+             // Use a regular expression to extract the JSON part
+            const jsonMatch = err.message.match(/(\{.*\})/);
+            
+            if (jsonMatch && jsonMatch[1]) {
+                try {
+                const errorObject = JSON.parse(jsonMatch[1]);
+                const status = errorObject.status;
+                const errors = errorObject.errors;
+
+                console.log("Status:", status);
+                console.log("Errors:", errors);
+
+                combinedErrors = errors.join(' ');
+
+                console.log("Combined Errors:", combinedErrors);
+
+                } catch (parseError) {
+                // Handle parsing error if JSON message is not valid
+                console.error("Error parsing JSON message:", parseError);
+                }
+            }
 
             // Extract error code
             const errorCodeMatch = err.message.match(/\d+/);
@@ -175,13 +218,13 @@ const Signup = () => {
                 // Set toast message and make it visible
                 setToastMsg('No Server Response');
                 setShowToast(true);
-            } else if (errorCode === 400) {
+            } else if (errorCode == 400) {
                 // Set toast message and make it visible
                 setToastMsg('Signup Failed');
                 setShowToast(true);
-            } else if (errorCode === 422) {
+            } else if (errorCode == 422) {
                 // Set toast message and make it visible
-                setToastMsg('Please Enter ensure password is > 7 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+                setToastMsg(combinedErrors);
                 setShowToast(true);
             } else {
                 // Set toast message and make it visible
