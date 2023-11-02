@@ -18,15 +18,21 @@ const login = asyncHandler(async (req, res) => {
     if (!foundUser) {
         return res.status(401).json({ message: 'No User Resgistered.' });
     }
-    // compare the password with the hashed password stored in the database
+
+    // Compare the password with the hashed password stored in the database
     const match = await bcrypt.compare(pwd, foundUser.pwd);
 
-    if (!match){
+    if (!match) {
         // Update user logon fail attempts
         foundUser.lockOutAttempts.passwordAttempts = foundUser.lockOutAttempts.passwordAttempts + 1;
         foundUser.save();
         return res.status(402).json({ message: 'Unauthorized. Invalid password.', error: "Invalid password.", attempts: foundUser.lockOutAttempts.passwordAttempts });
-    }else{
+    } else {
+        // User is locked out
+        if (foundUser.lockOutAttempts.passwordAttempts >= 5) {
+            console.log("User is locked out.")
+            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
+        }
         // Reset user logon fail attempts
         foundUser.lockOutAttempts.passwordAttempts = 0;
         foundUser.save();
@@ -160,13 +166,13 @@ const verifyLoginCode = asyncHandler(async (req, res) => {
         // Update user verification attempts
         foundUser.lockOutAttempts.emailVerificationAttempts = foundUser.lockOutAttempts.emailVerificationAttempts + 1;
         foundUser.save();
-        return res.status(401).json({ message: 'Invalid verification code.', error: "Invalid verification code." , attempts: foundUser.lockOutAttempts.emailVerificationAttempts});
+        return res.status(401).json({ message: 'Invalid verification code.', error: "Invalid verification code.", attempts: foundUser.lockOutAttempts.emailVerificationAttempts });
     } else if (Date.now() > expirationTime) {
         console.log("Verification code expired.")
         // Update user verification attempts
         foundUser.lockOutAttempts.attempts = foundUser.lockOutAttempts.attempts + 1;
         foundUser.save();
-        return res.status(401).json({ message: 'Verification code expired.', error: "Verification code expired." , attempts: foundUser.lockOutAttempts.emailVerificationAttempts});
+        return res.status(401).json({ message: 'Verification code expired.', error: "Verification code expired.", attempts: foundUser.lockOutAttempts.emailVerificationAttempts });
     } else {
         console.log("Verification code correct.")
         foundUser.lockOutAttempts.emailVerificationAttempts = 0;

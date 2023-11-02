@@ -69,11 +69,15 @@ const Login = () => {
                     setPwd('');
                     setIsLoadingUI(false);
                     navigate('/verify-login');
+                } else if (response.status === 444) {
+                    setIsLoadingUI(false);
+                    setErrMsg('Account Locked Out. Please contact administrator.');
                 } else {
                     setUsername('');
                     setPwd('');
                     navigate('/login-error');
                 }
+
             } else {
                 setUsername('');
                 setPwd('');
@@ -109,8 +113,8 @@ const Login = () => {
         <><div>
             {isLoadingUI && <LoadingSpinner />} {/* Display the spinner when isLoading is true */}
         </div>
-        
-        <Container fluid className="project-section">
+
+            <Container fluid className="project-section">
                 <Particle />
                 <Navbar />
                 <Container>
