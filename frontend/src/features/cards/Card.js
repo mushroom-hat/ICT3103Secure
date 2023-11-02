@@ -1,31 +1,58 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
-import { useNavigate } from 'react-router-dom'
-
-import { useSelector } from 'react-redux'
-import { selectCardById } from './cardsApiSlice'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import DeleteCardModal from './DeleteCardModal';  // Updated name to include "Card"
+import { useSelector } from 'react-redux';
+import { selectAllCards } from './cardsApiSlice';
+import { useState } from 'react';
 
 const Card = ({ cardId }) => {
-    const card = useSelector(state => selectCardById(state, cardId));
-    const navigate = useNavigate();
+  // Edit Modal
+  const [showCardModal, setShowCardModal] = useState(false);  // Updated state and name to include "Card"
+  const handleClose = () => setShowCardModal(false);
+  const handleShow = () => {
+    setShowCardModal(true);
+  };
 
-    const handleEdit = () => navigate(`/dash/cards/${cardId}/edit`);
+  // Delete Modal
+  const [showDeleteCardModal, setShowDeleteCardModal] = useState(false);  // Updated state and name to include "Card"
+  const handleDeleteClose = () => setShowDeleteCardModal(false);
+  const handleDeleteShow = () => {
+    setShowDeleteCardModal(true);
+  };
 
+  const cards = useSelector(selectAllCards);
+  const card = cards.find(c => c.id === cardId);
+
+  if (!card) {
     return (
-        <tr className="table__row card">
-            <td className="table__cell">{card.cardNumber}</td>
-            <td className="table__cell">{card.cardHolderName}</td>
-            <td className="table__cell">{card.expiryDate}</td>
-            <td className="table__cell">
-                <button
-                    className="icon-button table__button"
-                    onClick={handleEdit}
-                >
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                </button>
-            </td>
-        </tr>
+      <tr className="table__row card">
+        <td colSpan="4">
+          <div className="alert alert-warning" role="alert">
+            No card found
+          </div>
+        </td>
+      </tr>
     );
+  }
+
+  return (
+    <>
+      <tr className="table__row card">
+        <td className="table__cell">{card.cardNumber}</td>
+        <td className="table__cell">{card.cardHolderName}</td>
+        <td className="table__cell">{card.expiryDate}</td>
+        <td className="table__cell">
+          <button className="icon-button table__button" onClick={handleShow}>
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </button>
+          <button className="icon-button table__button" onClick={handleDeleteShow}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </td>
+      </tr>
+      <DeleteCardModal show={showDeleteCardModal} handleClose={handleDeleteClose} cardSelected={card} />  {/* Updated name to include "Card" */}
+    </>
+  );
 };
 
 export default Card;
