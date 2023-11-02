@@ -17,6 +17,18 @@ const login = asyncHandler(async (req, res) => {
 
     if (!foundUser) {
         return res.status(401).json({ message: 'No User Resgistered.' });
+    }else{
+        // Check if locked out
+        if (foundUser.lockOutAttempts.passwordAttempts >= 5) {
+            console.log("User is locked out.")
+            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
+        }else if (foundUser.lockOutAttempts.emailVerificationAttempts >= 3) {
+            console.log("User is locked out.")
+            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
+        }else if (foundUser.isActive === false) {
+            console.log("User is not activated.")
+            return res.status(445).json({ message: 'Unauthorized. User not activated.', error: 445 });
+        }
     }
 
     // Compare the password with the hashed password stored in the database
@@ -27,16 +39,8 @@ const login = asyncHandler(async (req, res) => {
         foundUser.lockOutAttempts.passwordAttempts = foundUser.lockOutAttempts.passwordAttempts + 1;
         foundUser.save();
         return res.status(402).json({ message: 'Unauthorized. Invalid password.', error: 402, attempts: foundUser.lockOutAttempts.passwordAttempts });
-    } else if (foundUser.isActive === false) {
-        return res.status(445).json({ message: 'Unauthorized. User not activated.', error: 445 });
-    }
+    } 
     else {
-        // User is locked out
-        if (foundUser.lockOutAttempts.passwordAttempts >= 5) {
-            console.log("User is locked out.")
-            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
-        }
-        // Reset user logon fail attempts
         foundUser.lockOutAttempts.passwordAttempts = 0;
         foundUser.save();
     };
