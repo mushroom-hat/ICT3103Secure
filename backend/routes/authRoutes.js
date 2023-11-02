@@ -5,9 +5,10 @@ const loginLimiter = require('../middleware/loginLimiter');
 const requestLogger = require('../middleware/requestLogger');
 const setDonatorRole = require('../middleware/setDonatorRole');
 const bouncer = require('../middleware/bouncer.js');
+const bouncerlogin = require('../middleware/bouncerlogin.js');
 
 router.route('/')
-    .post(loginLimiter, authController.login);
+    .post(loginLimiter, bouncerlogin, authController.login);
 
 router.route('/refresh')
     .get(authController.refresh);
