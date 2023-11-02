@@ -116,7 +116,7 @@ const verifyLogin = asyncHandler(async (req, res) => {
 
                     // Save the verification code and expiration time to the database
                     foundUser.verificationCode.code = verificationCode;
-                    foundUser.verificationCode.expirationTime = Date.now() + 300000;
+                    foundUser.verificationCode.expirationTime = Date.now() + 90000;
                     foundUser.save();
 
                     // Return a success message
