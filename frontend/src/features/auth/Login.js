@@ -56,15 +56,14 @@ const Login = () => {
             if (accessToken !== null) {
                 setIsLoadingUI(true);
                 const backendAPI = process.env.REACT_APP_API_BASE_URL;
+                console.log("Backend API: " + backendAPI);
                 const response = await fetch(`${backendAPI}/auth/verify-login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     }, body: JSON.stringify({ username })
                 });
-                console.log("Res: " + response);
-                console.log("Res Body: " + response.body);
-                if (response.status === 200) {
+                if (response.status === 200 || response.body.success !== null) {
                     dispatch(setCredentials({ accessToken, username, roles }));
                     setUsername('');
                     setPwd('');
@@ -73,10 +72,10 @@ const Login = () => {
                 } 
 
                 // Check Response Body
-                if (response.body.error === 444) {
+                if (response.body.error === 444 || response.status === 444) {
                     setIsLoadingUI(false);
                     setErrMsg('Account Locked Out. Please contact administrator.');
-                } else if(response.body.error === 445){
+                } else if(response.body.error === 445 || response.status === 445){
                     console.log("Error: " + response.body);
                     setIsLoadingUI(false);
                     dispatch(setCredentials({ username }));
@@ -89,9 +88,7 @@ const Login = () => {
                 }
 
             } else {
-                setUsername('');
-                setPwd('');
-                navigate('/login-error');
+                setErrMsg('Server Connection Error');
             }
         } catch (err) {
             console.error('Failed to log in:', err);
