@@ -16,21 +16,21 @@ pipeline {
     }
 
     stages {
-        stage('SonarCloud Code Scan') {
-            steps {
-                script {
-                    // update to test
-                    def nodeTool = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                    withSonarQubeEnv('SonarCloud') {
-                        def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                        withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${scannerTool}/bin"]) {
-                            sh 'node -v'  // Check Node.js version (optional)
-                            sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info'
-                        }
-                    }
-                } 
-            }
-        }
+        // stage('SonarCloud Code Scan') {
+        //     steps {
+        //         script {
+        //             // update to test
+        //             def nodeTool = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+        //             withSonarQubeEnv('SonarCloud') {
+        //                 def scannerTool = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+        //                 withEnv(["PATH+NODEJS=${nodeTool}/bin", "PATH+SONAR=${scannerTool}/bin"]) {
+        //                     sh 'node -v'  // Check Node.js version (optional)
+        //                     sh 'sonar-scanner -Dsonar.projectKey=mushroom-hat_ICT3103Secure -Dsonar.organization=charsity -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info'
+        //                 }
+        //             }
+        //         } 
+        //     }
+        // }
         // stage("SonarCloud Quality Gate"){
         //     timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
         //         def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv

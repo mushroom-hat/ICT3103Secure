@@ -11,23 +11,59 @@ const Article = require('../models/Article');
 //@access Private
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-pwd').lean();
-    if (!users || users.length === 0) {npm 
+    if (!users || users.length === 0) {
+        npm
         return res.status(404).json({ message: 'No users found' });
     }
     res.json(users);
 });
 
 const getUserById = asyncHandler(async (req, res) => {
-    const userId = req.params.id;
+    console.log("Getting user by ID");
+    const userId = req.body._id;
+    console.log(userId);
 
     // Find the user by ID
     const user = await User.findById(userId).select('-pwd').lean();
+    console.log(user);
 
     if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: 'User not found', error: true });
+    } else {
+        console.log("User found");
+        return res.status(200).json({ message: 'User found', success: true, user: user });
     }
+});
 
-    res.json(user);
+const getUserByUsername = asyncHandler(async (req, res) => {
+    console.log("Getting user by ID");
+    const username = req.body.username;
+    console.log(username);
+
+    // Find user by username
+    // Find the user based on the username and select 'username', 'email', and 'name'
+    User.findOne({ username: username })
+        .select('username email name card')
+        .lean() // Use .lean() to return plain JavaScript objects
+        .then(user => {
+            if (user) {
+                console.log('User Found:', user);
+                // 'user' object now contains 'username', 'email', and 'name'
+                return res.status(200).json({ message: 'User found', success: true, user: user });
+
+            } else {
+                console.log('User not found');
+                // Handle the case where the user is not found
+                return res.status(404).json({ message: 'User not found', error: true });
+
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            // Handle the error appropriately
+            return res.status(500).json({ message: 'Internal Server Error With GetUserByUsername', error: true });
+        });
+
 });
 //@desc Get all organizations
 //@route GET /users/organizations
@@ -51,7 +87,7 @@ const createNewUsers = asyncHandler(async (req, res) => {
     const tokenKey = 'NA'
 
     // Confirm data
-    if (!name || !username || !email || !pwd || !roles || !isActive ) {
+    if (!name || !username || !email || !pwd || !roles || !isActive) {
         return res.status(400).json({ message: 'All fields are required' });
     }
     console.log("Checking for duplicate username")
@@ -60,7 +96,7 @@ const createNewUsers = asyncHandler(async (req, res) => {
     if (duplicate) {
         return res.status(409).json({ message: 'Duplicate user' });
     }
-    
+
     console.log("Done checking for duplicate username")
 
     // Hash password
@@ -111,7 +147,7 @@ const updateUser = asyncHandler(async (req, res) => {
     if (card) {
         user.card = card; // Update the 'card' field
     }
-    
+
     if (pwd) {
         // Hash password
         user.pwd = await bcrypt.hash(pwd, 10); // salt rounds
@@ -186,5 +222,6 @@ module.exports = {
     updateUser,
     deleteUser,
     addDonationToUser, // Export the new function to add a donation]
-    getUserById
+    getUserById,
+    getUserByUsername
 };
