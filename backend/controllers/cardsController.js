@@ -1,7 +1,7 @@
 const Card = require('../models/Card');
 const User = require('../models/User'); // Import the User model
 const asyncHandler = require('express-async-handler');
-
+const jwt = require('jsonwebtoken');
 //@desc Get all cards
 //@route GET /cards
 //@access Private
@@ -24,16 +24,38 @@ const createNewCard = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
+    // Extract the user ID from the JWT token
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    console.log("Req header", authHeader)
+    if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    const token = authHeader.split(' ')[1];
+    let userID;
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (err) return res.status(403).json({ message: 'Forbidden' });
+        userID = decoded.UserInfo.id;
+        console.log("UserID", userID)
+    });
+
     // Create and store the new card
     const card = await Card.create({ cardNumber, cardHolderName, expiryDate, cvc });
 
     if (card) {
+        // Update the user's card field with the newly created card's ID
+        const user = await User.findById(userID);
+        if (user) {
+            user.card = card._id;
+            await user.save();
+            console.log("Before", user)
+        }
+        console.log("After", user)
+
         res.status(201).json({ message: 'New card created' });
     } else {
         res.status(400).json({ message: 'Invalid card data received' });
     }
 });
-
 //@desc Update a card
 //@route PUT /cards/:id
 //@access Private

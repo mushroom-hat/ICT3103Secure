@@ -74,6 +74,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         } else return [{ type: "Organization", id: "LIST" }];
       },
     }),
+    getUserById: builder.query({
+      query: (id) => `/users/getById/${id}`,
+      validateStatus: (response, result) => {
+        return response.status === 200 && !result.isError;
+      },
+    }),
   }),
 });
 
@@ -83,6 +89,7 @@ export const {
   useUpdateUserMutation,
   useDeleteUserMutation,
   useGetOrganizationsQuery,
+  useGetUserByIdQuery,
 } = usersApiSlice;
 
 // returns the query result object

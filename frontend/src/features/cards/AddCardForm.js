@@ -1,115 +1,137 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Button, Col, Container, Row, Toast } from 'react-bootstrap';
-import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
-import { useAddNewCardMutation } from "./cardsApiSlice"; // Import the appropriate API slice
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useAddNewCardMutation } from "./cardsApiSlice";
+import { useUpdateUserMutation } from "../users/usersApiSlice";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from "react-redux";
+import { selectAllUsers } from "../users/usersApiSlice";
+import useAuth from '../../hooks/useAuth';
 
 const AddCardForm = () => {
-  const [formData, setFormData] = useState({
-    cardNumber: '',
-    cardHolderName: '',
-    expiryDate: '',
-    cvc: '',
-  });
-
-  const [showToast, setShowToast] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [addNewCard, { isSuccess: mutationSuccess }] = useAddNewCardMutation(); // Replace with the correct mutation
+  const [addNewCard, { isLoading, isSuccess, isError, error }] = useAddNewCardMutation();
+  const updateUser = useUpdateUserMutation()[0];
   const navigate = useNavigate();
 
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardHolderName, setCardHolderName] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [cvc, setCVC] = useState('');
+  const [validCard, setValidCard] = useState(false);
+
   useEffect(() => {
-    if (mutationSuccess) {
-      setIsSuccess(true);
-      setTimeout(() => {
-        navigate('/cards'); // Replace with the appropriate route
-      }, 3000);
+    console.log("cardNumber:", cardNumber);
+    console.log("cardHolderName:", cardHolderName);
+    console.log("expiryDate:", expiryDate);
+    console.log("cvc:", cvc);
+  
+    // Initialize isCardValid as false
+    let isCardValid = false;
+  
+    // Check if the card is valid based on common requirements
+    if (
+      cardNumber.length === 16 &&          // Card number has 16 digits
+      cardHolderName.trim() !== '' &&      // Card holder name is not empty
+      expiryDate.match(/^\d{2}\/\d{2}$/) && // Expiry date matches MM/YY format
+      cvc.length === 3                     // CVC has 3 digits
+    ) {
+      isCardValid = true;
     }
-  }, [mutationSuccess, navigate]);
+  
+    console.log("isCardValid:", isCardValid);
+  
+    // Set validCard based on the validation result
+    setValidCard(isCardValid);
+  }, [cardNumber, cardHolderName, expiryDate, cvc]);
+  
+  
+  
+  console.log(cardNumber)
+  console.log(cardHolderName)
+  console.log(expiryDate)
+  console.log(cvc)
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const addNewCardClick = async () => {
-    try {
-      await addNewCard(formData);
-      setIsSuccess(mutationSuccess);
-    } catch (error) {
-      setIsSuccess(false);
-    }
-    setShowToast(true);
-  };
-
-  const handleSubmit = (e) => {
+  const { username, id } = useAuth();
+  console.log(id)
+  const canSave = validCard && id && !isLoading;
+  console.log(validCard)
+  const onSaveCardClicked = async (e) => {
     e.preventDefault();
-    addNewCardClick();
+    if (canSave) {
+      const cardResponse = await addNewCard({
+        cardNumber,
+        cardHolderName,
+        expiryDate,
+        cvc,
+      });
+  
+      console.log("Card Response:", cardResponse);
+  
+      if (!cardResponse.error) {
+        const newCardId = cardResponse.data.id;
+        const updateUserResponse = await updateUser({ id, card: newCardId });
+        
+        console.log("User Update Response:", updateUserResponse); // Log the response from updateUser function
+  
+        navigate('/success');
+      }
+    }
   };
 
   return (
-    <Container fluid className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh', color: "white" }}>
-      <Row className="w-100">
-        <Col xs={12} md={8} lg={6} className="mx-auto">
-          <Form onSubmit={handleSubmit}>
-            <Row className="mb-3 text-white justify-content-center">
-              <h2>Add Card</h2>
-            </Row>
+    <div>
+      {isError && (
+        <p className="error-message">{error?.data?.message}</p>
+      )}
 
-            <Form.Group className="mb-3">
-              <Form.Label>Card Number</Form.Label>
-              <Form.Control type="text" name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} />
-            </Form.Group>
+      <form className="card-creation-form" onSubmit={onSaveCardClicked}>
+        <h2>New Card</h2>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Card Holder Name</Form.Label>
-              <Form.Control type="text" name="cardHolderName" value={formData.cardHolderName} onChange={handleInputChange} />
-            </Form.Group>
+        <label htmlFor="cardNumber">Card Number:</label>
+        <input
+          type="text"
+          id="cardNumber"
+          value={cardNumber}
+          onChange={(e) => setCardNumber(e.target.value)}
+          required
+        />
 
-            <Form.Group className="mb-3">
-              <Form.Label>Expiry Date</Form.Label>
-              <Form.Control type="text" name="expiryDate" value={formData.expiryDate} onChange={handleInputChange} />
-            </Form.Group>
+        <label htmlFor="cardHolderName">Card Holder Name:</label>
+        <input
+          type="text"
+          id="cardHolderName"
+          value={cardHolderName}
+          onChange={(e) => setCardHolderName(e.target.value)}
+          required
+        />
 
-            <Form.Group className="mb-3">
-              <Form.Label>CVC</Form.Label>
-              <Form.Control type="text" name="cvc" value={formData.cvc} onChange={handleInputChange} />
-            </Form.Group>
+        <label htmlFor="expiryDate">Expiry Date:</label>
+        <input
+          type="text"
+          id="expiryDate"
+          value={expiryDate}
+          onChange={(e) => setExpiryDate(e.target.value)}
+          required
+        />
 
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </Form>
+        <label htmlFor="cvc">CVC:</label>
+        <input
+          type="text"
+          id="cvc"
+          value={cvc}
+          onChange={(e) => setCVC(e.target.value)}
+          required
+        />
 
-          <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            minWidth: 200,
-            color: "black"
-          }}>
-            <Toast.Header>
-              <strong className="mr-auto">Notification</strong>
-            </Toast.Header>
-            <Toast.Body>
-              {isSuccess ? (
-                <>
-                  <CheckCircleFill color="green" className="mr-2" style={{ marginRight: "10px" }} />
-                  Create card successful
-                </>
-              ) : (
-                <>
-                  <XCircleFill color="red" className="mr-2" style={{ marginRight: "10px" }} />
-                  Fail to create card
-                </>
-              )}
-            </Toast.Body>
-          </Toast>
-        </Col>
-      </Row>
-    </Container>
+        <label htmlFor="user">User: {username}</label>
+
+        <button
+          type="submit"
+          disabled={!canSave}
+        >
+          Save Card
+        </button>
+      </form>
+    </div>
   );
 };
 

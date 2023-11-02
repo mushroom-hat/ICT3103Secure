@@ -17,6 +17,18 @@ const getAllUsers = asyncHandler(async (req, res) => {
     res.json(users);
 });
 
+const getUserById = asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+
+    // Find the user by ID
+    const user = await User.findById(userId).select('-pwd').lean();
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+});
 //@desc Get all organizations
 //@route GET /users/organizations
 //@access Public
@@ -173,5 +185,6 @@ module.exports = {
     createNewUsers,
     updateUser,
     deleteUser,
-    addDonationToUser // Export the new function to add a donation
+    addDonationToUser, // Export the new function to add a donation]
+    getUserById
 };

@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
-import useAuth from '../../hooks/useAuth'; // Import the useAuth hook
+import useAuth from '../../hooks/useAuth';
 import { useAddNewDonationMutation } from './donationsApiSlice';
+import { useGetUserByIdQuery } from '../users/usersApiSlice';
+import { useSelector } from "react-redux";
 
 function NewDonationForm() {
-  const { id, username } = useAuth(); // Get the user's ID and username from the useAuth hook
+  const { id, username } = useAuth();
+  console.log(id);
+
   const [amount, setAmount] = useState('');
-  const [createDonation, { isLoading, isError, error }] = useAddNewDonationMutation();
+  const [createDonation, { isLoading, isError: isDonationError, error: donationError }] = useAddNewDonationMutation();
+  const userId = id;
+  console.log(userId);
+
+  const { data: user, error: userError } = useGetUserByIdQuery(userId);
+  console.log(user);
+ 
+  if (user) {
+    console.log('User data from Redux:', user);
+  }
 
   const handleCreateDonation = () => {
     if (amount) {
-      // Send a POST request to create a new donation
       createDonation({ userId: id, amount: Number(amount) });
     }
   };
@@ -27,7 +39,7 @@ function NewDonationForm() {
           onChange={(e) => setAmount(e.target.value)}
         />
       </div>
-      {isError && <p>Error: {error.message}</p>}
+      {isDonationError && <p>Error: {donationError.message}</p>}
       <button onClick={handleCreateDonation} disabled={isLoading}>
         Create Donation
       </button>
