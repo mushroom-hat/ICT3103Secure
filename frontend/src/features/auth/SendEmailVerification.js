@@ -20,7 +20,7 @@ const SendEmailVerificationPage = () => {
             // await axios.post('/auth/send-verification-email');
 
             const backendAPI = process.env.REACT_APP_API_BASE_URL;
-            const response = await fetch(`${backendAPI}/auth/send-verification-emai`, {
+            const response = await fetch(`${backendAPI}/auth/send-verification-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
