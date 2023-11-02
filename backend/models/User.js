@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema({
   card: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Card', // Reference to the Card schema
-    required: false
+    required: false,
+    default: "NaN"
   },
   donation: {
     type: mongoose.Schema.Types.ObjectId,
