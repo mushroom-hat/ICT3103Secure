@@ -50,70 +50,75 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { accessToken, roles } = await login({ username, pwd }).unwrap();
-            console.log("Res Data: " + accessToken + " " + username + " " + roles);
-
-            if (accessToken !== null) {
-                setIsLoadingUI(true);
-                const backendAPI = process.env.REACT_APP_API_BASE_URL;
-                console.log("Backend API: " + backendAPI);
-                const response = await fetch(`${backendAPI}/auth/verify-login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }, body: JSON.stringify({ username })
-                });
-                if (response.status === 200 || response.json().status === 200) {
-                    dispatch(setCredentials({ accessToken, username, roles }));
-                    setUsername('');
-                    setPwd('');
-                    setIsLoadingUI(false);
-                    navigate('/verify-login');
-                } 
-
-                // Check Response Body
-                if (response.json().error === 444 || response.status === 444) {
-                    setIsLoadingUI(false);
-                    setErrMsg('Account Locked Out. Please contact administrator.');
-                } else if(response.json().error === 445 || response.status === 445){
-                    console.log("Error: " + response.body);
-                    setIsLoadingUI(false);
-                    dispatch(setCredentials({ username }));
-                    navigate('/sendemailverification');
-                } else {
-                    // Console Log Response Entire in String, unpacked JSON
-                    console.log("Error: " + response.json());
-                    setUsername('');
-                    setPwd('');
-                    navigate('/login-error');
-                }
-
+          const { accessToken, roles } = await login({ username, pwd }).unwrap();
+          console.log("Res Data: " + accessToken + " " + username + " " + roles);
+      
+          if (accessToken !== null) {
+            setIsLoadingUI(true);
+            const backendAPI = process.env.REACT_APP_API_BASE_URL;
+            console.log("Backend API: " + backendAPI);
+            const response = await fetch(`${backendAPI}/auth/verify-login`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username }),
+            });
+      
+            const responseData = await response.json(); // Read the JSON response data once
+      
+            if (response.status === 200 || responseData.status === 200) {
+              dispatch(setCredentials({ accessToken, username, roles }));
+              setUsername('');
+              setPwd('');
+              setIsLoadingUI(false);
+              navigate('/verify-login');
+            } else if (responseData.error === 444 || response.status === 444) {
+              setIsLoadingUI(false);
+              setErrMsg('Account Locked Out. Please contact administrator.');
+            } else if (responseData.error === 445 || response.status === 445) {
+              console.log("Error: " + responseData.body);
+              setIsLoadingUI(false);
+              dispatch(setCredentials({ username }));
+              navigate('/sendemailverification');
             } else {
-                setErrMsg('Server Connection Error');
+              // Console Log Response Entire in String, unpacked JSON
+              console.log("Error: " + JSON.stringify(responseData));
+              setUsername('');
+              setPwd('');
+              navigate('/login-error');
             }
+          } else {
+            setErrMsg('Server Connection Error');
+          }
         } catch (err) {
-            console.error('Failed to log in:', err);
-            if (!err.status) {
-                setErrMsg('No Server Response');
-            } else if (err.status === 400) {
-                setErrMsg('Missing Username or Password');
-            } else if (err.status === 401) {
-                setErrMsg(err.data?.message);
-            } else if (err.status === 402) {
-                const attemptsAsString = err.data?.attempts;
-                const attemptsAsInt = parseInt(attemptsAsString, 10);
-                const result = 5 - attemptsAsInt;
-                setErrMsg(err.data?.message + " Password will be locked out in another " + result.toString() + " attempts.");
-            } else if (err.status === 445 || err.data?.error === 445) {
-                dispatch(setCredentials({ username }));
-                navigate('/sendemailverification')
-            }
-            else {
-                console.error('Unknown error occurred:', err.status);
-                setErrMsg(err.data?.message);
-            }
+          console.error('Failed to log in:', err);
+          if (!err.status) {
+            setErrMsg('No Server Response');
+          } else if (err.status === 400) {
+            setErrMsg('Missing Username or Password');
+          } else if (err.status === 401) {
+            setErrMsg(err.data?.message);
+          } else if (err.status === 402) {
+            const attemptsAsString = err.data?.attempts;
+            const attemptsAsInt = parseInt(attemptsAsString, 10);
+            const result = 5 - attemptsAsInt;
+            setErrMsg(
+              err.data?.message +
+                " Password will be locked out in another " +
+                result.toString() +
+                " attempts."
+            );
+          } else if (err.status === 445 || err.data?.error === 445) {
+            dispatch(setCredentials({ username }));
+            navigate('/sendemailverification');
+          } else {
+            console.error('Unknown error occurred:', err.status);
+            setErrMsg(err.data?.message);
+          }
         }
-    }
+      };
+      
 
     const handleUserInput = (e) => setUsername(e.target.value);
     const handlePwdInput = (e) => setPwd(e.target.value);
