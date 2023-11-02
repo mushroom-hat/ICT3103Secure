@@ -14,7 +14,7 @@ const authSlice = createSlice({
             state.token = null;
             state.username = null;
             state.roles = null  // clear the username
-        },
+        }
     }
 })
 

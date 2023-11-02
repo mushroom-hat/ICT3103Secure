@@ -27,7 +27,10 @@ const login = asyncHandler(async (req, res) => {
         foundUser.lockOutAttempts.passwordAttempts = foundUser.lockOutAttempts.passwordAttempts + 1;
         foundUser.save();
         return res.status(402).json({ message: 'Unauthorized. Invalid password.', error: "Invalid password.", attempts: foundUser.lockOutAttempts.passwordAttempts });
-    } else {
+    } else if (foundUser.isActive === false) {
+        return res.status(445).json({ message: 'Unauthorized. User not activated.', error: "User not activated." });
+    }
+    else {
         // User is locked out
         if (foundUser.lockOutAttempts.passwordAttempts >= 5) {
             console.log("User is locked out.")
@@ -368,6 +371,89 @@ const signup = asyncHandler(async (req, res) => {
     res.status(201).json({ message: 'User registered successfully', success: 'User registered successfully' });
 });
 
+// Send Activation Email
+const sendActivationEmail = asyncHandler(async (req, res) => {
+    // Get the user's email address from username, username will be in the request body
+    const { username } = req.body;
+    console.log("Retrieving Username: " + username);
+    console.log("Finding user...");
+
+
+    // Find the user in the database
+    User.findOne({ username: username })
+        .select('email token')
+        .lean() // Use .lean() to return plain JavaScript objects
+        .then(user => {
+            if (user) {
+                console.log('User Found:', user);
+                // 'user' object now contains 'username', 'email', and 'name'
+
+                // Send Email
+                const nodemailer = require('nodemailer');
+                const transporter = nodemailer.createTransport({
+                    secure: true,
+                    requireTLS: true,
+                    port: 465,
+                    secured: true,
+                    service: 'gmail',
+                    auth: {
+                        user: process.env.MAIL_USER,
+                        pass: process.env.MAIL_PASS
+                    }
+                });
+                const activationURL = `https://wazpplabs.com/auth/activate/${encodeURIComponent(user.token)}`;
+                console.log("Activation URL: " + activationURL);
+                const emailTemplate = {
+                    from: 'ssdsecuresoftware@gmail.com',
+                    to: user.email, // Replace with the user's email address
+                    subject: 'Activate Your Account',
+                    html: `
+                  <p>Dear "${user.name}",</p>
+                  <p>Click the following button to activate your account:</p>
+                  <a href="https://wazpplabs.com/landing-page?token=${encodeURIComponent(user.token)}" style="display: inline-block; padding: 10px 20px; background-color: blue; color: white; text-decoration: none;">
+                    Activate Your Account
+                  </a>
+                `
+                };
+
+                console.log("Sending email...")
+                console.log("Email: " + emailTemplate.to)
+
+                transporter.sendMail(emailTemplate, (error, info) => {
+                    if (error) {
+                        console.error('Error sending email:', error);
+                        return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error" });
+                    } else {
+                        console.log('Email sent:', info.response);
+                    }
+                });
+                console.log("Activation Email sent successfully.")
+                return res.status(200).json({ message: 'Activation Email sent successfully', success: 'Activation Email sent successfully' });
+
+            } else {
+                console.log('User not found');
+                // Handle the case where the user is not found
+                return res.status(404).json({ message: 'User not found', error: true });
+
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            // Handle the error appropriately
+            return res.status(500).json({ message: 'Internal Server Error With SendEmailVerification', error: true });
+        });
+
+});
+
+
+
+
+
+
+
+
+
+
 const activate = asyncHandler(async (req, res) => {
     console.log("Activating user...");
 
@@ -432,5 +518,6 @@ module.exports = {
     refresh,
     logout,
     signup,
-    activate
+    activate,
+    sendActivationEmail
 };

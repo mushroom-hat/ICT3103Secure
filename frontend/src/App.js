@@ -19,6 +19,7 @@ import AddCardForm from './features/cards/AddCardForm';
 
 import ActivationLandingPage from './features/auth/ActivationLandingPage';
 import EmailVerification from './features/auth/EmailVerification';
+import SendEmailVerification from './features/auth/SendEmailVerification';
 import WriteArticle from './features/articles/WriteArticle';
 import LoginVerification from './features/auth/LoginVerification';
 import LoginErrorPage from './features/auth/LoginError';
@@ -49,6 +50,7 @@ function App() {
         <Route path="signup" element={<Signup />} />
         <Route path="/landing-page" element={<ActivationLandingPage />} />
         <Route path="emailverification" element={<EmailVerification />} />
+        <Route path="sendemailverification" element={<SendEmailVerification />} />
         <Route element={<PersistLogin />}>
           <Route path="article">
             <Route path=":id" element={<Article />} />

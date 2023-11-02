@@ -62,7 +62,6 @@ const Login = () => {
                         'Content-Type': 'application/json',
                     }, body: JSON.stringify({ username })
                 });
-
                 if (response.status === 200) {
                     dispatch(setCredentials({ accessToken, username, roles }));
                     setUsername('');
@@ -94,9 +93,12 @@ const Login = () => {
                 const attemptsAsString = err.data?.attempts;
                 const attemptsAsInt = parseInt(attemptsAsString, 10);
                 const result = 5 - attemptsAsInt;
-
                 setErrMsg(err.data?.message + " Password will be locked out in another " + result.toString() + " attempts.");
-            } else {
+            } else if (err.status === 445) {
+                dispatch(setCredentials({ username }));
+                navigate('/sendemailverification')
+            }
+            else {
                 setErrMsg(err.data?.message);
             }
         }

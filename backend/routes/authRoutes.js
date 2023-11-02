@@ -28,4 +28,7 @@ router.route('/verify-login')
 router.route('/verify-login-code')
     .post(authController.verifyLoginCode)
 
+router.route('/send-verification-email')
+    .post(authController.sendActivationEmail)
+
 module.exports = router;
