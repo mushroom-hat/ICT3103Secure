@@ -43,7 +43,16 @@ const userSchema = new mongoose.Schema({
   tokenKey: {
     type: String,
     required: true
-  }
+  },
+  verificationCode: {
+    code: {
+      type: String,
+      required: true
+    },
+    expirationTime: {
+      type: Date,
+      required: true
+    }}
   // Additional fields can be added here
 });
 

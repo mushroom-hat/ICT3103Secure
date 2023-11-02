@@ -54,6 +54,113 @@ const login = asyncHandler(async (req, res) => {
     res.json({ accessToken, username: foundUser.username, roles: foundUser.roles });
 });
 
+// Verify Login using 6 digit Email Verification
+const verifyLogin = asyncHandler(async (req, res) => {
+    try {
+        console.log("Verifying login...")
+        // Generate a 6 digit code
+        const crypto = require('crypto');
+        const verificationCode = crypto.randomInt(100000, 999999);
+        console.log("Verification Code: " + verificationCode);
+        // Get the user's email address from username
+        const { username } = req.body;
+        console.log("Retrieving Username: " + username);
+
+        const foundUser = await User.findOne({ username }).exec();
+
+        // Check if the user exists
+        if (!foundUser) {
+            console.log("User not found.")
+            return res.status(401).json({ message: 'Unauthorized', error: "User not found." });
+        } else if (foundUser.isActive === false) {
+            console.log("User not activated.")
+            return res.status(401).json({ message: 'Unauthorized', error: "User not activated." });
+        } else {
+            console.log("Found User: " + foundUser.username);
+            const emailAddr = foundUser.email;
+            console.log("Email Address: " + emailAddr);
+
+            // Send the 6 digit code to the user's email address
+            const nodemailer = require('nodemailer');
+            const transporter = nodemailer.createTransport({
+                secure: true,
+                requireTLS: true,
+                port: 465,
+                secured: true,
+                service: 'gmail',
+                auth: {
+                    user: 'ssdsecuresoftware@gmail.com',
+                    pass: 'xtyr bfet oftx jxtc'
+                }
+            });
+
+            const emailTemplate = {
+                from: 'ssdsecuresoftware@gmail.com',
+                to: emailAddr, // Replace with the user's email address
+                subject: 'Login Verification Code (Charity)',
+                html: `
+          <p>Your Code: ${verificationCode}</p>
+          
+        `
+            };
+
+            console.log("Sending email verification...")
+            console.log("Email: " + emailTemplate.to)
+
+            transporter.sendMail(emailTemplate, (error, info) => {
+                if (error) {
+                    console.error('Error sending email:', error);
+                    return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error" });
+                } else {
+                    console.log('Email Verification Code sent:', info.response);
+
+                    // Save the verification code and expiration time to the database
+                    foundUser.verificationCode.code = verificationCode;
+                    foundUser.verificationCode.expirationTime = Date.now() + 300000;
+                    foundUser.save();
+
+                    // Return a success message
+                    return res.status(200).json({ message: 'Email Verification Code sent successfully.' , success: "Email Verification Code sent successfully."});
+                }
+            });
+
+            console.log("Email Verication Code sent successfully.")
+            console.log("Verification Code Sent.")
+        }
+
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal login verification server error.', error: "Internal login verification server error." });
+    }
+
+
+});
+
+// Verify 6 digit Email Verification Code
+const verifyLoginCode = asyncHandler(async (req, res) => {
+    console.log("Verifying login code...")
+    // Get the user's email address from username
+    const { username, verificationCode } = req.body;
+    console.log("Retrieving Username with Code: " + username + " " + verificationCode);
+
+    // Find the user in the database
+    const foundUser = await User.findOne({ username }).exec();
+    const verificationCodeDB = foundUser.verificationCode.code;
+    const expirationTime = foundUser.verificationCode.expirationTime;
+
+    // Check if the verification code is correct
+    if (verificationCodeDB !== verificationCode) {
+        console.log("Invalid verification code.")
+        return res.status(401).json({ message: 'Invalid verification code.', error: "Invalid verification code." });
+    } else if (Date.now() > expirationTime) {
+        console.log("Verification code expired.")
+        return res.status(401).json({ message: 'Verification code expired.', error: "Verification code expired." });
+    } else {
+        console.log("Verification code correct.")
+        return res.status(200).json({ message: 'Verification code verified successfully.', success: "Verification code correct." });
+    }
+});
+
+
 // @desc Refresh
 // @route GET /auth/refresh
 // @access Public - because access token has expired
@@ -169,11 +276,11 @@ const signup = asyncHandler(async (req, res) => {
         const userExists = await User.findOne({ username });
         const userExistsEmail = await User.findOne({ email });
         if (userExists || userExistsEmail) {
-            return res.status(400).json({ message: 'Username already taken' , error: 'Username already taken'});
+            return res.status(400).json({ message: 'Username already taken', error: 'Username already taken' });
         }
     } catch (error) {
         console.log("Error: " + error)
-        return res.status(500).json({ message: 'Internal server error', error: "Internal server error"});
+        return res.status(500).json({ message: 'Internal server error', error: "Internal server error" });
     }
 
 
@@ -228,7 +335,7 @@ const signup = asyncHandler(async (req, res) => {
         transporter.sendMail(emailTemplate, (error, info) => {
             if (error) {
                 console.error('Error sending email:', error);
-                return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error"});
+                return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error" });
             } else {
                 console.log('Email sent:', info.response);
             }
@@ -238,7 +345,7 @@ const signup = asyncHandler(async (req, res) => {
         console.log("User added successfully.")
 
     }
-    res.status(201).json({ message: 'User registered successfully' , success: 'User registered successfully'});
+    res.status(201).json({ message: 'User registered successfully', success: 'User registered successfully' });
 });
 
 const activate = asyncHandler(async (req, res) => {
@@ -300,6 +407,8 @@ const activate = asyncHandler(async (req, res) => {
 
 module.exports = {
     login,
+    verifyLogin,
+    verifyLoginCode,
     refresh,
     logout,
     signup,

@@ -21,4 +21,10 @@ router.route('/signup')
 router.route('/activate/:token')
     .post(authController.activate);
 
+router.route('/verify-login')
+    .post(authController.verifyLogin)
+
+router.route('/verify-login-code')
+    .post(authController.verifyLoginCode)
+
 module.exports = router;

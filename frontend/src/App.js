@@ -1,11 +1,11 @@
-import { Routes, Route } from 'react-router-dom' 
-import Layout from './components/Layout'; 
-import Public from './components/Public'; 
-import Login from './features/auth/Login'; 
-import Signup from './features/auth/Signup'; 
+import { Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout';
+import Public from './components/Public';
+import Login from './features/auth/Login';
+import Signup from './features/auth/Signup';
 import DashLayout from './components/DashLayout';
 import Welcome from './features/auth/Welcome';
-import UsersList from './features/users/UsersList' ;
+import UsersList from './features/users/UsersList';
 import OrganizationsList from './features/organizations/OrganizationsList';
 import UserProfile from './features/users/UserProfile';
 import CashflowAnalysis from './features/cashflow/CashFlowAnalysis';
@@ -18,6 +18,8 @@ import NewDonationForm from './features/donations/NewDonationForm';
 import ActivationLandingPage from './features/auth/ActivationLandingPage';
 import EmailVerification from './features/auth/EmailVerification';
 import WriteArticle from './features/articles/WriteArticle';
+import LoginVerification from './features/auth/LoginVerification';
+import LoginErrorPage from './features/auth/LoginError';
 
 import { ROLES } from "./config/roles";
 
@@ -36,6 +38,8 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Public />} />
         <Route path="login" element={<Login />} />
+        <Route path="login-error" element={<LoginErrorPage />} />
+        <Route path="/verify-login" element={<LoginVerification />} />
         <Route path="profile" element={<UserProfile />} />
         <Route path="organizations">
           <Route index element={<OrganizationsList />} />

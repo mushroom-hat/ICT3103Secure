@@ -22,7 +22,7 @@ const Login = () => {
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [persist, setPersist] = usePersist();
-    
+
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -45,13 +45,40 @@ const Login = () => {
         e.preventDefault();
         try {
             // Cast to variables of res.json({ accessToken, username: foundUser.username, roles: foundUser.roles });
-            const {accessToken, roles} = await login({ username, pwd }).unwrap();
+            const { accessToken, roles } = await login({ username, pwd }).unwrap();
             console.log("Res Data: " + accessToken + " " + username + " " + roles);
-            // Get roles from accessToken
-            dispatch(setCredentials({ accessToken, username, roles }));
-            setUsername('');
-            setPwd('');
-            navigate('/dash');
+
+            // Email Verification 6 digit code, access token is not null, redirect to email verification page.
+            if (accessToken !== null) {
+                // Pass the value of accessToken to the email verification page.
+                
+                // Post username to /auth/verify-login with the body of the request being the username.
+                const backendAPI = process.env.REACT_APP_API_BASE_URL;
+                const response = await fetch(`${backendAPI}/auth/verify-login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },body: JSON.stringify({ username })
+                });
+                // If the response is 200, navigate to the email verification page.
+                if(response.status === 200){
+                    dispatch(setCredentials({ accessToken, username, roles }));
+                    setUsername('');
+                    setPwd('');
+                    navigate('/verify-login');
+                }else{
+                    setUsername('');
+                    setPwd('');
+                    navigate('/login-error');
+                }
+                
+            }else{
+                setUsername('');
+                setPwd('');
+                navigate('/login-error');
+            }
+
+
         } catch (err) {
             if (!err.status) {
                 setErrMsg('No Server Response');
@@ -79,7 +106,7 @@ const Login = () => {
             <Particle />
             <Navbar />
             <Container>
-                <h1 className="project-heading" style={{textAlign: 'center'}}>
+                <h1 className="project-heading" style={{ textAlign: 'center' }}>
                     Employee Login
                 </h1>
             </Container>
@@ -91,7 +118,7 @@ const Login = () => {
                             <Card className="login profile-update-card bg-dark text-white">
                                 <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
                                 <form className="form" onSubmit={handleSubmit}>
-                                    <label style={{ marginTop: "20px", marginLeft: "10px" , marginRight: "10px"}} htmlFor="username">Username:</label>
+                                    <label style={{ marginTop: "20px", marginLeft: "10px", marginRight: "10px" }} htmlFor="username">Username:</label>
                                     <FormControl
                                         className="form__input"
                                         type="text"
@@ -100,16 +127,16 @@ const Login = () => {
                                         value={username}
                                         onChange={handleUserInput}
                                         autoComplete="off"
-                                        required style={{ marginLeft: "10px" , marginRight: "10px", width: "-webkit-fill-available"}}
+                                        required style={{ marginLeft: "10px", marginRight: "10px", width: "-webkit-fill-available" }}
                                     />
-                                    <label style={{ marginTop: "20px", marginLeft: "10px" , marginRight: "10px"}} htmlFor="password">Password:</label>
+                                    <label style={{ marginTop: "20px", marginLeft: "10px", marginRight: "10px" }} htmlFor="password">Password:</label>
                                     <FormControl
                                         className="form__input"
                                         type={showPassword ? 'text' : 'password'}
                                         id="password"
                                         value={pwd}
                                         onChange={handlePwdInput}
-                                        required style={{ marginLeft: "10px", marginRight: "10px", width: "-webkit-fill-available"}}
+                                        required style={{ marginLeft: "10px", marginRight: "10px", width: "-webkit-fill-available" }}
                                     />
                                     <FontAwesomeIcon
                                         icon={showPassword ? faEyeSlash : faEye} // Toggle eye icon based on showPassword state
@@ -126,18 +153,18 @@ const Login = () => {
                                             fontSize: '1rem', // Adjust the font size if needed
                                         }}
                                     />
-                                    <label 
-                                        htmlFor="persist" 
-                                        className="form__persist" 
-                                        style={{ display: 'block', marginTop: '10px', marginLeft: "10px" , marginRight: "10px" }}
-                                        >
+                                    <label
+                                        htmlFor="persist"
+                                        className="form__persist"
+                                        style={{ display: 'block', marginTop: '10px', marginLeft: "10px", marginRight: "10px" }}
+                                    >
                                         <input
                                             type="checkbox"
                                             className="form__checkbox"
                                             id="persist"
                                             checked={persist}
                                             onChange={handleToggle}
-                                            style={{ marginRight: "10px"}}
+                                            style={{ marginRight: "10px" }}
                                         />
                                         Trust This Device
                                     </label>
@@ -152,21 +179,21 @@ const Login = () => {
                                             marginRight: 'auto',
                                             width: 'fit-content'
                                         }}
-                                        >
+                                    >
                                         Sign In
-                                        </button>
-                                        <label style={{
-                                            display: 'block',
-                                            marginTop: '10px',
-                                            textAlign: 'center',
-                                            marginBottom: '10px',
-                                            marginLeft: 'auto',
-                                            marginRight: 'auto',
-                                            width: 'fit-content'
-                                        }}>
-                                            Dont have an account? <Link to="/signup">Sign Up</Link>
-                                        </label>
-                                        
+                                    </button>
+                                    <label style={{
+                                        display: 'block',
+                                        marginTop: '10px',
+                                        textAlign: 'center',
+                                        marginBottom: '10px',
+                                        marginLeft: 'auto',
+                                        marginRight: 'auto',
+                                        width: 'fit-content'
+                                    }}>
+                                        Dont have an account? <Link to="/signup">Sign Up</Link>
+                                    </label>
+
 
                                 </form>
                             </Card>
@@ -175,7 +202,7 @@ const Login = () => {
                 </Container>
             </section>
         </Container>
-        
+
     );
 
     return content;
