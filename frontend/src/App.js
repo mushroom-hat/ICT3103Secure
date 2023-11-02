@@ -15,6 +15,8 @@ import RequireAuth from './features/auth/RequireAuth';
 import SpendingsList from './features/spendings/SpendingsList';
 import NewSpendingForm from './features/spendings/NewSpendingForm';
 import NewDonationForm from './features/donations/NewDonationForm';
+import AddCardForm from './features/cards/AddCardForm';
+
 import ActivationLandingPage from './features/auth/ActivationLandingPage';
 import EmailVerification from './features/auth/EmailVerification';
 import WriteArticle from './features/articles/WriteArticle';
@@ -27,9 +29,7 @@ import "./style.css";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import CardList from "./features/cards/CardList";
-import EditCard from "./features/cards/EditCard";
-import EditCardForm from "./features/cards/EditCardForm";
+import CardsList from "./features/cards/CardsList";
 import Article from "./features/articles/Article";
 import Organization from "./features/organizations/Organization";
 function App() {
@@ -67,10 +67,9 @@ function App() {
                 <Route path="new" element={<NewSpendingForm />} />
               </Route>
               <Route element={<RequireAuth allowedRoles={[ROLES.Donator]} />}>
-                <Route path="card">
-                  <Route index element={<CardList />} />
-                  <Route path=":id" element={<EditCard />} />
-                  <Route path="new" element={<EditCardForm />} />
+                <Route path="cards">
+                  <Route index element={<CardsList />} />
+                  <Route path="new" element={<AddCardForm />} />
                 </Route>
                 <Route path="donations">
                   <Route path="new" element={<NewDonationForm />} />
