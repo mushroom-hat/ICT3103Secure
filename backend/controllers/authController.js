@@ -26,9 +26,9 @@ const login = asyncHandler(async (req, res) => {
         // Update user logon fail attempts
         foundUser.lockOutAttempts.passwordAttempts = foundUser.lockOutAttempts.passwordAttempts + 1;
         foundUser.save();
-        return res.status(402).json({ message: 'Unauthorized. Invalid password.', error: "Invalid password.", attempts: foundUser.lockOutAttempts.passwordAttempts });
+        return res.status(402).json({ message: 'Unauthorized. Invalid password.', error: 402, attempts: foundUser.lockOutAttempts.passwordAttempts });
     } else if (foundUser.isActive === false) {
-        return res.status(445).json({ message: 'Unauthorized. User not activated.', error: "User not activated." });
+        return res.status(445).json({ message: 'Unauthorized. User not activated.', error: 445 });
     }
     else {
         // User is locked out
@@ -384,7 +384,7 @@ const sendActivationEmail = asyncHandler(async (req, res) => {
 
     // Find the user in the database
     User.findOne({ username: username })
-        .select('email token')
+        .select('email name token')
         .lean() // Use .lean() to return plain JavaScript objects
         .then(user => {
             if (user) {

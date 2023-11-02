@@ -90,6 +90,7 @@ const Login = () => {
                 navigate('/login-error');
             }
         } catch (err) {
+            console.error('Failed to log in:', err);
             if (!err.status) {
                 setErrMsg('No Server Response');
             } else if (err.status === 400) {
@@ -101,7 +102,7 @@ const Login = () => {
                 const attemptsAsInt = parseInt(attemptsAsString, 10);
                 const result = 5 - attemptsAsInt;
                 setErrMsg(err.data?.message + " Password will be locked out in another " + result.toString() + " attempts.");
-            } else if (err.status === 445) {
+            } else if (err.status === 445 || err.code === 445) {
                 dispatch(setCredentials({ username }));
                 navigate('/sendemailverification')
             }
