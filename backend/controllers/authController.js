@@ -26,6 +26,10 @@ const login = asyncHandler(async (req, res) => {
         foundUser.lockOutAttempts.passwordAttempts = foundUser.lockOutAttempts.passwordAttempts + 1;
         foundUser.save();
         return res.status(402).json({ message: 'Unauthorized. Invalid password.', error: "Invalid password.", attempts: foundUser.lockOutAttempts.passwordAttempts });
+    }else{
+        // Reset user logon fail attempts
+        foundUser.lockOutAttempts.passwordAttempts = 0;
+        foundUser.save();
     };
 
     const accessToken = jwt.sign(
