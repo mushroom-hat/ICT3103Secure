@@ -82,7 +82,7 @@ const Login = () => {
                     navigate('/sendemailverification');
                 } else {
                     // Console Log Response Entire in String, unpacked JSON
-                    console.log("Error: " + response.json());
+                    console.log("Error: " + response.data);
                     console.log("Error: " + response.json().then(data => console.log(data)));
                     console.log("Error: " + response.body.message);
                     setUsername('');
