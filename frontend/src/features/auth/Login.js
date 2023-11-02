@@ -99,6 +99,7 @@ const Login = () => {
                 navigate('/sendemailverification')
             }
             else {
+                console.error('Unknown error occurred:', err.status);
                 setErrMsg(err.data?.message);
             }
         }
