@@ -13,8 +13,8 @@ router.route('/')
 router.route('/organizations')
 .get(usersController.getAllOrganizations) //READ
 
-.router.route('/getById')
-.get(usersController.getUserById) // Add the route for getUserById
+router.route('/getUserById')
+    .get(usersController.getUserById) // Add the route for getUserById
 
 module.exports = router
 
