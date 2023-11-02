@@ -71,6 +71,10 @@ const Login = () => {
                 } else if (response.status === 444) {
                     setIsLoadingUI(false);
                     setErrMsg('Account Locked Out. Please contact administrator.');
+                } else if(response.status === 445){
+                    setIsLoadingUI(false);
+                    dispatch(setCredentials({ username }));
+                    navigate('/sendemailverification');
                 } else {
                     setUsername('');
                     setPwd('');
