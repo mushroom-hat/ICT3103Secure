@@ -195,7 +195,6 @@ const signup = asyncHandler(async (req, res) => {
     if (await newUser.save()) {
         const nodemailer = require('nodemailer');
 
-
         const transporter = nodemailer.createTransport({
             secure: true,
             requireTLS: true,
@@ -203,8 +202,8 @@ const signup = asyncHandler(async (req, res) => {
             secured: true,
             service: 'gmail',
             auth: {
-                user: 'ssdsecuresoftware@gmail.com',
-                pass: 'xtyr bfet oftx jxtc'
+                user: process.env.MAIL_USER,
+                pass: process.env.MAIL_PASS
             }
         });
         const activationURL = `https://wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`;

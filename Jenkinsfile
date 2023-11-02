@@ -10,6 +10,8 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION = credentials('AWS_DEFAULT_REGION')
+        MAIL_USER = credentials('MAIL_USER')
+        MAIL_PASS = credentials('MAIL_PASS')
 
     }
 
@@ -206,6 +208,8 @@ def cleanAndStartBackendContainer(containerName, imageName) {
     -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
     -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
     -e AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" \
+    -e MAIL_USER="${MAIL_USER}" \
+    -e MAIL_PASS="${MAIL_PASS}" \
     -v /var/run/docker.sock:/var/run/docker.sock -v jenkins-data:/var/jenkins_home -v $HOME:/home \
     -e VIRTUAL_HOST=api.wazpplabs.com -e VIRTUAL_PORT=3500 ''' +  imageName
 
