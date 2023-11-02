@@ -93,13 +93,13 @@ const verifyLogin = asyncHandler(async (req, res) => {
         // Check if the user exists
         if (!foundUser) {
             console.log("User not found.")
-            return res.status(401).json({ message: 'Unauthorized', error: "User not found.", error: 401 });
+            return res.status(401).json({ message: 'User not found.', error: 401 });
         } else if (foundUser.isActive === false) {
             console.log("User not activated.")
-            return res.status(445).json({ message: 'Unauthorized', error: "User not activated.", error: 445 });
+            return res.status(445).json({ message: 'User not activated.', error: 445 });
         } else if (foundUser.lockOutAttempts.emailVerificationAttempts >= 3 || foundUser.lockOutAttempts.passwordAttempts >= 5) {
             console.log("User is locked out.")
-            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out.", error: 444 });
+            return res.status(444).json({ message: 'User is locked out.',  error: 444 });
         } else {
             console.log("Found User: " + foundUser.username);
             const emailAddr = foundUser.email;
@@ -133,7 +133,7 @@ const verifyLogin = asyncHandler(async (req, res) => {
             transporter.sendMail(emailTemplate, (error, info) => {
                 if (error) {
                     console.error('Error sending email:', error);
-                    return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error" });
+                    return res.status(500).json({ message: 'Email Internal server error', error: 500 });
                 } else {
                     console.log('Email Verification Code sent:', info.response);
 
@@ -143,7 +143,7 @@ const verifyLogin = asyncHandler(async (req, res) => {
                     foundUser.save();
 
                     // Return a success message
-                    return res.status(200).json({ message: 'Email Verification Code sent successfully.', success: "Email Verification Code sent successfully." });
+                    return res.status(200).json({ message: 'Email Verification Code sent successfully.', success: 200 });
                 }
             });
 

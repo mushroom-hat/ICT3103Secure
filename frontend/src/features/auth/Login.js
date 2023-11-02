@@ -63,7 +63,7 @@ const Login = () => {
                         'Content-Type': 'application/json',
                     }, body: JSON.stringify({ username })
                 });
-                if (response.status === 200 || response.body.success !== null) {
+                if (response.status === 200) {
                     dispatch(setCredentials({ accessToken, username, roles }));
                     setUsername('');
                     setPwd('');
