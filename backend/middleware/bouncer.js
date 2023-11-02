@@ -32,9 +32,10 @@ const bouncer = async (req, res, next) => {
   let passwordErrors;
 
   // Password validation
+  const passwordReq = {...req};
   await new Promise((resolve) => {
-    passwordValidation(req, res, () => {
-      passwordErrors = validationResult(req);
+    passwordValidation(passwordReq, res, () => {
+      passwordErrors = validationResult(passwordReq);
       if (!passwordErrors.isEmpty()) {
         console.log("Password validation errors:", passwordErrors.array());
       } else {
@@ -44,13 +45,11 @@ const bouncer = async (req, res, next) => {
     });
   });
 
-  // Clear the current validation context
-  validationResult(req).errors = [];
-
   // Username validation
-  usernameValidation(req, res, () => {
+  const usernameReq = {...req};
+  usernameValidation(usernameReq, res, () => {
     
-    const usernameErrors = validationResult(req);
+    const usernameErrors = validationResult(usernameReq);
     if (!usernameErrors.isEmpty()) {
       console.log("Username validation errors:", usernameErrors.array());
     } else {
