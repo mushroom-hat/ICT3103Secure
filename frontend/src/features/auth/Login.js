@@ -81,7 +81,9 @@ const Login = () => {
                     dispatch(setCredentials({ username }));
                     navigate('/sendemailverification');
                 } else {
-                    console.log("Error: " + response.body);
+                    // Console Log Response Entire in String, unpacked JSON
+                    console.log("Error: " + response.json());
+                    console.log("Error: " + response.body.message);
                     setUsername('');
                     setPwd('');
                     navigate('/login-error');
