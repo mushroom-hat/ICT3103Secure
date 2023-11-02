@@ -16,12 +16,27 @@ const login = asyncHandler(async (req, res) => {
     const foundUser = await User.findOne({ username }).exec();
 
     if (!foundUser) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: 'No User Resgistered.' });
     }
-    // compare the password with the hashed password stored in the database
+
+    // Compare the password with the hashed password stored in the database
     const match = await bcrypt.compare(pwd, foundUser.pwd);
 
-    if (!match) return res.status(401).json({ message: 'Unauthorized' });
+    if (!match) {
+        // Update user logon fail attempts
+        foundUser.lockOutAttempts.passwordAttempts = foundUser.lockOutAttempts.passwordAttempts + 1;
+        foundUser.save();
+        return res.status(402).json({ message: 'Unauthorized. Invalid password.', error: "Invalid password.", attempts: foundUser.lockOutAttempts.passwordAttempts });
+    } else {
+        // User is locked out
+        if (foundUser.lockOutAttempts.passwordAttempts >= 5) {
+            console.log("User is locked out.")
+            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
+        }
+        // Reset user logon fail attempts
+        foundUser.lockOutAttempts.passwordAttempts = 0;
+        foundUser.save();
+    };
 
     const accessToken = jwt.sign(
         {
@@ -99,9 +114,7 @@ const verifyLogin = asyncHandler(async (req, res) => {
                 to: emailAddr, // Replace with the user's email address
                 subject: 'Login Verification Code (Charity)',
                 html: `
-          <p>Your Code: ${verificationCode}</p>
-          
-        `
+                        <p>Your Code: ${verificationCode}</p>`
             };
 
             console.log("Sending email verification...")
@@ -120,7 +133,7 @@ const verifyLogin = asyncHandler(async (req, res) => {
                     foundUser.save();
 
                     // Return a success message
-                    return res.status(200).json({ message: 'Email Verification Code sent successfully.' , success: "Email Verification Code sent successfully."});
+                    return res.status(200).json({ message: 'Email Verification Code sent successfully.', success: "Email Verification Code sent successfully." });
                 }
             });
 
@@ -150,12 +163,20 @@ const verifyLoginCode = asyncHandler(async (req, res) => {
     // Check if the verification code is correct
     if (verificationCodeDB !== verificationCode) {
         console.log("Invalid verification code.")
-        return res.status(401).json({ message: 'Invalid verification code.', error: "Invalid verification code." });
+        // Update user verification attempts
+        foundUser.lockOutAttempts.emailVerificationAttempts = foundUser.lockOutAttempts.emailVerificationAttempts + 1;
+        foundUser.save();
+        return res.status(401).json({ message: 'Invalid verification code.', error: "Invalid verification code.", attempts: foundUser.lockOutAttempts.emailVerificationAttempts });
     } else if (Date.now() > expirationTime) {
         console.log("Verification code expired.")
-        return res.status(401).json({ message: 'Verification code expired.', error: "Verification code expired." });
+        // Update user verification attempts
+        foundUser.lockOutAttempts.attempts = foundUser.lockOutAttempts.attempts + 1;
+        foundUser.save();
+        return res.status(401).json({ message: 'Verification code expired.', error: "Verification code expired.", attempts: foundUser.lockOutAttempts.emailVerificationAttempts });
     } else {
         console.log("Verification code correct.")
+        foundUser.lockOutAttempts.emailVerificationAttempts = 0;
+        foundUser.save();
         return res.status(200).json({ message: 'Verification code verified successfully.', success: "Verification code correct." });
     }
 });

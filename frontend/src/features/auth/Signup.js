@@ -218,11 +218,11 @@ const Signup = () => {
                 // Set toast message and make it visible
                 setToastMsg('No Server Response');
                 setShowToast(true);
-            } else if (errorCode == 400) {
+            } else if (errorCode === 400) {
                 // Set toast message and make it visible
                 setToastMsg('Signup Failed');
                 setShowToast(true);
-            } else if (errorCode == 422) {
+            } else if (errorCode === 422) {
                 // Set toast message and make it visible
                 setToastMsg(combinedErrors);
                 setShowToast(true);

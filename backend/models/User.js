@@ -34,25 +34,41 @@ const userSchema = new mongoose.Schema({
   },
   isActive: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   },
   token: {
     type: String,
-    required: true
+    required: true,
+    default: "NaN"
   },
   tokenKey: {
     type: String,
-    required: true
+    required: true,
+    default: "NaN"
   },
   verificationCode: {
     code: {
       type: String,
-      required: true
+      required: true,
+      default: "000000"
     },
     expirationTime: {
       type: Date,
-      required: true
-    }}
+      required: true,
+      default: Date.now()
+    }},
+    lockOutAttempts: {
+      passwordAttempts: {
+        type: Number,
+        required: true,
+        default: 0
+      },
+      emailVerificationAttempts: {
+        type: Number,
+        required: true,
+        default: 0
+      }}
   // Additional fields can be added here
 });
 
