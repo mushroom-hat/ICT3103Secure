@@ -102,7 +102,7 @@ const Login = () => {
                 const attemptsAsInt = parseInt(attemptsAsString, 10);
                 const result = 5 - attemptsAsInt;
                 setErrMsg(err.data?.message + " Password will be locked out in another " + result.toString() + " attempts.");
-            } else if (err.status === 445 || err.code === 445) {
+            } else if (err.status === 445 || err.data?.error === 445) {
                 dispatch(setCredentials({ username }));
                 navigate('/sendemailverification')
             }
