@@ -89,13 +89,13 @@ const verifyLogin = asyncHandler(async (req, res) => {
         // Check if the user exists
         if (!foundUser) {
             console.log("User not found.")
-            return res.status(401).json({ message: 'Unauthorized', error: "User not found." });
+            return res.status(401).json({ message: 'Unauthorized', error: "User not found.", error: 401 });
         } else if (foundUser.isActive === false) {
             console.log("User not activated.")
-            return res.status(445).json({ message: 'Unauthorized', error: "User not activated." });
+            return res.status(445).json({ message: 'Unauthorized', error: "User not activated.", error: 445 });
         } else if (foundUser.lockOutAttempts.emailVerificationAttempts >= 3 || foundUser.lockOutAttempts.passwordAttempts >= 5) {
             console.log("User is locked out.")
-            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
+            return res.status(444).json({ message: 'User is locked out.', error: "User is locked out.", error: 444 });
         } else {
             console.log("Found User: " + foundUser.username);
             const emailAddr = foundUser.email;
