@@ -1,6 +1,8 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
 const User = require('./User'); // Import your User model
+const Card = require('../cards/Card'); // Import your User model
+
 const usersAdapter = createEntityAdapter({});
 
 const initialState = usersAdapter.getInitialState();
@@ -98,7 +100,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           name: '',
           username: '',
           email: '',
-          card: '',
+          card: 'null',
         };
       
         // Extract data from the original response and provide defaults if not present

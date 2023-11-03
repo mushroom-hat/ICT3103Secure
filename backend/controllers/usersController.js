@@ -19,27 +19,22 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 const getUserById = asyncHandler(async (req, res) => {
-    console.log("Getting user by ID");
-    const userId = req.body._id;
-    console.log(userId);
+    const userId = req.params.id; // Retrieve the user ID from request parameters
 
     // Find the user by ID
     const user = await User.findById(userId).select('-pwd').lean();
-    console.log(user);
 
     if (!user) {
-        return res.status(404).json({ message: 'User not found', error: true });
-    } else {
-        console.log("User found");
-        return res.status(200).json({ message: 'User found', success: true, user: user });
+        return res.status(404).json({ message: 'User not found' });
     }
+
+    res.json(user);
 });
 
+
 const getUserByUsername = asyncHandler(async (req, res) => {
-    console.log("Getting user by ID");
     const username = req.body.username;
     console.log(username);
-
     // Find user by username
     // Find the user based on the username and select 'username', 'email', and 'name'
     User.findOne({ username: username })
