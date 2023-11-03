@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import { useAddNewArticleMutation } from './articlesApiSlice';
+import React, { useState } from "react";
+import { useAddNewArticleMutation } from "./articlesApiSlice";
 import useAuth from "../../hooks/useAuth";
+import Particle from "../../components/Particle";
+import Navbar from "../../components/Navbar";
+import { Container } from "react-bootstrap";
 
 function WriteArticle() {
   const { id: authorId } = useAuth(); // Retrieve the user's ID
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const [addArticle, { isLoading, isError }] = useAddNewArticleMutation();
 
   const handleSubmit = async () => {
-    if (title.trim() === '' || content.trim() === '') {
+    if (title.trim() === "" || content.trim() === "") {
       // Handle validation error
       return;
     }
@@ -26,41 +29,59 @@ function WriteArticle() {
       await addArticle(newArticleData).unwrap();
 
       // Reset form fields
-      setTitle('');
-      setContent('');
+      setTitle("");
+      setContent("");
     } catch (error) {
       // Handle error
-      console.error('Error creating the article', error);
+      console.error("Error creating the article", error);
     }
   };
 
   return (
-    <div>
-      <h2>Write Article</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="content">Content</label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </div>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Adding...' : 'Add Article'}
-        </button>
-        {isError && <div>Error adding the article.</div>}
-      </form>
-    </div>
+    <Container fluid className="project-section">
+      <Particle />
+      <Navbar />
+      <Container>
+        <h1 className="project-heading">Write a new Article</h1>
+        <form
+          onSubmit={handleSubmit}
+          style={{ position: "relative", paddingBottom: "0.5rem" }}
+        >
+          <div style={{ paddingBottom: "0.5rem" }}>
+            <label
+              htmlFor="title"
+              style={{ color: "white", paddingRight: "0.5rem" }}
+            >
+              Title:
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{ zIndex: 1, position: "relative" }}
+            />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", paddingBottom: "0.5rem" }}>
+            <label
+              htmlFor="content"
+              style={{ color: "white" }}
+            >
+              Content:
+            </label>
+            <textarea
+              id="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+          <button type="submit" disabled={isLoading} className="rounded-button">
+            {isLoading ? "Publishing.." : "Publish"}
+          </button>
+          {isError && <div>Error publishing the article.</div>}
+        </form>
+      </Container>
+    </Container>
   );
 }
 

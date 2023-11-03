@@ -57,6 +57,7 @@ function NavBar() {
 
             <Nav.Item>
               <Nav.Link
+                data-testid="organizations-link"
                 as={Link}
                 to="/organizations"
                 onClick={() => updateExpanded(false)}
