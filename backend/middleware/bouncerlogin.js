@@ -2,7 +2,7 @@ const { check, validationResult } = require('express-validator');
 
 // Password validation
 const validatePassword = () => {
-  return check('pwd', 'Please check your password again')
+  return check('pwd', 'Please check your password again.')
     .custom((value) => {
       const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
       if (re.test(value) && value.length >= 7) {
@@ -17,7 +17,7 @@ const validatePassword = () => {
 const validateUsername = () => {
   return check('username', 'Invalid username format')
     .matches(/^[a-zA-Z0-9_-]+$/)
-    .withMessage('Invalid username format')
+    .withMessage('Invalid username format.')
     .escape();
 };
 

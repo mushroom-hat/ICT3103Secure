@@ -8,7 +8,7 @@ const bouncer = require('../middleware/bouncer.js');
 const bouncerlogin = require('../middleware/bouncerlogin.js');
 
 router.route('/')
-    .post(loginLimiter, authController.login);
+    .post(loginLimiter, bouncerlogin, authController.login);
 
 router.route('/refresh')
     .get(authController.refresh);

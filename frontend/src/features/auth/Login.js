@@ -93,6 +93,7 @@ const Login = () => {
           }
         } catch (err) {
           console.error('Failed to log in:', err);
+          let restructureError = { errors: [] };
           if (!err.status) {
             setErrMsg('No Server Response');
           } else if (err.status === 400) {
@@ -112,6 +113,14 @@ const Login = () => {
           } else if (err.status === 445 || err.data?.error === 445) {
             dispatch(setCredentials({ username }));
             navigate('/sendemailverification');
+          } else if (err.status === 422){
+                for (let i = 0; i < err.data.errors.length; i++) {
+                    restructureError.errors = [...restructureError.errors, err.data.errors[i].msg];
+                }
+                // Combine into one string
+                let combinedErrors = restructureError.errors.join(' ');
+                console.log(combinedErrors);
+                setErrMsg(combinedErrors);
           } else {
             console.error('Unknown error occurred:', err.status);
             setErrMsg(err.data?.message);
