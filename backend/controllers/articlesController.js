@@ -17,6 +17,7 @@ const getAllArticles = asyncHandler(async (req, res) => {
 //@route POST /articles
 //@access Private
 const createNewArticle = asyncHandler(async (req, res) => {
+    console.log("this is the right path zh")
     const { title, content, author } = req.body;
 
     // Confirm data
