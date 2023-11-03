@@ -4,7 +4,6 @@ const authController = require('../controllers/authController');
 const loginLimiter = require('../middleware/loginLimiter');
 const requestLogger = require('../middleware/requestLogger');
 const setDonatorRole = require('../middleware/setDonatorRole');
-const bouncer = require('../middleware/bouncer.js');
 const bouncerlogin = require('../middleware/bouncerlogin.js');
 const bouncersignup = require('../middleware/bouncersignup.js');
 
