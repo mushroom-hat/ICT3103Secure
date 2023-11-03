@@ -13,8 +13,8 @@ router.route('/')
 router.route('/organizations')
     .get(usersController.getAllOrganizations) //READ
 
-router.route('/getUserById')
-    .post(usersController.getUserById) // Add the route for getUserById
+router.route('/getUserById/:id')
+    .get(usersController.getUserById);
 
 router.route('/getUserByUsername')
     .post(usersController.getUserByUsername) // Add the route for getUserById

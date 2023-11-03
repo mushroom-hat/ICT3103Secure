@@ -2,23 +2,21 @@ import React, { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { useAddNewDonationMutation } from './donationsApiSlice';
 import { useGetUserByIdQuery } from '../users/usersApiSlice';
+import { useGetUserByUsernameQuery } from '../users/usersApiSlice'; // Replace with the correct path
 import { useSelector } from "react-redux";
 
 function NewDonationForm() {
   const { id, username } = useAuth();
-  console.log(id);
-
+  console.log("id", id);
+  
+  const { data } = useGetUserByUsernameQuery(username);
+  console.log("useQuery", useGetUserByUsernameQuery(username))
+  console.log("useData", data)
+  //console.log("userData", userData)
   const [amount, setAmount] = useState('');
+  //const [hasCard, setHasCard] = useState(false); // Track whether the user has a card
   const [createDonation, { isLoading, isError: isDonationError, error: donationError }] = useAddNewDonationMutation();
-  const userId = id;
-  console.log(userId);
 
-  const { data: user, error: userError } = useGetUserByIdQuery(userId);
-  console.log(user);
- 
-  if (user) {
-    console.log('User data from Redux:', user);
-  }
 
   const handleCreateDonation = () => {
     if (amount) {

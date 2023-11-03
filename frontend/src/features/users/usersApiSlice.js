@@ -1,6 +1,6 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
-
+const User = require('./User'); // Import your User model
 const usersAdapter = createEntityAdapter({});
 
 const initialState = usersAdapter.getInitialState();
@@ -23,7 +23,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         if (result?.ids) {
           return [
             { type: "User", id: "LIST" },
-            ...result.ids.map((id) => ({ type: "User", id })),
+            ...result.ids.map((id) => ({ type: "User", id }))
           ];
         } else return [{ type: "User", id: "LIST" }];
       },
@@ -75,11 +75,99 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       },
     }),
     getUserById: builder.query({
-      query: (id) => `/users/getById/${id}`,
+      query: (id) => `/users/getUserById/${id}`,  // Include the 'id' as a parameter in the URL
+      validateStatus: (response, result) => {
+        return response.status === 200 && !result.isError;
+      }
+    }),
+    getUserByUsername: builder.query({
+      query: (username) => ({
+        url: '/users/getUserByUsername',
+        method: 'POST',
+        body: { username },
+      }),
       validateStatus: (response, result) => {
         return response.status === 200 && !result.isError;
       },
+      transformResponse: async (responseData) => {
+        console.log('Original response data:', responseData);
+      
+        if (responseData?.user) {
+          // Populate the 'card' field
+          const user = await User.populate(responseData.user, { path: 'card' });
+      
+          // Define the structure of the data you expect in the response
+          const expectedDataStructure = {
+            name: '',
+            username: '',
+            email: '',
+            card: {
+              cardNumber: '',
+              cardHolderName: '',
+              expiryDate: '',
+              cvc: '',
+            },
+          };
+      
+          // Extract data from the populated user object and provide defaults if not present
+          const transformedData = {
+            name: user.name || expectedDataStructure.name,
+            username: user.username || expectedDataStructure.username,
+            email: user.email || expectedDataStructure.email,
+            card: {
+              cardNumber: user.card?.cardNumber || expectedDataStructure.card.cardNumber,
+              cardHolderName: user.card?.cardHolderName || expectedDataStructure.card.cardHolderName,
+              expiryDate: user.card?.expiryDate || expectedDataStructure.card.expiryDate,
+              cvc: user.card?.cvc || expectedDataStructure.card.cvc,
+            },
+          };
+      
+          console.log('Transformed response data:', transformedData);
+      
+          return transformedData;
+        } else {
+          // Handle the case where 'user' is not present in the response
+          return {
+            name: '',
+            username: '',
+            email: '',
+            card: {
+              cardNumber: '',
+              cardHolderName: '',
+              expiryDate: '',
+              cvc: '',
+            },
+          };
+        }
+      },
+      
+      transformResponse: (responseData) => {
+        console.log('Original response data:', responseData);
+      
+        // Define the structure of the data you expect in the response
+        const expectedDataStructure = {
+          name: '',
+          username: '',
+          email: '',
+          card: '',
+        };
+      
+        // Extract data from the original response and provide defaults if not present
+        const transformedData = {
+          name: responseData?.user?.name || expectedDataStructure.name,
+          username: responseData?.user?.username || expectedDataStructure.username,
+          email: responseData?.user?.email || expectedDataStructure.email,
+          card: responseData?.user?.card || expectedDataStructure.card,
+        };
+      
+        console.log('Transformed response data:', transformedData);
+      
+        return transformedData;
+      },
+
     }),
+    
+
   }),
 });
 
@@ -90,23 +178,21 @@ export const {
   useDeleteUserMutation,
   useGetOrganizationsQuery,
   useGetUserByIdQuery,
+  useGetUserByUsernameQuery,
 } = usersApiSlice;
 
-// returns the query result object
+// Returns the query result object
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select();
 
-// creates memoized selector
+// Creates memoized selector
 const selectUsersData = createSelector(
   selectUsersResult,
   (usersResult) => usersResult.data // normalized state object with ids & entities
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
+// GetSelectors creates these selectors and renames them with aliases using destructuring
 export const {
   selectAll: selectAllUsers,
   selectById: selectUserById,
   selectIds: selectUserIds,
-  // Pass in a selector that returns the users slice of state
-} = usersAdapter.getSelectors(
-  (state) => selectUsersData(state) ?? initialState
-);
+} = usersAdapter.getSelectors((state) => selectUsersData(state) ?? initialState);
