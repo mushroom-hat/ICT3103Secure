@@ -1,23 +1,24 @@
-// Middleware function to check if the user has one of the required roles
-function verifyRole(requiredRoles) {
-    return (req, res, next) => {
-      // Check if req.roles exists
-      if (!req.roles) {
-        console.log("VerifyRole - No req.roles");
-        return res.status(401).json({ message: 'Forbidden' });
-      }
-  
-      // Check if the user's role matches one of the required roles
-      const userRole = req.roles;
-  
-      if (!requiredRoles.includes(userRole)) {
-        console.log("VerifyRole - Wrong Role");
-        return res.status(403).json({ message: 'Unauthorized' });
-      }
-  
-      // User has one of the required roles, proceed to the next middleware
-      next();
-    };
-  }
-  
-  module.exports = verifyRole;
+const jwt = require('jsonwebtoken');
+
+function verifyJWT(req, res, next) {
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+
+    if (!authHeader?.startsWith('Bearer ')) {
+        console.log("Verify JWT - No Bearer");
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (err) return res.status(403).json({ message: 'Forbidden' });
+
+        req.user = decoded.UserInfo.username;
+        req.roles = decoded.UserInfo.roles;
+        console.log("Req user", req.roles);
+
+        next();
+    });
+}
+
+module.exports = verifyJWT;

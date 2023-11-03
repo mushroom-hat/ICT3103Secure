@@ -23,7 +23,7 @@ function NewDonationForm() {
 
     if (amount && data?.card !== null) {
       console.log("Amount and card data are valid");
-      createDonation({ userId: id, amount: Number(amount) });
+      createDonation({ userId: id, amount: amount });
     }
     else {
       console.log("Amount or card data are invalid");

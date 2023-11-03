@@ -17,8 +17,11 @@ const getAllDonations = asyncHandler(async (req, res) => {
 //@route POST /donations
 //@access Private
 const createNewDonation = asyncHandler(async (req, res) => {
-    const { userId, amount } = req.body;
 
+    console.log("Inside createNewDonation");
+    const { userId, amount } = req.body;
+    console.log(userId);
+    console.log(amount);
     // Confirm data
     if (!userId || !amount) {
         return res.status(400).json({ message: 'User ID and amount are required' });

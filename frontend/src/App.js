@@ -41,7 +41,6 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="login-error" element={<LoginErrorPage />} />
         <Route path="/verify-login" element={<LoginVerification />} />
-        <Route path="profile" element={<UserProfile />} />
         <Route path="organizations">
           <Route index element={<OrganizationsList />} />
           <Route path=":id" element={<Organization />} />
@@ -64,6 +63,7 @@ function App() {
           >
             <Route path="dash" element={<DashLayout />}>
               <Route index element={<Welcome />} />
+                <Route path="profile" element={<UserProfile />} />
               <Route path="spending">
                 <Route index element={<SpendingsList />} />
                 <Route path="new" element={<NewSpendingForm />} />

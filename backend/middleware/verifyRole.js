@@ -1,5 +1,5 @@
-// Middleware function to check if the user has the required role
-function verifyRole(requiredRole) {
+// Middleware function to check if the user has one of the required roles
+function verifyRole(requiredRoles) {
   return (req, res, next) => {
     // Check if req.roles exists
     if (!req.roles) {
@@ -7,17 +7,15 @@ function verifyRole(requiredRole) {
       return res.status(401).json({ message: 'Forbidden' });
     }
 
-    // Check if the user's role matches the requiredRole
+    // Check if the user's role matches one of the required roles
     const userRole = req.roles;
-    console.log ("Req roles", req.roles)
-    console.log("Required role", requiredRole)
 
-    if (userRole !== requiredRole) {
+    if (!requiredRoles.includes(userRole)) {
       console.log("VerifyRole - Wrong Role");
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    // User has the required role, proceed to the next middleware
+    // User has one of the required roles, proceed to the next middleware
     next();
   };
 }

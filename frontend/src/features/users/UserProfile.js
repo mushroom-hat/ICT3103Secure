@@ -1,71 +1,113 @@
-import React, { useState } from 'react';
-import Navbar from '../../components/Navbar';
+import React, { useState, useEffect } from 'react';
+import useAuth from '../../hooks/useAuth';
+import { useGetUserByUsernameQuery, useUpdateUserMutation } from './usersApiSlice';
 
 const UserProfile = () => {
-    // Mock state for user data
-    const [user, setUser] = useState({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        location: 'Foo City, CA',
-    });
+  const { id, username } = useAuth();
+  const { data: user, error, isLoading } = useGetUserByUsernameQuery(username);
+  const [updateUser] = useUpdateUserMutation();
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setUser(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
+  const [formData, setFormData] = useState({
+    name: '',
+    username: '',
+    email: '',
+    pwd: '',
+  });
 
-    return (
-        <section className="user-profile">
-            <Navbar />
+  useEffect(() => {
+    if (user) {
+      // If user data is available, set the form data
+      setFormData({
+        name: user.name || '',
+        username: user.username || '',
+        email: user.email || '',
+        pwd: '', // Add other fields as needed
+      });
+    }
+  }, [user]);
 
-            <header>
-                <h1>User Profile</h1>
-            </header>
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-            <main className="profile__main">
-                <form>
-                    <div className="form-group">
-                        <label>Name:</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={user.name}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-                    <div className="form-group">
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={user.email}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+    try {
+      await updateUser({
+        id,
+        ...formData,
+      });
+      // You can handle success or show a success message here
+    } catch (error) {
+      // Handle the error
+      console.error('Update error:', error);
+    }
+  };
 
-                    <div className="form-group">
-                        <label>Location:</label>
-                        <input
-                            type="text"
-                            name="location"
-                            value={user.location}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-                    <button type="submit">Save Changes</button>
-                </form>
-            </main>
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
-            <footer>
-                <p>© 2023 Donation Centre. All rights reserved.</p>
-            </footer>
-        </section>
-    );
-}
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
+  return (
+    <div>
+      <h2>User Profile</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="pwd">Password:</label>
+          <input
+            type="password"
+            id="pwd"
+            name="pwd"
+            value={formData.pwd}
+            onChange={handleChange}
+          />
+        </div>
+        <button type="submit">Update Profile</button>
+      </form>
+    </div>
+  );
+};
 
 export default UserProfile;
