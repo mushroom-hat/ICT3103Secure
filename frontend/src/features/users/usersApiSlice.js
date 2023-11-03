@@ -89,57 +89,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       validateStatus: (response, result) => {
         return response.status === 200 && !result.isError;
       },
-      transformResponse: async (responseData) => {
-        console.log('Original response data:', responseData);
-      
-        if (responseData?.user) {
-          // Populate the 'card' field
-          const user = await User.populate(responseData.user, { path: 'card' });
-      
-          // Define the structure of the data you expect in the response
-          const expectedDataStructure = {
-            name: '',
-            username: '',
-            email: '',
-            card: {
-              cardNumber: '',
-              cardHolderName: '',
-              expiryDate: '',
-              cvc: '',
-            },
-          };
-      
-          // Extract data from the populated user object and provide defaults if not present
-          const transformedData = {
-            name: user.name || expectedDataStructure.name,
-            username: user.username || expectedDataStructure.username,
-            email: user.email || expectedDataStructure.email,
-            card: {
-              cardNumber: user.card?.cardNumber || expectedDataStructure.card.cardNumber,
-              cardHolderName: user.card?.cardHolderName || expectedDataStructure.card.cardHolderName,
-              expiryDate: user.card?.expiryDate || expectedDataStructure.card.expiryDate,
-              cvc: user.card?.cvc || expectedDataStructure.card.cvc,
-            },
-          };
-      
-          console.log('Transformed response data:', transformedData);
-      
-          return transformedData;
-        } else {
-          // Handle the case where 'user' is not present in the response
-          return {
-            name: '',
-            username: '',
-            email: '',
-            card: {
-              cardNumber: '',
-              cardHolderName: '',
-              expiryDate: '',
-              cvc: '',
-            },
-          };
-        }
-      },
       
       transformResponse: (responseData) => {
         console.log('Original response data:', responseData);
