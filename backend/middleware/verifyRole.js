@@ -9,6 +9,8 @@ function verifyRole(requiredRole) {
 
     // Check if the user's role matches the requiredRole
     const userRole = req.roles;
+    console.log ("Req roles", req.roles)
+    console.log("Required role", requiredRole)
 
     if (userRole !== requiredRole) {
       console.log("VerifyRole - Wrong Role");

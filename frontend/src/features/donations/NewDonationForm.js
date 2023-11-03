@@ -8,23 +8,25 @@ import Navbar from "../../components/Navbar";
 import { Container } from "react-bootstrap";
 
 function NewDonationForm() {
-  const { id, username } = useAuth();
+  const { id, username, roles } = useAuth();
   console.log("id", id);
-
+  console.log("Roles", roles);
   const { data, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
   console.log("useData", data?.username);
 
   const [amount, setAmount] = useState('');
   const [createDonation, { isLoading, isError: isDonationError, error: donationError }] = useAddNewDonationMutation();
 
+  // Handle button click
   const handleCreateDonation = () => {
-    if (amount && data?.card !== null) { // Use optional chaining to access data safely
-      createDonation({ userId: id, amount: Number(amount) });
-      console.log("gay")
+    console.log("Button clicked"); // Add this line
 
+    if (amount && data?.card !== null) {
+      console.log("Amount and card data are valid");
+      createDonation({ userId: id, amount: Number(amount) });
     }
-    else{
-      console.log("gay")
+    else {
+      console.log("Amount or card data are invalid");
     }
   };
 
@@ -60,7 +62,7 @@ function NewDonationForm() {
             style={{ zIndex: 1, position: "relative" }}
           />
         </div>
-        {!data?.card && (
+        {data?.card === null && (
           <p style={{ color: "white" }}>
             Please add a payment method to make a donation.
           </p>
@@ -68,13 +70,17 @@ function NewDonationForm() {
         {isDonationError && <p>Error: {donationError.message}</p>}
         <button
           onClick={handleCreateDonation}
-          disabled={!amount || isLoading || data?.card !== null} // Adjust the conditions for disabling the button
+          disabled={isLoading}
           style={{
             padding: "10px 20px",
             borderRadius: "20px",
             backgroundColor: "#c770f0",
             color: "white",
             border: "none",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "box-shadow 0.3s ease",
+            zIndex: 1,
+            position: "relative",
           }}
         >
           Donate
