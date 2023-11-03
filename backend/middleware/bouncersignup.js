@@ -21,7 +21,7 @@ const validateUsername = () => {
     .escape();
 };
 
-const bouncer = async (req, res, next) => {
+const bouncersignup = async (req, res, next) => {
   console.log("the validation begins");
 
   const passwordValidation = validatePassword();
@@ -78,4 +78,4 @@ const bouncer = async (req, res, next) => {
   });
 };
 
-module.exports = bouncer;
+module.exports = bouncersignup;

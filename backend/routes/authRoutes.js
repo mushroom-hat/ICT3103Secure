@@ -6,6 +6,7 @@ const requestLogger = require('../middleware/requestLogger');
 const setDonatorRole = require('../middleware/setDonatorRole');
 const bouncer = require('../middleware/bouncer.js');
 const bouncerlogin = require('../middleware/bouncerlogin.js');
+const bouncersignup = require('../middleware/bouncersignup.js');
 
 router.route('/')
     .post(loginLimiter, bouncerlogin, authController.login);
@@ -17,7 +18,7 @@ router.route('/logout')
     .post(authController.logout);
 
 router.route('/signup')
-    .post(requestLogger, setDonatorRole, bouncer, authController.signup); // Apply the middlewares here
+    .post(requestLogger, setDonatorRole, bouncersignup, authController.signup); // Apply the middlewares here
 
 router.route('/activate/:token')
     .post(authController.activate);
