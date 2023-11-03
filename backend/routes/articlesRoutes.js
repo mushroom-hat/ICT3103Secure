@@ -1,10 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const articlesController = require('../controllers/articlesController')
+const bouncerwritearticle = require('../middleware/bouncerwritearticle.js');
 
 router.route('/')
     .get(articlesController.getAllArticles) // READ
-    .post(articlesController.createNewArticle) // CREATE
+    .post(bouncerwritearticle, articlesController.createNewArticle) // CREATE
     .patch(articlesController.updateArticle) // UPDATE
     .delete(articlesController.deleteArticle) // DELETE
 
