@@ -21,14 +21,35 @@ const validateUsername = () => {
     .escape();
 };
 
+// Email validation
+const validateEmail = () => {
+  return check('email', 'Invalid email address')
+    .isEmail()
+    .withMessage('Invalid email address format.')
+    .normalizeEmail();
+};
+
+// Name validation
+const validateName = () => {
+  return check('name', 'Invalid name')
+    .matches(/^[a-zA-Z\s]+$/)
+    .withMessage('Name should contain only letters and spaces.')
+    .trim() // Remove leading and trailing whitespace
+    .escape(); // Escape HTML entities
+};
+
 const bouncersignup = async (req, res, next) => {
   console.log("the validation begins");
 
   const passwordValidation = validatePassword();
   const usernameValidation = validateUsername();
+  const emailValidation = validateEmail();
+  const nameValidation = validateName();
 
   let passwordValid = false;
   let usernameValid = false;
+  let emailValid = false;
+  let nameValid = false;
   let passwordErrors;
 
   // Password validation
@@ -55,26 +76,52 @@ const bouncersignup = async (req, res, next) => {
     } else {
       usernameValid = true;
     }
+  
+  // Email validation
+  const emailReq = {...req};
+  emailValidation(emailReq, res , () => {
 
-    if (!passwordValid && !usernameValid) {
-      // Handle the case where both validations fail
+    const emailErrors = validationResult(emailReq);
+    if (!emailErrors.isEmpty()){
+      console.log("Email validation errors:", emailErrors.array());
+    } else {
+      emailValid = true;
+    }
+  
+  // Name validation
+  const nameReq = {...req};
+  nameValidation(nameReq, res , () => {
+
+    const nameErrors = validationResult(nameReq);
+    if (!nameErrors.isEmpty()){
+      console.log("name validation errors:", nameErrors.array());
+    } else {
+      nameValid = true;
+    }
+
+    if (
+      !passwordErrors.isEmpty() ||
+      !usernameErrors.isEmpty() ||
+      !emailErrors.isEmpty() ||
+      !nameErrors.isEmpty()
+    ) {
+      // Handle the case where at least one validation fails
+      const allErrors = [
+        ...passwordErrors.array(),
+        ...usernameErrors.array(),
+        ...emailErrors.array(),
+        ...nameErrors.array(),
+      ];
+    
       return res.status(422).json({
-        errors: [...passwordErrors.array(), ...usernameErrors.array()],
-      });
-    } else if (!passwordValid) {
-      // Handle the case where only password validation fails
-      return res.status(422).json({
-        errors: passwordErrors.array(),
-      });
-    } else if (!usernameValid) {
-      // Handle the case where only username validation fails
-      return res.status(422).json({
-        errors: usernameErrors.array(),
+        errors: allErrors,
       });
     }
 
-    // If both password and username are valid, continue with the next middleware
+    // If all valid, continue with the next middleware
     next();
+  });
+  });
   });
 };
 
