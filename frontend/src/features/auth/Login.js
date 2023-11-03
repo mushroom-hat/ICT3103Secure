@@ -122,9 +122,6 @@ const Login = () => {
                 console.log(combinedErrors);
                 setErrMsg(combinedErrors);
                 
-          } else if (responseData.error === 442){
-            console.log("IT WORKED")
-
           } else {
             console.error('Unknown error occurred:', err.status);
             setErrMsg(err.data?.message);
