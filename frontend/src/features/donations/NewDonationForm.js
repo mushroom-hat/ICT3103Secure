@@ -10,14 +10,15 @@ import { Container } from "react-bootstrap";
 function NewDonationForm() {
   const { id, username, roles } = useAuth();
   console.log("id", id);
-  console.log("Roles", roles);
+  
   const { data, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
   console.log("useData", data?.username);
 
   const [amount, setAmount] = useState('');
+  //const [hasCard, setHasCard] = useState(false); // Track whether the user has a card
   const [createDonation, { isLoading, isError: isDonationError, error: donationError }] = useAddNewDonationMutation();
 
-  // Handle button click
+
   const handleCreateDonation = () => {
     console.log("Button clicked"); // Add this line
 
@@ -62,26 +63,11 @@ function NewDonationForm() {
             style={{ zIndex: 1, position: "relative" }}
           />
         </div>
-        {data?.card === null && (
-          <p style={{ color: "white" }}>
-            Please add a payment method to make a donation.
-          </p>
-        )}
         {isDonationError && <p>Error: {donationError.message}</p>}
         <button
           onClick={handleCreateDonation}
           disabled={isLoading}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "20px",
-            backgroundColor: "#c770f0",
-            color: "white",
-            border: "none",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            transition: "box-shadow 0.3s ease",
-            zIndex: 1,
-            position: "relative",
-          }}
+          className="rounded-button"
         >
           Donate
         </button>
