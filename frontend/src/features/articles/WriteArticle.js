@@ -3,7 +3,7 @@ import { useAddNewArticleMutation } from "./articlesApiSlice";
 import useAuth from "../../hooks/useAuth";
 import Particle from "../../components/Particle";
 import Navbar from "../../components/Navbar";
-import { Container } from "react-bootstrap";
+import { Container, Form, Button, Alert } from "react-bootstrap";
 
 function WriteArticle() {
   const { id: authorId } = useAuth(); // Retrieve the user's ID
@@ -13,7 +13,9 @@ function WriteArticle() {
 
   const [addArticle, { isLoading, isError }] = useAddNewArticleMutation();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (title.trim() === "" || content.trim() === "") {
       // Handle validation error
       return;
@@ -42,44 +44,31 @@ function WriteArticle() {
       <Particle />
       <Navbar />
       <Container>
-        <h1 className="project-heading">Write a new Article</h1>
-        <form
-          onSubmit={handleSubmit}
-          style={{ position: "relative", paddingBottom: "0.5rem" }}
-        >
-          <div style={{ paddingBottom: "0.5rem" }}>
-            <label
-              htmlFor="title"
-              style={{ color: "white", paddingRight: "0.5rem" }}
-            >
-              Title:
-            </label>
-            <input
+        <h1 className="project-heading">Write a New Article</h1>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Label>Title:</Form.Label>
+            <Form.Control
               type="text"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              style={{ zIndex: 1, position: "relative" }}
             />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", paddingBottom: "0.5rem" }}>
-            <label
-              htmlFor="content"
-              style={{ color: "white" }}
-            >
-              Content:
-            </label>
-            <textarea
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Content:</Form.Label>
+            <Form.Control
+              as="textarea"
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
-          </div>
-          <button type="submit" disabled={isLoading} className="rounded-button">
+          </Form.Group>
+          <Button type="submit" disabled={isLoading} className="rounded-button">
             {isLoading ? "Publishing.." : "Publish"}
-          </button>
-          {isError && <div>Error publishing the article.</div>}
-        </form>
+          </Button>
+          {isError && <Alert variant="danger">Error publishing the article.</Alert>}
+        </Form>
       </Container>
     </Container>
   );
