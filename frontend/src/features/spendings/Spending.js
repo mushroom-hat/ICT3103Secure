@@ -9,10 +9,9 @@ import { selectSpendingById } from './spendingsApiSlice';
 const Spending = ({ spendingId }) => {
   const spending = useSelector((state) => selectSpendingById(state, spendingId));
   const navigate = useNavigate();
-
+  console.log("spendingform spending org", spending.organization)
 
   if (spending) {
-    const handleEdit = () => navigate(`/dash/spendings/${spendingId}`);
 
 
     const cellStatus = spending.active ? '' : 'table__cell--inactive';
@@ -20,16 +19,10 @@ const Spending = ({ spendingId }) => {
 
     return (
       <tr className="table__row spending">
-        <td className={`table__cell ${cellStatus}`}>{spending.organization.username}</td>
+        <td className={`table__cell ${cellStatus}`}>{spending.organization}</td>       
         <td className={`table__cell ${cellStatus}`}>{spending.amount}</td>
-        <td className={`table__cell ${cellStatus}`}>
-          <button
-            className="icon-button table__button"
-            onClick={handleEdit}
-          >
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </button>
-        </td>
+        <td className={`table__cell ${cellStatus}`}>{spending.description}</td>
+
       </tr>
     );
   } else return null;

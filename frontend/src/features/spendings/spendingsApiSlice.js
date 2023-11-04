@@ -7,7 +7,6 @@ const spendingsAdapter = createEntityAdapter({});
 
 const initialState = spendingsAdapter.getInitialState();
 
-
 export const spendingsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSpendings: builder.query({
@@ -16,10 +15,13 @@ export const spendingsApiSlice = apiSlice.injectEndpoints({
         return response.status === 200 && !result.isError;
       },
       transformResponse: (responseData) => {
+        console.log("ResponseData", responseData)
         const loadedSpendings = responseData.map((spending) => {
           spending.id = spending._id;
+          console.log("spending", spending)
           return spending;
         });
+        console.log("loadedSpending", loadedSpendings)
         return spendingsAdapter.setAll(initialState, loadedSpendings);
       },
       providesTags: (result, error, arg) => {
