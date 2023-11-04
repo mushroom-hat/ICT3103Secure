@@ -14,6 +14,7 @@ import { BsCreditCard } from "react-icons/bs";
 import { LiaDonateSolid, LiaUsersCogSolid } from "react-icons/lia";
 import { FaSignInAlt } from "react-icons/fa";
 import { CgFileDocument } from "react-icons/cg";
+import { TbReportAnalytics } from "react-icons/tb";
 import useAuth from "../hooks/useAuth";
 import { useDispatch } from 'react-redux';
 import { logOut } from '../features/auth/authSlice';
@@ -21,7 +22,6 @@ import { useSendLogoutMutation } from '../features/auth/authApiSlice'
 
 function NavBar() {
   const { roles } = useAuth();
-  console.log(roles);
   const [expand, updateExpanded] = useState(false);
   const [navColour, updateNavbar] = useState(false);
 
@@ -136,6 +136,16 @@ function NavBar() {
                     onClick={() => updateExpanded(false)}
                   >
                     <BiDonateHeart style={{ marginBottom: "2px" }} /> Donate
+                  </Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link
+                    as={Link}
+                    to="/dash/cashflowAnalysis"
+                    onClick={() => updateExpanded(false)}
+                  >
+                    <TbReportAnalytics style={{ marginBottom: "2px" }} /> Cashflow
                   </Nav.Link>
                 </Nav.Item>
               </>

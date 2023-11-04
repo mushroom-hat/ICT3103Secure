@@ -45,7 +45,6 @@ function App() {
           <Route index element={<OrganizationsList />} />
           <Route path=":id" element={<Organization />} />
         </Route>
-        <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
         <Route path="signup" element={<Signup />} />
         <Route path="/landing-page" element={<ActivationLandingPage />} />
         <Route path="emailverification" element={<EmailVerification />} />
@@ -72,6 +71,9 @@ function App() {
                   <Route index element={<SpendingsList />} />
                   <Route path="new" element={<NewSpendingForm />} />
                 </Route>
+                <Route path="articles">
+                  <Route path="new" element={<WriteArticle />} />
+                </Route>
               </Route>
               <Route element={<RequireAuth allowedRoles={[ROLES.Donator]} />}>
                 <Route path="cards">
@@ -81,21 +83,12 @@ function App() {
                 <Route path="donations">
                   <Route path="new" element={<NewDonationForm />} />
                 </Route>
+                <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
               </Route>
               <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                 <Route path="users">
                   <Route index element={<UsersList />} />
                   <Route path="new" element={<NewUserForm />} />
-                </Route>
-              </Route>
-              <Route element={<RequireAuth allowedRoles={[ROLES.Donator]} />}>
-                <Route path="donations">
-                  <Route path="new" element={<NewDonationForm />} />
-                </Route>
-              </Route>
-              <Route element={<RequireAuth allowedRoles={[ROLES.Organization]} />}>
-                <Route path="articles">
-                  <Route path="new" element={<WriteArticle />} />
                 </Route>
               </Route>
             </Route>
