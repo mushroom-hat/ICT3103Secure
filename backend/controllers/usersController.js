@@ -115,6 +115,7 @@ const createNewUsers = asyncHandler(async (req, res) => {
 //@route PUT /users/:id
 //@access Private
 const updateUser = asyncHandler(async (req, res) => {
+    console.log(req.body)
     const { id, name, username, email, pwd, roles, card } = req.body; // Include 'card' in the destructuring
 
     // Check if the user exists to update based on the _id
@@ -133,17 +134,26 @@ const updateUser = asyncHandler(async (req, res) => {
     }
 
     // Update user fields if provided in the request body
-    if (username) {
+    if (username && username != '') {
         user.username = username;
     }
-    if (roles) {
+
+    if (name && name != '') {
+        user.name = name;
+    }
+
+    if (email && email != '') {
+        user.email = email;
+    }
+
+    if (roles && roles != '') {
         user.roles = roles;
     }
-    if (card) {
+    if (card && card != '') {
         user.card = card; // Update the 'card' field
     }
 
-    if (pwd) {
+    if (pwd && pwd != '') {
         // Hash password
         user.pwd = await bcrypt.hash(pwd, 10); // salt rounds
     }
