@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
+
 import { useAddNewSpendingMutation } from "./spendingsApiSlice";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,9 +9,10 @@ import { useSelector } from "react-redux";
 import { selectAllUsers } from "../users/usersApiSlice";
 import useAuth from "../../hooks/useAuth";
 
-const AMOUNT_REGEX = /^[0-9]+(\.[0-9]{1,2})?/;
-const DESCRIPTION_REGEX = /^.{0,500}$/;
-const NewSpendingForm = ({ spending }) => {
+const AMOUNT_REGEX = /^[0-9]+(\.[0.9]{1,2})/;
+const DESCRIPTION_REGEX = /^.{0,500}/;
+
+const NewSpendingForm = () => {
   const [addNewSpending, {
     isLoading,
     isSuccess,
@@ -26,12 +29,13 @@ const NewSpendingForm = ({ spending }) => {
   const [validDescription, setValidDescription] = useState(false);
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isSuccessMessage, setIsSuccessMessage] = useState(false);
 
   const users = useSelector(selectAllUsers);
 
   useEffect(() => {
     setValidAmount(AMOUNT_REGEX.test(amount));
-    setValidAmount(DESCRIPTION_REGEX.test(amount));
+    setValidDescription(DESCRIPTION_REGEX.test(description));
 
   }, [amount, description]);
 
@@ -41,42 +45,47 @@ const NewSpendingForm = ({ spending }) => {
       setAmount('');
       setDescription(''); // Clear description
       setShowSuccessMessage(true);
+      setIsSuccessMessage(true);
       setTimeout(() => {
         setShowSuccessMessage(false);
+        setIsSuccessMessage(false);
         navigate('/dash/spending');
       }, 3000);
     }
   }, [isSuccess, navigate]);
 
   const onAmountChanged = (e) => setAmount(e.target.value);
-  const onDescriptionChanged = (e) => setDescription(e.target.value); // Handle description change
+  const onDescriptionChanged = (e) => setDescription(e.target.value);
 
   const organizationUsers = users.filter(user => user.roles === "Organization");
 
-  const canSave = Boolean(organizationId) && validAmount && !isLoading;
+  const canSave = Boolean(organizationId) && validAmount && validDescription && !isLoading;
 
   const onSaveSpendingClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      await addNewSpending({ organization: organizationId, amount, description }); // Include description
+      await addNewSpending({ organization: organizationId, amount, description });
     }
   };
 
   const validAmountClass = !validAmount ? 'form__input--incomplete' : '';
-  const validDescriptionClass = !validAmount ? 'form__input--incomplete' : '';
-
+  const validDescriptionClass = !validDescription ? 'form__input--incomplete' : '';
   const errClass = isError ? "errmsg" : "offscreen";
 
   return (
     <>
       {showSuccessMessage && (
-  <div className="success-message">
-    Spending added successfully!
-  </div>
-)}
+        <div className={isSuccessMessage ? "success-message" : "error-message"}>
+          {isSuccessMessage ? (
+            <CheckCircleFill color="green" className="mr-2" style={{ marginRight: "10px" }} />
+          ) : (
+            <XCircleFill color="red" className="mr-2" style={{ marginRight: "10px" }} />
+          )}
+          {isSuccessMessage ? "Spending added successfully!" : "Failed to add spending"}
+        </div>
+      )}
 
-<p className={errClass}>{error?.data?.message}</p>
-
+      <p className={errClass}>{error?.data?.message}</p>
 
       <form className="form" onSubmit={onSaveSpendingClicked}>
         <div className="form__title-row">
@@ -85,7 +94,7 @@ const NewSpendingForm = ({ spending }) => {
         <label className="form__label" htmlFor="organization">
           Organization:
         </label>
-        <p>{username}</p> {/* Display organization name from spending */}
+        <p>{username}</p>
         <label className="form__label" htmlFor="amount">
           Amount:
         </label>
@@ -102,13 +111,15 @@ const NewSpendingForm = ({ spending }) => {
         </label>
         <input
           className={`form__input ${validDescriptionClass}`}
-          id="amount"
-          name="amount"
+          id="description"
+          name="description"
           type="text"
-          value={amount}
-          onChange={onAmountChanged}
+          value={description}
+          onChange={onDescriptionChanged}
         />
-
+        <button type="submit" className="submit-button">
+          Submit
+        </button>
       </form>
     </>
   );
