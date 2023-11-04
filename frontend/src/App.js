@@ -88,8 +88,10 @@ function App() {
                   <Route path="new" element={<NewDonationForm />} />
                 </Route>
               </Route>
-              <Route path="articles">
-                <Route path="new" element={<WriteArticle />} />
+              <Route element={<RequireAuth allowedRoles={[ROLES.Organization]} />}>
+                <Route path="articles">
+                  <Route path="new" element={<WriteArticle />} />
+                </Route>
               </Route>
             </Route>
             {/* End Dash */}
