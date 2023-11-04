@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import NavBar from '../../components/Navbar_logon';
+import NavBar from '../../components/Navbar';
 import { Container, Col, Card, Row } from 'react-bootstrap';
 import technoteImg from '../../Assets/Welcome/tech_notes.png';
 import userImg from '../../Assets/Welcome/users.png';

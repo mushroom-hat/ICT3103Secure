@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAddNewArticleMutation } from "./articlesApiSlice";
 import useAuth from "../../hooks/useAuth";
 import Particle from "../../components/Particle";
-import Navbar from "../../components/Navbar";
+import NavBar from "../../components/Navbar";
 import { Container } from "react-bootstrap";
 
 function WriteArticle() {
@@ -40,7 +40,7 @@ function WriteArticle() {
   return (
     <Container fluid className="project-section">
       <Particle />
-      <Navbar />
+      <NavBar />
       <Container>
         <h1 className="project-heading">Write a new Article</h1>
         <form
