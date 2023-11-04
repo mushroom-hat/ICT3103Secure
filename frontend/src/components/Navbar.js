@@ -24,6 +24,7 @@ function NavBar() {
   console.log(roles);
   const [expand, updateExpanded] = useState(false);
   const [navColour, updateNavbar] = useState(false);
+  const dispatch = useDispatch();
 
   function scrollHandler() {
     if (window.scrollY >= 20) {
@@ -40,21 +41,23 @@ function NavBar() {
     error
 }] = useSendLogoutMutation()
 
-// const handleLogout = async () => {
-//   try {
-//     const response = await sendLogout(); // Call the logout mutation
-//     if (isSuccess) {
-//       dispatch(logOut()); // Dispatch the logOut action if the mutation is successful
-//       // Perform any additional logout-related actions, such as clearing cookies or redirecting the user
-//     } else if (isError) {
-//       // Handle error, e.g., display an error message
-//       console.error('Error logging out:', error);
-//     }
-//   } catch (error) {
-//     // Handle any other errors that might occur during the logout process
-//     console.error('Error logging out:', error);
-//   }
-// };
+const handleLogout = async () => {
+  try {
+    const { data, error } = await sendLogout(); // Call the logout mutation and destructure the result
+
+    if (data) {
+      dispatch(logOut()); // Dispatch the logOut action if the mutation is successful
+      // Perform any additional logout-related actions, such as clearing cookies or redirecting the user
+    } else if (error) {
+      // Handle error, e.g., display an error message
+      console.error('Error logging out:', error);
+    }
+  } catch (error) {
+    // Handle any other errors that might occur during the logout process
+    console.error('Error logging out:', error);
+  }
+};
+
 
   window.addEventListener("scroll", scrollHandler);
 
@@ -200,7 +203,7 @@ function NavBar() {
               </Nav.Item>
             ) : (
               <Nav.Item>
-                <Nav.Link as={Link} to="/">
+                <Nav.Link as={Link} to="/" onClick = {() => handleLogout()}>
                   <FaSignInAlt style={{ marginBottom: "2px" }}/> Logout
                 </Nav.Link>
               </Nav.Item>
