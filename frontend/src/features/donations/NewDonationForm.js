@@ -4,8 +4,8 @@ import { useAddNewDonationMutation } from './donationsApiSlice';
 import { useGetUserByUsernameQuery } from '../users/usersApiSlice';
 import { useSelector } from "react-redux";
 import Particle from "../../components/Particle";
-import Navbar from "../../components/Navbar";
 import { Container } from "react-bootstrap";
+import NavBar from '../../components/Navbar_logon';
 
 function NewDonationForm() {
   const { id, username, roles } = useAuth();
@@ -44,7 +44,7 @@ function NewDonationForm() {
   return (
     <Container fluid className="project-section">
       <Particle />
-      <Navbar />
+      <NavBar />
       <Container>
         <h1 className="project-heading">Make a Donation!</h1>
         <p style={{ color: "white" }}>You are logged in as: {username}</p>

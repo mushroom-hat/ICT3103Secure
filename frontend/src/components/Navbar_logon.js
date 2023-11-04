@@ -7,8 +7,9 @@ import { Link } from "react-router-dom";
 import {
   AiOutlineHome,
   AiOutlineUser,
+  AiOutlineFundProjectionScreen,
 } from "react-icons/ai";
-import { FaSignInAlt } from 'react-icons/fa';
+import { FaSignInAlt } from "react-icons/fa";
 
 function NavBar() {
   const [expand, updateExpanded] = useState(false);
@@ -32,8 +33,13 @@ function NavBar() {
       className={navColour ? "sticky" : "navbar"}
     >
       <Container>
-        <Navbar.Brand href="/" className="d-flex">
-          <img src={logo} className="img-logo" alt="brand" style={{ width: '10%', height: '10%' }} />
+        <Navbar.Brand href="/dash" className="d-flex">
+          <img
+            src={logo}
+            className="img-logo"
+            alt="brand"
+            style={{ width: "30%", height: "30%" }}
+          />
         </Navbar.Brand>
         <Navbar.Toggle
           aria-controls="responsive-navbar-nav"
@@ -48,8 +54,26 @@ function NavBar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto" defaultActiveKey="#home">
             <Nav.Item>
-              <Nav.Link as={Link} to="/dash" onClick={() => updateExpanded(false)}>
+              <Nav.Link
+                as={Link}
+                to="/dash"
+                onClick={() => updateExpanded(false)}
+              >
                 <AiOutlineHome style={{ marginBottom: "2px" }} /> Home
+              </Nav.Link>
+            </Nav.Item>
+
+            <Nav.Item>
+              <Nav.Link
+                data-testid="organizations-link"
+                as={Link}
+                to="/organizations"
+                onClick={() => updateExpanded(false)}
+              >
+                <AiOutlineFundProjectionScreen
+                  style={{ marginBottom: "2px" }}
+                />{" "}
+                Organizations
               </Nav.Link>
             </Nav.Item>
 
@@ -64,14 +88,10 @@ function NavBar() {
             </Nav.Item>
 
             <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/"
-              >
+              <Nav.Link as={Link} to="/">
                 <FaSignInAlt style={{ marginBottom: "2px" }} /> Logout
               </Nav.Link>
             </Nav.Item>
-
           </Nav>
         </Navbar.Collapse>
       </Container>
