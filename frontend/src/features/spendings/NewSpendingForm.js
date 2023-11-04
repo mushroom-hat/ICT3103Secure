@@ -71,16 +71,6 @@ const NewSpendingForm = () => {
       <form className="form" onSubmit={onSaveSpendingClicked}>
         <div className="form__title-row">
           <h2>New Spending</h2>
-          <div className="form__action-buttons">
-            <button
-              type="submit"
-              className="icon-button form__submit-button"
-              title="Save"
-              disabled={!canSave}
-            >
-              <FontAwesomeIcon icon={faSave} />
-            </button>
-          </div>
         </div>
         <label className="form__label" htmlFor="organization">
           Organization:
