@@ -14,6 +14,10 @@ const donationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  donationDescription:{
+    type: String,
+    required: true
+  },
   // Additional donation details can be added here
 });
 
