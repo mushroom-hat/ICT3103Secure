@@ -4,14 +4,14 @@ import homeLogo from "../Assets/home-main.png";
 import Particle from "./Particle";
 import Home2 from "./Home2";
 import Type from "./Type";
-import Navbar from "./Navbar";
+import NavBar from "./Navbar";
 import Footer from "./Footer";
 import ArticleList from "../features/articles/ArticleList";
 
 const Public = () => {
   return (
     <section>
-      <Navbar />
+      <NavBar />
       <Container fluid className="home-section" id="home">
         <Particle />
         <Container className="home-content">
