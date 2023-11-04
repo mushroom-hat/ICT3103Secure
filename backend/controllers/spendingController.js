@@ -61,8 +61,26 @@ const deleteSpending = asyncHandler(async (req, res) => {
     res.json(reply);
 });
 
+const getSpendingByOrganization = asyncHandler(async (req, res) => {
+    const { organizationId } = req.body;
+
+    // Check if the organizationId is valid (you might want to add additional validation)
+    if (!organizationId) {
+        return res.status(400).json({ message: 'Invalid organization ID' });
+    }
+
+    const spending = await Spending.find({ organization: organizationId }).lean();
+
+    if (!spending || spending.length === 0) {
+        return res.status(404).json({ message: 'No spending records found for this organization' });
+    }
+
+    res.json(spending);
+});
+
 module.exports = {
     getAllSpending,
     createNewSpending,
     deleteSpending,
+    getSpendingByOrganization
 };

@@ -7,4 +7,6 @@ router.route('/')
     .post(spendingController.createNewSpending) // CREATE
     .delete(spendingController.deleteSpending) // DELETE
 
+    router.post('/getByOrg', spendingController.getSpendingByOrganization);
+
 module.exports = router

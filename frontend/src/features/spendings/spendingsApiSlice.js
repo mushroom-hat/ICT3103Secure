@@ -43,6 +43,14 @@ export const spendingsApiSlice = apiSlice.injectEndpoints({
         { type: 'Spending', id: "LIST" }
       ],
     }),
+    getSpendingByOrganization: builder.query({
+      query: (organizationId) => ({
+        url: '/spending/getByOrg', // Adjust the URL as needed
+        method: 'POST', // Use the appropriate HTTP method (POST in this case)
+        body: { organizationId }, // Pass the organizationId in the request body
+      }),
+      providesTags: ['Spending'],
+    }),
     // Define additional mutations for updating and deleting spendings as needed.
   }),
 });
@@ -51,6 +59,7 @@ export const spendingsApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetSpendingsQuery,
   useAddNewSpendingMutation,
+  useGetSpendingByOrganizationQuery
   // Define additional mutation hooks for updating and deleting spendings as needed.
 } = spendingsApiSlice;
 
