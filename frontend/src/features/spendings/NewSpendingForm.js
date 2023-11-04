@@ -9,7 +9,7 @@ import Particle from "../../components/Particle";
 import { Container } from "react-bootstrap";
 import NavBar from "../../components/Navbar";
 
-const AMOUNT_REGEX = /^[0-9]+(\.[0.9]{1,2})/;
+const AMOUNT_REGEX = /^[0-9]+(\.[0-9]{1,2})$/;
 const DESCRIPTION_REGEX = /^.{0,500}/;
 
 const NewSpendingForm = () => {
@@ -17,28 +17,22 @@ const NewSpendingForm = () => {
     useAddNewSpendingMutation();
 
   const navigate = useNavigate();
-  const { username, userId } = useAuth();
-  const [organizationId, setOrganizationId] = useState(userId || ""); // Assuming you have organizationId
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState(""); // Added description state
+  const { username, id } = useAuth();
+  console.log("userId", id);
+  const [organizationId, setOrganizationId] = useState(id);
+  const [amount, setAmount] = useState(""); // Initialize with an empty string
+  const [description, setDescription] = useState("");
   const [validAmount, setValidAmount] = useState(false);
   const [validDescription, setValidDescription] = useState(false);
-
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isSuccessMessage, setIsSuccessMessage] = useState(false);
-
   const users = useSelector(selectAllUsers);
-
-  useEffect(() => {
-    setValidAmount(AMOUNT_REGEX.test(amount));
-    setValidDescription(DESCRIPTION_REGEX.test(description));
-  }, [amount, description]);
 
   useEffect(() => {
     if (isSuccess) {
       setOrganizationId("");
       setAmount("");
-      setDescription(""); // Clear description
+      setDescription("");
       setShowSuccessMessage(true);
       setIsSuccessMessage(true);
       setTimeout(() => {
@@ -49,16 +43,19 @@ const NewSpendingForm = () => {
     }
   }, [isSuccess, navigate]);
 
-  const onAmountChanged = (e) => setAmount(e.target.value);
+  const onAmountChanged = (e) => {
+    
+  };
+  
+
   const onDescriptionChanged = (e) => setDescription(e.target.value);
 
   const organizationUsers = users.filter(
     (user) => user.roles === "Organization"
   );
   const canSave =
-    Boolean(organizationId) && validAmount && validDescription && !isLoading;
-  console.log(organizationId);
-
+    organizationId !== null && amount !== null && description !== null && !isLoading;
+  console.log(validAmount)
   const onSaveSpendingClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
@@ -67,6 +64,7 @@ const NewSpendingForm = () => {
         amount,
         description,
       });
+      console.log("CANSAVE")
     }
   };
 
@@ -103,7 +101,6 @@ const NewSpendingForm = () => {
               : "Failed to add spending"}
           </div>
         )}
-
         <p className={errClass}>{error?.data?.message}</p>
         <h1 className="project-heading">New Spending</h1>
         <form
@@ -115,7 +112,7 @@ const NewSpendingForm = () => {
             gridGap: "0.5rem",
             zIndex: 1,
             position: "relative",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <label
@@ -139,7 +136,6 @@ const NewSpendingForm = () => {
             </label>
             <p style={{ margin: 0 }}>$</p>
           </div>
-
           <input
             className={`form__input ${validAmountClass}`}
             id="amount"
