@@ -10,10 +10,6 @@ const spendingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  description:{
-    type: String,
-    required: true,
-  },
   spendingDate: {
     type: Date,
     default: Date.now,

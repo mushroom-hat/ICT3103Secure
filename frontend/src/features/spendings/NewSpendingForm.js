@@ -20,10 +20,8 @@ const NewSpendingForm = () => {
 
   const [organizationId, setOrganizationId] = useState('');
   const [amount, setAmount] = useState('');
-  const [description, setDescription] = useState(''); // New state for description
   const [validAmount, setValidAmount] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
 
   const users = useSelector(selectAllUsers);
 
@@ -53,10 +51,10 @@ const NewSpendingForm = () => {
   const onSaveSpendingClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      await addNewSpending({ organization: organizationId, amount, description }); // Send description to the server
+      await addNewSpending({ organization: organizationId, amount });
     }
   };
-  const onDescriptionChanged = (e) => setDescription(e.target.value); // Capture description
+
   const validAmountClass = !validAmount ? 'form__input--incomplete' : '';
   const errClass = isError ? "errmsg" : "offscreen";
 
@@ -105,13 +103,12 @@ const NewSpendingForm = () => {
           Amount:
         </label>
         <input
-              className="form__input"
-              id="description"
-              name="description"
-              type="text"
-              value={description}
-              onChange={onDescriptionChanged}
-
+          className={`form__input ${validAmountClass}`}
+          id="amount"
+          name="amount"
+          type="text"
+          value={amount}
+          onChange={onAmountChanged}
         />
       </form>
     </>

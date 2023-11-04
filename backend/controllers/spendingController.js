@@ -20,7 +20,7 @@ const createNewSpending = asyncHandler(async (req, res) => {
     const { organization, amount } = req.body;
 
     // Confirm data
-    if (!organization || !amount || !description) {
+    if (!organization || !amount) {
         return res.status(400).json({ message: 'Organization and amount are required' });
     }
 
@@ -32,7 +32,7 @@ const createNewSpending = asyncHandler(async (req, res) => {
     }
 
     // Create and store the new spending record
-    const spendingRecord = await Spending.create({ organization, amount, description });
+    const spendingRecord = await Spending.create({ organization, amount });
 
     if (spendingRecord) {
         res.status(201).json({ message: 'New spending record created' });
