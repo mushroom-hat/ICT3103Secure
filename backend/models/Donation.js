@@ -6,6 +6,11 @@ const donationSchema = new mongoose.Schema({
     ref: 'User', // Reference to the User model for the donor
     required: true,
   },
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Reference to the User model for the donor
+    required: true,
+  },
   amount: {
     type: Number,
     required: true,
@@ -13,11 +18,7 @@ const donationSchema = new mongoose.Schema({
   donationDate: {
     type: Date,
     default: Date.now,
-  },
-  donationDescription:{
-    type: String,
-    required: true
-  },
+  }
   // Additional donation details can be added here
 });
 

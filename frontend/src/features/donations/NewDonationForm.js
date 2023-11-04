@@ -6,39 +6,43 @@ import { useSelector } from "react-redux";
 import Particle from "../../components/Particle";
 import { Container } from "react-bootstrap";
 import NavBar from "../../components/Navbar";
+import { useGetOrganizationsQuery } from '../users/usersApiSlice'; // Import the organizations query hook
 
 function NewDonationForm() {
   const { id, username } = useAuth();
-  console.log("id", id);
-  
-  const { data, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
-  console.log("useData", data?.username);
-
+  const { data: userData, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
   const [amount, setAmount] = useState('');
-  //const [hasCard, setHasCard] = useState(false); // Track whether the user has a card
+  const [selectedOrganization, setSelectedOrganization] = useState('');
   const [createDonation, { isLoading, isError: isDonationError, error: donationError }] = useAddNewDonationMutation();
 
+  const organizationsQuery = useGetOrganizationsQuery(); // Fetch organization data
 
-  const handleCreateDonation = () => {
-    console.log("Button clicked"); // Add this line
-
-    if (amount && data?.card !== null) {
-      console.log("Amount and card data are valid");
-      createDonation({ userId: id, amount: amount });
-    }
-    else {
-      console.log("Amount or card data are invalid");
-    }
-  };
-
-  if (isUserDataLoading) {
-    // You can render a loading message or spinner here
-    return <p>Loading user data...</p>;
+  if (isUserDataLoading || organizationsQuery.isLoading) {
+    // Render a loading message or spinner while fetching data
+    return <p>Loading...</p>;
   }
 
   if (isUserDataError) {
     // Handle the error if user data retrieval fails
     return <p>Error: {userDataError.message}</p>;
+  }
+
+  if (organizationsQuery.isError) {
+    // Handle the error if organization data retrieval fails
+    return <p>Error: {organizationsQuery.error.message}</p>;
+  }
+
+  const organizations = organizationsQuery.data; // Access the organization data
+
+  const handleCreateDonation = () => {
+    console.log("Button clicked");
+
+    if (amount && userData?.card !== null && selectedOrganization) {
+      console.log("Amount, card data, and organization are valid");
+      createDonation({ userId: id, amount: amount, organizationId: selectedOrganization });
+    } else {
+      console.log("Amount, card data, or organization are invalid");
+    }
   }
 
   return (
@@ -48,11 +52,9 @@ function NewDonationForm() {
       <Container>
         <h1 className="project-heading">Make a Donation!</h1>
         <p style={{ color: "white" }}>You are logged in as: {username}</p>
+        
         <div style={{ position: "relative", paddingBottom: "0.5rem" }}>
-          <label
-            htmlFor="amountInput"
-            style={{ color: "white", paddingRight: "0.5rem" }}
-          >
+          <label htmlFor="amountInput" style={{ color: "white", paddingRight: "0.5rem" }}>
             Please enter the amount you wish to donate: $
           </label>
           <input
@@ -63,7 +65,27 @@ function NewDonationForm() {
             style={{ zIndex: 1, position: "relative" }}
           />
         </div>
+        
+        <div style={{ position: "relative", paddingBottom: "0.5rem" }}>
+          <label htmlFor="organizationDropdown" style={{ color: "white", paddingRight: "0.5rem" }}>
+            Choose an organization:
+          </label>
+          <select
+            id="organizationDropdown"
+            value={selectedOrganization}
+            onChange={(e) => setSelectedOrganization(e.target.value)}
+          >
+            <option value="">Select an organization</option>
+            {organizations.map((org) => (
+              <option key={org.id} value={org.id}>
+                {org.username}
+              </option>
+            ))}
+          </select>
+        </div>
+        
         {isDonationError && <p>Error: {donationError.message}</p>}
+        
         <button
           onClick={handleCreateDonation}
           disabled={isLoading}
