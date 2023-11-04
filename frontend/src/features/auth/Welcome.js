@@ -53,7 +53,9 @@ const Welcome = () => {
           {renderCard('/dash/articles/new', userImg, 'Write Article', roles === 'Organization')}
           {renderCard('/dash/donations/new', userImg, 'Donate Now!', roles === 'Donator')}
           {renderCard('/organizations', userImg, 'What Are They Up To?', roles === 'Donator')}
-          {renderCard('/dash/spending', userImg, 'Organization Spending', roles === 'Donator' || roles === 'Organization')}
+          {renderCard('/dash/spending', userImg, 'Organization Spending', roles === 'Donator')}
+          {renderCard('/dash/spending/new', userImg, 'Manage Spending', roles === 'Organization')}
+
 
           {/* You can add more cards here if needed */}
         </Row>
