@@ -63,8 +63,28 @@ const deleteDonation = asyncHandler(async (req, res) => {
     res.json(reply);
 });
 
+const getDonationsByOrganization = asyncHandler(async (req, res) => {
+    const { organizationId } = req.body;
+
+    // Check if the organizationId is valid (you might want to add additional validation)
+    if (!organizationId) {
+        return res.status(400).json({ message: 'Invalid organization ID' });
+    }
+
+    const donations = await Donation.find({ organization: organizationId })
+        .lean();
+        
+
+    if (!donations || donations.length === 0) {
+        return res.status(404).json({ message: 'No donations found for this organization' });
+    }
+    
+    res.json(donations);
+});
+
 module.exports = {
     getAllDonations,
+    getDonationsByOrganization,
     createNewDonation,
     deleteDonation
 };

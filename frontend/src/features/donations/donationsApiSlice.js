@@ -48,15 +48,33 @@ export const donationsApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: 'Donation', id: arg.id }
-            ]
+            ],
+            providesTags: (result, error, arg) => {
+                if (result?.ids) {
+                    return [
+                        { type: 'Donation', id: 'LIST' },
+                        ...result.ids.map(id => ({ type: 'Donation', id }))
+                    ]
+                } else return [{ type: 'Donation', id: 'LIST' }]
+            }
+        }),
+        getDonationsByOrganization: builder.query({
+            query: (organizationId) => ({
+                url: '/donations/getByOrg',
+                method: 'POST',
+                body: { organizationId }, // Pass the organizationId in the request body
+            }),
+            providesTags: ['Donation'],
         }),
     }),
 })
+
 
 export const {
     useGetDonationsQuery,
     useAddNewDonationMutation,
     useDeleteDonationMutation,
+    useGetDonationsByOrganizationQuery
 } = donationsApiSlice
 
 // Returns the query result object
