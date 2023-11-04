@@ -68,7 +68,6 @@ function App() {
               <Route path="profile" element={<UserProfile />} />
               <Route element={<RequireAuth allowedRoles={[ROLES.Organization]} />}>
                 <Route path="spending">
-                  <Route index element={<SpendingsList />} />
                   <Route path="new" element={<NewSpendingForm />} />
                 </Route>
                 <Route path="articles">
@@ -85,6 +84,9 @@ function App() {
                 </Route>
                 <Route path="donations">
                   <Route path="new" element={<NewDonationForm />} />
+                </Route>
+                <Route path="spending">
+                  <Route index element={<SpendingsList />} />
                 </Route>
               </Route>
               <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>

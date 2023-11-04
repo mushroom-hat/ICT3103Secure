@@ -37,23 +37,22 @@ function NavBar() {
   const [sendLogout, { isLoading, isSuccess, isError, error }] =
     useSendLogoutMutation();
 
-const handleLogout = async () => {
-  try {
-    const { data, error } = await sendLogout(); // Call the logout mutation and destructure the result
+  const handleLogout = async () => {
+    try {
+      const { data, error } = await sendLogout(); // Call the logout mutation and destructure the result
 
-    if (data) {
-      dispatch(logOut()); // Dispatch the logOut action if the mutation is successful
-      // Perform any additional logout-related actions, such as clearing cookies or redirecting the user
-    } else if (error) {
-      // Handle error, e.g., display an error message
-      console.error('Error logging out:', error);
+      if (data) {
+        dispatch(logOut()); // Dispatch the logOut action if the mutation is successful
+        // Perform any additional logout-related actions, such as clearing cookies or redirecting the user
+      } else if (error) {
+        // Handle error, e.g., display an error message
+        console.error("Error logging out:", error);
+      }
+    } catch (error) {
+      // Handle any other errors that might occur during the logout process
+      console.error("Error logging out:", error);
     }
-  } catch (error) {
-    // Handle any other errors that might occur during the logout process
-    console.error('Error logging out:', error);
-  }
-};
-
+  };
 
   window.addEventListener("scroll", scrollHandler);
 
@@ -153,17 +152,6 @@ const handleLogout = async () => {
                     <BiDonateHeart style={{ marginBottom: "2px" }} /> Donate
                   </Nav.Link>
                 </Nav.Item>
-
-                <Nav.Item>
-                  <Nav.Link
-                    as={Link}
-                    to="/dash/cashflowAnalysis"
-                    onClick={() => updateExpanded(false)}
-                  >
-                    <TbReportAnalytics style={{ marginBottom: "2px" }} />{" "}
-                    Cashflow
-                  </Nav.Link>
-                </Nav.Item>
               </>
             )}
 
@@ -172,20 +160,21 @@ const handleLogout = async () => {
                 <Nav.Item>
                   <Nav.Link
                     as={Link}
-                    to="/dash/spending"
+                    to="/dash/articles/new"
                     onClick={() => updateExpanded(false)}
                   >
-                    <LiaDonateSolid style={{ marginBottom: "2px" }} /> Spending
+                    <CgFileDocument style={{ marginBottom: "2px" }} /> Publish
                   </Nav.Link>
                 </Nav.Item>
 
                 <Nav.Item>
                   <Nav.Link
                     as={Link}
-                    to="/dash/articles/new"
+                    to="/dash/donations/cashflowAnalysis"
                     onClick={() => updateExpanded(false)}
                   >
-                    <CgFileDocument style={{ marginBottom: "2px" }} /> Publish
+                    <TbReportAnalytics style={{ marginBottom: "2px" }} />{" "}
+                    Cashflow
                   </Nav.Link>
                 </Nav.Item>
               </>
@@ -226,8 +215,8 @@ const handleLogout = async () => {
               </Nav.Item>
             ) : (
               <Nav.Item>
-                <Nav.Link as={Link} to="/" onClick = {() => handleLogout()}>
-                  <FaSignInAlt style={{ marginBottom: "2px" }}/> Logout
+                <Nav.Link as={Link} to="/" onClick={() => handleLogout()}>
+                  <FaSignInAlt style={{ marginBottom: "2px" }} /> Logout
                 </Nav.Link>
               </Nav.Item>
             )}

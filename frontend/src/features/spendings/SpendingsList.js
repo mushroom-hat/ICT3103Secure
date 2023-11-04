@@ -65,7 +65,7 @@ const SpendingsList = () => {
       <Particle />
       <NavBar />
       <Container>
-        <h1 className="project-heading">View Your Spendings</h1>
+        <h1 className="project-heading">Organization Spendings</h1>
         {content}
       </Container>
     </Container>
