@@ -48,11 +48,9 @@ const Welcome = () => {
       </Container>
       <Container>
         <Row>
-          {renderCard('/dash/users/new', technoteImg, 'Manage Tech Notes', roles === 'Admin' || roles === 'Donator' || roles === 'Organization')}
           {renderCard('/dash/users', userImg, 'Manage Users', roles === 'Admin')}
-          {renderCard('/dash/users/new', spendingImg, 'Manage Spendings', roles === 'Admin' || roles === 'Organization')}
+          {/* You can add more cards here if needed */}
         </Row>
-        {/* Additional rows can go here */}
       </Container>
     </>
   );

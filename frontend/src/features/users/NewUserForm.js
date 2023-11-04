@@ -43,6 +43,7 @@ const AddUserForm = () => {
     try {
       await addNewUser(formData);
       setIsSuccess(mutationSuccess);
+      setIsSuccess(true);
     } catch (error) {
       setIsSuccess(false);
     }
