@@ -6,11 +6,13 @@ const asyncHandler = require('express-async-handler');
 //@route GET /spending
 //@access Public
 const getAllSpending = asyncHandler(async (req, res) => {
-    const spending = await Spending.find().populate('organization' ).lean();
-    if (!spending || spending.length === 0 || !spending.amount || !spending.description) {
+    const spending = await Spending.find().populate('organization').lean();
+    if (spending && spending.length > 0) {
+        res.json(spending);
+    } else {
         return res.status(404).json({ message: 'No spending records found' });
     }
-    res.json(spending);
+    
 });
 
 //@desc Create a new spending record
