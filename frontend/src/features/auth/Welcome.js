@@ -49,7 +49,7 @@ const Welcome = () => {
       <Container>
         <Row>
           {renderCard('/dash/users', userImg, 'Manage Users', roles === 'Admin')}
-          {renderCard('/dash/cashflow', userImg, 'Manage Cashflow', roles === 'Organization')}
+          {renderCard('/dash/donations/cashflowAnalysis', userImg, 'Manage Cashflow', roles === 'Organization')}
           {renderCard('/dash/articles/new', userImg, 'Write Article', roles === 'Organization')}
           {renderCard('/dash/donations/new', userImg, 'Donate Now!', roles === 'Donator')}
           {renderCard('/organizations', userImg, 'What Are They Up To?', roles === 'Donator')}
