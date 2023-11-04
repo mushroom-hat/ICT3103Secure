@@ -12,19 +12,18 @@ const getAllDonations = asyncHandler(async (req, res) => {
     }
     res.json(donations);
 });
-
 //@desc Create a new donation
 //@route POST /donations
 //@access Private
 const createNewDonation = asyncHandler(async (req, res) => {
-
     console.log("Inside createNewDonation");
-    const { userId, amount } = req.body;
+    const { userId, amount, donationDescription } = req.body;
     console.log(userId);
     console.log(amount);
+
     // Confirm data
-    if (!userId || !amount) {
-        return res.status(400).json({ message: 'User ID and amount are required' });
+    if (!userId || !amount || !donationDescription) {
+        return res.status(400).json({ message: 'User ID, amount, and donationDescription are required' });
     }
 
     // Check if the user exists
@@ -35,7 +34,7 @@ const createNewDonation = asyncHandler(async (req, res) => {
     }
 
     // Create and store the new donation
-    const donation = await Donation.create({ user: userId, amount });
+    const donation = await Donation.create({ user: userId, amount, donationDescription });
 
     if (donation) {
         res.status(201).json({ message: 'New donation created' });
@@ -43,6 +42,7 @@ const createNewDonation = asyncHandler(async (req, res) => {
         res.status(400).json({ message: 'Invalid donation data received' });
     }
 });
+
 
 //@desc Delete a donation
 //@route DELETE /donations/:id
