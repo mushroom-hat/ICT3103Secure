@@ -2,11 +2,12 @@ const express = require('express')
 const router = express.Router()
 const usersController = require('../controllers/usersController')
 const verifyJWT = require('../middleware/verifyJWT')
+const bouncersignup = require('../middleware/bouncersignup.js');
 
 
 router.route('/')
     .get(verifyJWT, usersController.getAllUsers) //READ
-    .post(verifyJWT, usersController.createNewUsers) //CREATE
+    .post(verifyJWT, bouncersignup, usersController.createNewUsers) //CREATE
     .patch(verifyJWT, usersController.updateUser) //UPDATE
     .delete(verifyJWT, usersController.deleteUser) //DELETE
 

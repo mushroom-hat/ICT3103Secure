@@ -18,6 +18,7 @@ const AddUserForm = () => {
   });
 
   const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');  // New state for Toast message
   const [isSuccess, setIsSuccess] = useState(false);
   const [addNewUser, { isSuccess: mutationSuccess }] = useAddNewUserMutation();
   const navigate = useNavigate();
@@ -41,10 +42,70 @@ const AddUserForm = () => {
 
   const addNewUserClick = async () => {
     try {
-      await addNewUser(formData);
-      setIsSuccess(mutationSuccess);
-      setIsSuccess(true);
+      const response = await addNewUser(formData);
+      const errorresponseData = response.error;
+
+      // Do something with the responseData, e.g., display it
+      console.log('Response Data:', errorresponseData);
+      if (errorresponseData){
+        throw new Error(JSON.stringify(errorresponseData));
+      }
+      setToastMsg('User Added successfully!');
     } catch (error) {
+      let combinedErrors;
+      let errorCode;
+      let errormessages = [];
+
+      const jsonMatch = error.message.match(/(\{.*\})/);
+      console.log(error.message);
+            
+      if (jsonMatch && jsonMatch[1]) {
+          try {
+          const errorObject = JSON.parse(jsonMatch[1]);
+          const status = errorObject.status;
+          const errors = errorObject.data.errors.msg;
+
+          for(let i = 0; i < errorObject.data.errors.length; i++){
+
+            errormessages.push(errorObject.data.errors[i].msg);
+          };
+
+          combinedErrors = errormessages.join(' ');
+
+          } catch (parseError) {
+          // Handle parsing error if JSON message is not valid
+          console.error("Error parsing JSON message:", parseError);
+          }
+      };
+
+            // Extract error code
+          const errorCodeMatch = error.message.match(/\d+/);
+
+            if (errorCodeMatch) {
+              errorCode = errorCodeMatch[0];
+              console.log("Error Code:", errorCode);
+          }
+
+          console.log(errorCode);
+
+          if (!errorCode) {
+              // Set toast message and make it visible
+              setToastMsg('No Server Response');
+              setShowToast(true);
+          } else if (parseInt(errorCode, 10) === 400) {
+              // Set toast message and make it visible
+              setToastMsg('Try again');
+              setShowToast(true);
+          } else if (parseInt(errorCode, 10) === 422) {
+              // Set toast message and make it visible
+              setToastMsg(combinedErrors);
+              setShowToast(true);
+          } else {
+              // Set toast message and make it visible
+              setToastMsg('Error Occured');
+              setShowToast(true);
+          }
+      
       setIsSuccess(false);
     }
     setShowToast(true);
@@ -119,17 +180,7 @@ const AddUserForm = () => {
               <strong className="mr-auto">Notification</strong>
             </Toast.Header>
             <Toast.Body>
-              {isSuccess ? (
-                <>
-                  <CheckCircleFill color="green" className="mr-2" style={{ marginRight: "10px" }} />
-                  Create user successful
-                </>
-              ) : (
-                <>
-                  <XCircleFill color="red" className="mr-2" style={{ marginRight: "10px" }} />
-                  Fail to create user
-                </>
-              )}
+            {toastMsg}
             </Toast.Body>
           </Toast>
         </Col>
