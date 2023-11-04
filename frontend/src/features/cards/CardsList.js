@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGetCardsQuery } from "./cardsApiSlice";
 import Card from "./Card";
-import NavBar from "../../components/Navbar";
+import NavBar from "../../components/Navbar_logon";
 import Particle from "../../components/Particle";
 import { Container, Col, Row, Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";

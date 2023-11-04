@@ -7,7 +7,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 import { Container, Row, Col, Card, FormControl, Toast } from "react-bootstrap";
 import Particle from "../../components/Particle";
-import NavBar from "../../components/Navbar";
+import Navbar from "../../components/Navbar";
 
 const Signup = () => {
     const nameRef = useRef(null); // Add a ref for the Name input
@@ -239,7 +239,7 @@ const Signup = () => {
     return (
         <Container fluid className="project-section">
             <Particle />
-            <NavBar />
+            <Navbar />
             <Container>
                 <h1 className="project-heading" style={{ textAlign: 'center' }}>
                     Donator Signup

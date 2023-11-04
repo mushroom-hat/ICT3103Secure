@@ -7,7 +7,7 @@ import usePersist from '../../hooks/usePersist';
 
 import { Container, Row, Col } from "react-bootstrap";
 import Particle from "../../components/Particle";
-import NavBar from "../../components/Navbar";
+import Navbar from "../../components/Navbar";
 import Card from "react-bootstrap/Card";
 import FormControl from "react-bootstrap/FormControl";
 import { Toast } from "react-bootstrap";
@@ -144,7 +144,7 @@ const Login = () => {
 
             <Container fluid className="project-section">
                 <Particle />
-                <NavBar />
+                <Navbar />
                 <Container>
                     <h1 className="project-heading" style={{ textAlign: 'center' }}>
                         Employee Login

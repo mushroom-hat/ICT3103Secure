@@ -5,10 +5,10 @@ import { useGetUserByUsernameQuery } from '../users/usersApiSlice';
 import { useSelector } from "react-redux";
 import Particle from "../../components/Particle";
 import { Container } from "react-bootstrap";
-import NavBar from "../../components/Navbar";
+import NavBar from '../../components/Navbar_logon';
 
 function NewDonationForm() {
-  const { id, username } = useAuth();
+  const { id, username, roles } = useAuth();
   console.log("id", id);
   
   const { data, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);

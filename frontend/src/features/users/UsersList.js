@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGetUsersQuery } from "./usersApiSlice";
 import User from "./User";
-import NavBar from "../../components/Navbar";
+import NavBar from "../../components/Navbar_logon";
 import Particle from "../../components/Particle";
 import { Container, Col, Row, Pagination, Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";

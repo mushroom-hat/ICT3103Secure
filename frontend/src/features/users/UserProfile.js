@@ -6,11 +6,10 @@ import {
 } from "./usersApiSlice";
 import Particle from "../../components/Particle";
 import { Container } from "react-bootstrap";
-import NavBar from "../../components/Navbar";
+import NavBar from "../../components/Navbar_logon";
 
 const UserProfile = () => {
-  const { id, username, roles } = useAuth();
-  console.log("role", roles)
+  const { id, username } = useAuth();
   const { data: user, error, isLoading } = useGetUserByUsernameQuery(username);
   const [updateUser] = useUpdateUserMutation();
 
