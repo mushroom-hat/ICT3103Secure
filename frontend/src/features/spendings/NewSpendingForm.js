@@ -58,8 +58,8 @@ const NewSpendingForm = () => {
   const onDescriptionChanged = (e) => setDescription(e.target.value);
 
   const organizationUsers = users.filter(user => user.roles === "Organization");
-
   const canSave = Boolean(organizationId) && validAmount && validDescription && !isLoading;
+  console.log(organizationId)
 
   const onSaveSpendingClicked = async (e) => {
     e.preventDefault();

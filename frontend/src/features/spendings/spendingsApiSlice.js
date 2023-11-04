@@ -16,14 +16,10 @@ export const spendingsApiSlice = apiSlice.injectEndpoints({
         return response.status === 200 && !result.isError;
       },
       transformResponse: (responseData) => {
-        console.log("responseData", responseData)
-
         const loadedSpendings = responseData.map((spending) => {
           spending.id = spending._id;
           return spending;
         });
-        console.log("loadedSpendings",loadedSpendings)
-
         return spendingsAdapter.setAll(initialState, loadedSpendings);
       },
       providesTags: (result, error, arg) => {
