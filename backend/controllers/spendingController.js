@@ -6,8 +6,8 @@ const asyncHandler = require('express-async-handler');
 //@route GET /spending
 //@access Public
 const getAllSpending = asyncHandler(async (req, res) => {
-    const spending = await Spending.find().populate('organization', 'username').lean();
-    if (!spending || spending.length === 0) {
+    const spending = await Spending.find().populate('organization', 'username', 'description' ).lean();
+    if (!spending || spending.length === 0 || !spending.description) {
         return res.status(404).json({ message: 'No spending records found' });
     }
     res.json(spending);
@@ -17,7 +17,7 @@ const getAllSpending = asyncHandler(async (req, res) => {
 //@route POST /spending
 //@access Private
 const createNewSpending = asyncHandler(async (req, res) => {
-    const { organization, amount } = req.body;
+    const { organization, amount, description } = req.body;
 
     // Confirm data
     if (!organization || !amount || !description) {
@@ -32,7 +32,7 @@ const createNewSpending = asyncHandler(async (req, res) => {
     }
 
     // Create and store the new spending record
-    const spendingRecord = await Spending.create({ organization, amount, description });
+    const spendingRecord = await Spending.create({ organization, amount });
 
     if (spendingRecord) {
         res.status(201).json({ message: 'New spending record created' });

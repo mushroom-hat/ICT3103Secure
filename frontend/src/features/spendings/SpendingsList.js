@@ -48,7 +48,7 @@ const SpendingsList = () => {
           <tr>
             <th scope="col" className="table__th spending__organization">Organization</th>
             <th scope="col" className="table__th spending__amount">Amount</th>
-            <th scope="col" className="table__th spending__amount">Description</th>
+            <th scope="col" className="table__th spending__edit">Description</th>
           </tr>
         </thead>
         <tbody>{tableContent}</tbody>
