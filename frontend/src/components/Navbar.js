@@ -16,9 +16,9 @@ import { FaSignInAlt } from "react-icons/fa";
 import { CgFileDocument } from "react-icons/cg";
 import { TbReportAnalytics } from "react-icons/tb";
 import useAuth from "../hooks/useAuth";
-import { useDispatch } from 'react-redux';
-import { logOut } from '../features/auth/authSlice';
-import { useSendLogoutMutation } from '../features/auth/authApiSlice'
+import { useDispatch } from "react-redux";
+import { logOut } from "../features/auth/authSlice";
+import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 
 function NavBar() {
   const { roles } = useAuth();
@@ -33,28 +33,24 @@ function NavBar() {
     }
   }
 
-  const [sendLogout, {
-    isLoading,
-    isSuccess,
-    isError,
-    error
-}] = useSendLogoutMutation()
+  const [sendLogout, { isLoading, isSuccess, isError, error }] =
+    useSendLogoutMutation();
 
-// const handleLogout = async () => {
-//   try {
-//     const response = await sendLogout(); // Call the logout mutation
-//     if (isSuccess) {
-//       dispatch(logOut()); // Dispatch the logOut action if the mutation is successful
-//       // Perform any additional logout-related actions, such as clearing cookies or redirecting the user
-//     } else if (isError) {
-//       // Handle error, e.g., display an error message
-//       console.error('Error logging out:', error);
-//     }
-//   } catch (error) {
-//     // Handle any other errors that might occur during the logout process
-//     console.error('Error logging out:', error);
-//   }
-// };
+  // const handleLogout = async () => {
+  //   try {
+  //     const response = await sendLogout(); // Call the logout mutation
+  //     if (isSuccess) {
+  //       dispatch(logOut()); // Dispatch the logOut action if the mutation is successful
+  //       // Perform any additional logout-related actions, such as clearing cookies or redirecting the user
+  //     } else if (isError) {
+  //       // Handle error, e.g., display an error message
+  //       console.error('Error logging out:', error);
+  //     }
+  //   } catch (error) {
+  //     // Handle any other errors that might occur during the logout process
+  //     console.error('Error logging out:', error);
+  //   }
+  // };
 
   window.addEventListener("scroll", scrollHandler);
 
@@ -97,11 +93,27 @@ function NavBar() {
         </Navbar.Toggle>
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto" defaultActiveKey="#home">
-            <Nav.Item>
-              <Nav.Link as={Link} to="/" onClick={() => updateExpanded(false)}>
-                <AiOutlineHome style={{ marginBottom: "2px" }} /> Home
-              </Nav.Link>
-            </Nav.Item>
+            {roles === "" ? (
+              <Nav.Item>
+                <Nav.Link
+                  as={Link}
+                  to="/"
+                  onClick={() => updateExpanded(false)}
+                >
+                  <AiOutlineHome style={{ marginBottom: "2px" }} /> Home
+                </Nav.Link>
+              </Nav.Item>
+            ) : (
+              <Nav.Item>
+                <Nav.Link
+                  as={Link}
+                  to="/dash"
+                  onClick={() => updateExpanded(false)}
+                >
+                  <AiOutlineHome style={{ marginBottom: "2px" }} /> Home
+                </Nav.Link>
+              </Nav.Item>
+            )}
 
             <Nav.Item>
               <Nav.Link
@@ -145,7 +157,8 @@ function NavBar() {
                     to="/dash/cashflowAnalysis"
                     onClick={() => updateExpanded(false)}
                   >
-                    <TbReportAnalytics style={{ marginBottom: "2px" }} /> Cashflow
+                    <TbReportAnalytics style={{ marginBottom: "2px" }} />{" "}
+                    Cashflow
                   </Nav.Link>
                 </Nav.Item>
               </>
@@ -211,7 +224,7 @@ function NavBar() {
             ) : (
               <Nav.Item>
                 <Nav.Link as={Link} to="/">
-                  <FaSignInAlt style={{ marginBottom: "2px" }}/> Logout
+                  <FaSignInAlt style={{ marginBottom: "2px" }} /> Logout
                 </Nav.Link>
               </Nav.Item>
             )}
