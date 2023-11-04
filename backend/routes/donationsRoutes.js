@@ -10,4 +10,6 @@ router.route('/')
     .post(verifyJWT,verifyRole(['Donator']), bouncerdonation, donationsController.createNewDonation) // CREATE
     .patch(donationsController.deleteDonation) // DELETE
 
+router.post('/getByOrg', donationsController.getDonationsByOrganization);
+
 module.exports = router

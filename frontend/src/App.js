@@ -74,6 +74,9 @@ function App() {
                 <Route path="articles">
                   <Route path="new" element={<WriteArticle />} />
                 </Route>
+                <Route path="donations">
+                  <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
+                </Route>
               </Route>
               <Route element={<RequireAuth allowedRoles={[ROLES.Donator]} />}>
                 <Route path="cards">
@@ -83,7 +86,6 @@ function App() {
                 <Route path="donations">
                   <Route path="new" element={<NewDonationForm />} />
                 </Route>
-                <Route path="cashflowAnalysis" element={<CashflowAnalysis />} />
               </Route>
               <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                 <Route path="users">
