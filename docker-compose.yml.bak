@@ -1,7 +1,7 @@
 version: '3'
 services:
   frontend:
-    image: charsity-frontend:latest  # Use your actual frontend Docker image
+    image: charsity-frontend:latest
     ports:
       - "3000:3000"  # Map the container's port 3000 to the host's port 3000
     environment:
