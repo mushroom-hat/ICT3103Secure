@@ -6,7 +6,8 @@ import { useSelector } from "react-redux";
 import Particle from "../../components/Particle";
 import { Container } from "react-bootstrap";
 import NavBar from "../../components/Navbar";
-import { useGetOrganizationsQuery } from '../users/usersApiSlice'; // Import the organizations query hook
+import { useGetOrganizationsQuery } from '../users/usersApiSlice';
+import { useNavigate } from 'react-router-dom';
 
 function NewDonationForm() {
   const { id, username } = useAuth();
@@ -14,6 +15,7 @@ function NewDonationForm() {
   const [amount, setAmount] = useState('');
   const [selectedOrganization, setSelectedOrganization] = useState('');
   const [createDonation, { isLoading, isError: isDonationError, error: donationError }] = useAddNewDonationMutation();
+  const navigate = useNavigate();
 
   const organizationsQuery = useGetOrganizationsQuery(); // Fetch organization data
 
@@ -42,6 +44,7 @@ function NewDonationForm() {
       createDonation({ userId: id, amount: amount, organizationId: selectedOrganization });
     } else {
       console.log("Amount, card data, or organization are invalid");
+      navigate("/dash/cards/new");
     }
   }
 
