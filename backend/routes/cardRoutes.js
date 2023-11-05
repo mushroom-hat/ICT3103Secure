@@ -10,4 +10,7 @@ router.route('/')
     .patch(verifyJWT,verifyRole(['Admin']),cardsController.updateCard) // UPDATE
     .delete(verifyJWT,verifyRole(['Donator']),cardsController.deleteCard) // DELETE
 
+router.route('/userCardInfo')
+    .post(verifyJWT,verifyRole(['Donator']),cardsController.getCardInfoByUserId);
+
 module.exports = router

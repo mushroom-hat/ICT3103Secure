@@ -2,6 +2,7 @@
 function verifyRole(requiredRoles) {
   return (req, res, next) => {
     console.log("In verifyRoles");
+    console.log("requiredRoles", requiredRoles);
     // Check if req.roles exists
     if (!req.roles) {
       console.log("VerifyRole - No req.roles");
@@ -12,7 +13,9 @@ function verifyRole(requiredRoles) {
     const userRole = req.roles;
 
     if (!requiredRoles.includes(userRole)) {
+      console.log(userRole)
       console.log("VerifyRole - Wrong Role");
+      console.log(requiredRoles)
       return res.status(403).json({ message: 'Unauthorized' });
     }
 

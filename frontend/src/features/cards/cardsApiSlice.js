@@ -31,6 +31,14 @@ export const cardsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'Card', id: 'LIST' }]
             }
         }),
+        getUserCardInfo: builder.query({
+            query: (id) => ({
+                url: '/cards/userCardInfo',
+                method: 'POST',
+                body: { id }, // Pass the organizationId in the request body
+            }),
+            providesTags: (result, error, arg) => [{ type: 'UserCardInfo', id: arg.id }]
+        }),
         addNewCard: builder.mutation({
             query: initialCardData => ({
                 url: '/cards',
@@ -70,6 +78,7 @@ export const cardsApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetCardsQuery,
+    useGetUserCardInfoQuery,
     useAddNewCardMutation,
     useUpdateCardMutation,
     useDeleteCardMutation,

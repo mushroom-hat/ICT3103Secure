@@ -79,7 +79,8 @@ const AddCardForm = () => {
 
         console.log("User Update Response:", updateUserResponse); // Log the response from updateUser function
 
-        navigate("/success");
+        navigate("/dash/donations/new");
+        window.location.reload();
       }
     }
   };

@@ -1,119 +1,89 @@
 import React, { useState } from "react";
-import { useGetCardsQuery } from "./cardsApiSlice";
-import Card from "./Card";
+import useAuth from "../../hooks/useAuth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  useDeleteCardMutation,
+  useGetUserCardInfoQuery,
+} from "./cardsApiSlice";
 import NavBar from "../../components/Navbar";
-import Particle from "../../components/Particle";
-import { Container, Col, Row, Form } from "react-bootstrap";
-import { Button } from "react-bootstrap";
-import "../../style.css"; // Import your custom CSS for styling
-import useAuth from '../../hooks/useAuth';
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import "../../style.css";
+import Particle from "../../components/Particle";
 import { useGetUserByUsernameQuery } from '../users/usersApiSlice';
+import { useSelector } from "react-redux";
 
 const CardsList = () => {
-  const {
-    data: cards,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useGetCardsQuery(undefined, {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
-
   const { id, username } = useAuth();
-  const { data: userData, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
-
-  const hasValidCard = userData && userData?.card !== null;
-
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleAdd = () => {
-    navigate("/dash/cards/new");
+  const { data: userData, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
+  const { data: cardData, isLoading, isError } = useGetUserCardInfoQuery(id);
+  const [deleteCard] = useDeleteCardMutation(); // Mutation hook for deleting a card
+
+  const hasValidCard = userData && userData.card !== 'null';
+  console.log(userData?.card);
+  console.log(userData);
+  console.log("valid card", hasValidCard);
+
+  const handleDelete = async () => {
+    try {
+      // Assuming cardData.id is the ID of the card to be deleted
+      await deleteCard({ id: cardData._id }).unwrap();
+      // After successful deletion, you can refetch card data or update the UI
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting card:", error);
+    }
   };
 
-  let content;
-
-  if (isLoading) content = <p>Loading...</p>;
-  if (isError) content = <p>Not Currently Available</p>;
-
-  if (isSuccess) {
-    const { ids, entities } = cards;
-
-    // Filter the cards to only include those with matching user ID
-    const userCards = ids.filter((cardId) => userData?.card === cardId);
-
-    content = (
-      <>
-        <NavBar />
-        <Container fluid className="home-section" id="home">
-          <Particle />
-          <Container>
-            <Row>
-              <Col md={7} className="home-header">
-                <h1 style={{ paddingBottom: 15, color: "white" }} className="heading">
-                  Payment Methods
-                </h1>
-              </Col>
-            </Row>
-          </Container>
-        </Container>
-        <Container>
-          <Row className="justify-content-md-center" style={{ paddingBottom: "1rem"}}>
-            <Form.Group as={Row} controlId="searchQuery">
-              <Col sm={3}>
-                <Button
-                  variant="primary"
-                  disabled={hasValidCard}
-                  onClick={() => {
-                    handleAdd();
-                  }}
-                >
-                  Add Payment Method
-                </Button>
-              </Col>
-              <Col sm={9} style={{ display: "flex", alignItems: "center"}}>
-                <Form.Control
-                  type="text"
-                  placeholder="Search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </Col>
-            </Form.Group>
-          </Row>
-          <Row className="justify-content-md-center">
-            <Col sm={12}>
-              <div className="payment-methods-list">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Card Number</th>
-                      <th>Card Holder Name</th>
-                      <th>Expiry Date</th>
-                      <th>CVC</th>
-                      <th>Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {userCards.map((cardId) => (
-                      <tr key={cardId}>
-                        <Card cardId={cardId} />
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </>
-    );
-  }
-
-  return content;
+  return (
+    <Container fluid className="project-section">
+      <Particle />
+      <NavBar />
+      <Container style={{ position: "relative", zIndex: 1 }}>
+        <h1 className="project-heading">View Your Cards</h1>
+        {isError || !cardData ? (
+          <div className="alert alert-warning" role="alert">
+            No card found
+          </div>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Card Number</th>
+                <th>Card Holder Name</th>
+                <th>Expiry Date</th>
+                <th>CVC</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="table__cell">{cardData.cardNumber.slice(-4)}</td>
+                <td className="table__cell">{cardData.cardHolderName}</td>
+                <td className="table__cell">{cardData.expiryDate}</td>
+                <td className="table__cell">{cardData.cvc}</td>
+                <td className="table__cell">
+                  <button
+                    className="icon-button table__button"
+                    onClick={handleDelete}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        )}
+        <Button variant="primary" disabled={hasValidCard} onClick={() => navigate("/dash/cards/new")}>
+          Add Payment Method
+        </Button>
+      </Container>
+    </Container>
+  );
 };
 
 export default CardsList;
