@@ -7,7 +7,9 @@ import { Container, Col, Row, Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../../style.css"; // Import your custom CSS for styling
-
+import useAuth from '../../hooks/useAuth';
+import { useNavigate } from "react-router-dom";
+import { useGetUserByUsernameQuery } from '../users/usersApiSlice';
 const CardsList = () => {
   const {
     data: cards,
@@ -19,14 +21,24 @@ const CardsList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+  const { id, username } = useAuth();
+  const { data: userData, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
 
+  const hasValidCard = userData && userData?.card !== null;
+  console.log("Card", userData?.card)
+  console.log(hasValidCard)
+  console.log(!hasValidCard)
+  console.log()
   const [searchQuery, setSearchQuery] = useState("");
-
+  const navigate = useNavigate();
+  const handleAdd = () => {
+    navigate("/dash/cards/new");
+  };
   let content;
 
   if (isLoading) content = <p>Loading...</p>;
   if (isError) content = <p>Not Currently Available</p>;
-
+  
   if (isSuccess) {
     const { ids, entities } = cards;
     const filteredIds = ids.filter((id) => {
@@ -58,9 +70,18 @@ const CardsList = () => {
           <Row className="justify-content-md-center" style={{ paddingBottom: "1rem"}}>
               <Form.Group as={Row} controlId="searchQuery">
                 <Col sm={3}>
-                  <Link to="/dash/cards/new">
-                    <Button variant="primary">Add Payment Method</Button>
-                  </Link>
+
+                <Link to="/dash/cards/new">
+                <Button
+                  variant="primary"
+                  disabled={hasValidCard}
+                  onClick={() => {
+                    handleAdd();
+                  }}
+                >
+    Add Payment Method
+  </Button>
+</Link>
                 </Col>
                 <Col sm={9} style={{ display: "flex", alignItems: "center"}}>
                   <Form.Control
