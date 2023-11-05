@@ -17,7 +17,7 @@ const ArticleRow = ({ articleId }) => {
   
   return (
     <tr className="table__row article" onClick={handleClick}>
-      <td className="table__cell">{article.author.username}</td>
+      <td className="table__cell">{article.author ? article.author.username : 'N/A'}</td>
       <td className="table__cell">{article.title}</td>
       <td className="table__cell">{truncatedContent}</td>
     </tr>
