@@ -195,14 +195,14 @@ const Signup = () => {
                 try {
                 const errorObject = JSON.parse(jsonMatch[1]);
                 const status = errorObject.status;
+                const error2 = errorObject.data.error;
                 const errors = errorObject.errors;
 
                 console.log("Status:", status);
                 console.log("Errors:", errors);
+                console.log("Errors2:", error2);
 
                 if(status == 400){
-                    const error2 = errorObject.data.error;
-                    console.log("Errors2:", error2);
                     combinedErrors = error2
                 }
                 else{
