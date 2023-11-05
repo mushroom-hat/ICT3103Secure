@@ -116,10 +116,10 @@ pipeline {
         //             sh "chmod 777 /trivy-scan-results"
 
         //             // Scan the frontend Docker image and save results in the Jenkins workspace
-        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /home/student69/trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln -f table --skip-files --skip-dirs -o /trivy-scan-results/frontend-dependency-scan.csv charsity-frontend"
+        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /home/student69/trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln -f table --skip-files --skip-dirs --timeout 30m -o /trivy-scan-results/frontend-dependency-scan.csv charsity-frontend"
 
         //             // Scan the backend Docker image and save results in the Jenkins workspace
-        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /home/student69/trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln -f table -o /trivy-scan-results/backend-dependency-scan.csv charsity-backend"
+        //             sh "docker run --memory 3g -v /var/run/docker.sock:/var/run/docker.sock -v /home/student69/trivy-scan-results:/trivy-scan-results aquasec/trivy image --scanners vuln -f table --skip-files --skip-dirs --timeout 30m -o /trivy-scan-results/backend-dependency-scan.csv charsity-backend"
 
         //         }
         //     }
