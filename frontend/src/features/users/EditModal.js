@@ -20,13 +20,132 @@ const EditModal = ({ userSelected, show, handleClose }) => {
 
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
   const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');  // New state for Toast message
+
+  let customerror;
+  let restructureError;
+  
 
   const handleSave = async () => {
-    await updateUser({ id, name, username, email, roles, isActive });
-    setShowToast(true);
-    if (isSuccess) {
-      console.log('Updated user successfully');
+
+    try{
+        const response = await updateUser({ id, name, username, email, roles, isActive });
+        console.log("this is the result", response);
+
+        try{
+          if (response.data.status == 200) {
+            console.log('Updated user successfully');
+            setToastMsg('Updated user successful');
+            setShowToast(true);
+            handleClose(); // Close the modal
+            return; // Return early to stop further execution
+          }
+        }
+        catch{
+          console.log("this works i guess")
+        }
+
+          console.log("mate we have a problem");
+          console.log(response.error);
+          customerror = response.error;
+
+          if (response.error.status == 400){
+            throw new Error(JSON.stringify(customerror))
+          }
+
+          if (customerror) {
+            //Force an error
+            console.log(customerror);
+            console.log(customerror.data.errors.length)
+            restructureError = {
+                status: null,
+                errors: []
+            };
+
+            restructureError.status = customerror.status;
+            console.log("To test restructure", restructureError);
+
+            for (let i = 0; i < customerror.data.errors.length; i++){
+                restructureError.errors.push(customerror.data.errors[i].msg);
+            };
+
+            console.log(restructureError);
+
+
+            throw new Error(JSON.stringify(restructureError));
+            
+        }
+
     }
+    catch(err){
+      let errorCode;
+      let combinedErrors;
+      let newbornerror;
+
+      console.log("Route Handler: Catch block begins");
+      newbornerror = JSON.stringify(err);
+      console.log("This the thrown error", newbornerror);
+       // Use a regular expression to extract the JSON part
+      const jsonMatch = err.message.match(/(\{.*\})/);
+      console.log(jsonMatch);
+      
+      if (jsonMatch && jsonMatch[1]) {
+          try {
+          const errorObject = JSON.parse(jsonMatch[1]);
+          const status = errorObject.status;
+          const errors = errorObject.errors;
+
+          console.log("Status:", status);
+          console.log("Errors:", errors);
+
+          if(status == 400){
+              const error2 = errorObject.data.error;
+              console.log("Errors2:", error2);
+              combinedErrors = error2
+          }
+          else{
+              combinedErrors = errors.join(' ');
+          }
+
+          console.log("Combined Errors:", combinedErrors);
+
+          } catch (parseError) {
+          // Handle parsing error if JSON message is not valid
+          console.error("Error parsing JSON message:", parseError);
+          }
+      }
+
+      // Extract error code
+      const errorCodeMatch = err.message.match(/\d+/);
+
+      if (errorCodeMatch) {
+          errorCode = errorCodeMatch[0];
+          console.log("Error Code:", errorCode);
+      }
+
+      console.log(errorCode);
+
+      if (!errorCode) {
+          // Set toast message and make it visible
+          setToastMsg('Error Occured!');
+          setShowToast(true);
+      } else if (parseInt(errorCode, 10) === 400) {
+          // Set toast message and make it visible
+          setToastMsg(combinedErrors);
+          setShowToast(true);
+      } else if (parseInt(errorCode, 10) === 422) {
+          // Set toast message and make it visible
+          setToastMsg(combinedErrors);
+          setShowToast(true);
+      } else {
+          // Set toast message and make it visible
+          setToastMsg('Signup Failed');
+          setShowToast(true);
+      }
+
+    }
+    
+    
     handleClose();
   };
 
@@ -48,15 +167,7 @@ const EditModal = ({ userSelected, show, handleClose }) => {
           <strong className="mr-auto">Notification</strong>
         </Toast.Header>
         <Toast.Body>
-          {isSuccess ? (
-            <>
-              <i className="bi bi-check-circle-fill text-success"></i> Successfully updated
-            </>
-          ) : isError ? (
-            <>
-              <i className="bi bi-x-circle-fill text-danger"></i> Failed to update
-            </>
-          ) : null}
+          {toastMsg}
         </Toast.Body>
       </Toast>
 

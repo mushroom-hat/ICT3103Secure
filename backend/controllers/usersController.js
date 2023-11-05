@@ -167,7 +167,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save();
 
-    res.json({ message: `${updatedUser.username} updated` });
+    res.status(200).json({ status: 200, message: `${updatedUser.username} updated` });
 });
 
 

@@ -4,12 +4,13 @@ const usersController = require('../controllers/usersController')
 const verifyJWT = require('../middleware/verifyJWT')
 const verifyRole = require('../middleware/verifyRole')
 const bouncersignup = require('../middleware/bouncersignup.js');
+const bouncerupdateuser = require('../middleware/bouncerupdateuser.js');
 
 
 router.route('/')
     .get(verifyJWT,verifyRole(['Admin']),usersController.getAllUsers) //READ
     .post(verifyJWT,verifyRole(['Admin']), bouncersignup, usersController.createNewUsers) //CREATE
-    .patch(verifyJWT,verifyRole(['Admin']), usersController.updateUser) //UPDATE
+    .patch(verifyJWT,verifyRole(['Admin']), bouncerupdateuser, usersController.updateUser) //UPDATE
     .delete(verifyJWT,verifyRole(['Admin']), usersController.deleteUser) //DELETE
 
 router.route('/organizations')
