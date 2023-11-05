@@ -23,39 +23,44 @@ const AddCardForm = () => {
   const [validCard, setValidCard] = useState(false);
 
   useEffect(() => {
-    console.log("cardNumber:", cardNumber);
-    console.log("cardHolderName:", cardHolderName);
-    console.log("expiryDate:", expiryDate);
-    console.log("cvc:", cvc);
-
-    // Initialize isCardValid as false
-    let isCardValid = false;
-
-    // Check if the card is valid based on common requirements
-    if (
-      cardNumber.length === 16 && // Card number has 16 digits
-      cardHolderName.trim() !== "" && // Card holder name is not empty
-      expiryDate.match(/^\d{2}\/\d{2}$/) && // Expiry date matches MM/YY format
-      cvc.length === 3 // CVC has 3 digits
-    ) {
-      isCardValid = true;
+    // Initialize isCardValid as true
+    let isCardValid = true;
+  
+    // Check if the card number has 16 digits
+    if (cardNumber.length !== 16) {
+      isCardValid = false;
+      console.log("Card Number is invalid")
     }
+  
+    // Check if the card holder name is not empty
+    if (cardHolderName.trim() === '') {
+      isCardValid = false;
+      console.log("cardHoldeName")
 
-    console.log("isCardValid:", isCardValid);
+    }
+  
+    // Check if the expiry date matches MM/YY format
+    if (!expiryDate.match(/^\d{2}\/\d{2}$/)) {
+      isCardValid = false;
+      console.log("expiryDate")
 
+    }
+  
+    // Check if CVC has 3 digits
+    if (cvc.length !== 3) {
+      isCardValid = false;
+      console.log("cvc")
+
+    }
+  
     // Set validCard based on the validation result
     setValidCard(isCardValid);
   }, [cardNumber, cardHolderName, expiryDate, cvc]);
-
-  console.log(cardNumber);
-  console.log(cardHolderName);
-  console.log(expiryDate);
-  console.log(cvc);
+  
 
   const { username, id } = useAuth();
-  console.log(id);
   const canSave = validCard && id && !isLoading;
-  console.log(validCard);
+  console.log("Valid Card", validCard);
   const onSaveCardClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
@@ -74,7 +79,7 @@ const AddCardForm = () => {
 
         console.log("User Update Response:", updateUserResponse); // Log the response from updateUser function
 
-        navigate("/dash/donations/new");
+        navigate("/success");
       }
     }
   };
