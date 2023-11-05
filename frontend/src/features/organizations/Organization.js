@@ -6,6 +6,7 @@ import Card from "react-bootstrap/Card";
 import Particle from "../../components/Particle";
 import NavBar from "../../components/Navbar";
 import hopefulImg from "../../Assets/Organisation/HopefulHeartsFoundation.png";
+import { Link } from "react-router-dom";
 
 const Organization = () => {
   const {
@@ -20,8 +21,6 @@ const Organization = () => {
   });
 
   const { id } = useParams();
-  const mockDesc =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
   let content;
 
@@ -35,7 +34,10 @@ const Organization = () => {
       content = <p>Organization not found.</p>;
     } else {
       content = (
-        <Card className="project-card-view organization-card text-center">
+        <Card
+          className="project-card-view organization-card text-center"
+          style={{ position: "relative", zIndex: 1 }}
+        >
           <div
             style={{
               display: "flex",
@@ -58,7 +60,9 @@ const Organization = () => {
             <Card.Text
               style={{ textAlign: "justify", paddingBottom: "0.5rem" }}
             >
-              {mockDesc}
+              <Link to="/">
+                Read more about us!
+              </Link>
             </Card.Text>
           </Card.Body>
         </Card>
@@ -70,7 +74,6 @@ const Organization = () => {
     <Container fluid className="project-section">
       <Particle />
       <NavBar />
-      <span>hey</span>
       <Container>{content}</Container>
     </Container>
   );

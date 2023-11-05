@@ -142,7 +142,8 @@ const OrganizationsList = () => {
           />
         </div>
       </Container>
-      {/* <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
+      <Container>
+        {/* <Row style={{ justifyContent: "center", paddingBottom: "10px" }}>
         <Col md={4} className="" style={{ color: "white" }}>
           <h2 className="filters-header">Search by category</h2>
           <div className="filters-list">
@@ -210,9 +211,10 @@ const OrganizationsList = () => {
           </Col>
         ))}
       </Row> */}
-      <Row>{content}</Row>
+        <Row>{content}</Row>
+      </Container>
     </Container>
-  );;
+  );
 };
 
 export default OrganizationsList;
