@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
+import NavBar from "../../components/Navbar";
 import { Container, Row, Col } from "react-bootstrap";
 import Particle from "../../components/Particle";
 import hopfulImg from "../../Assets/Organisation/HopefulHeartsFoundation.png";
@@ -123,7 +123,7 @@ const OrganizationsList = () => {
   return (
     <Container fluid className="project-section">
       <Particle />
-      <Navbar />
+      <NavBar />
       <Container
         style={{
           display: "flex",
