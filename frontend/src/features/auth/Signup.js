@@ -140,16 +140,13 @@ const Signup = () => {
                 setShowToast(true);
                 customerror = response.error;
                 console.log ("This is the customerror", customerror);
-            } else {
-                // No error
-                accessToken = response;
-            }
-
-            if (customerror.status == 400) {
-                throw new Error(JSON.stringify(customerror))
             }
 
             if (customerror) {
+
+                if (customerror.status == 400) {
+                    throw new Error(JSON.stringify(customerror))
+                }
                 //Force an error
                 console.log(customerror);
                 console.log(customerror.data.errors.length)
@@ -173,13 +170,6 @@ const Signup = () => {
             }
 
             console.log("Route Handler: Signup successful");
-            console.log("this is the accesstoken", accessToken)
-            dispatch(setCredentials({ accessToken }));
-            setName('');
-            setUsername('');
-            setEmail('');
-            setPwd('');
-            setConfirmPwd('');
             navigate('/emailverification');
         } catch (err) {
             let errorCode;
