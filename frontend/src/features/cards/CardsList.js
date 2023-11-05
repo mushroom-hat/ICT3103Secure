@@ -70,8 +70,6 @@ const CardsList = () => {
           <Row className="justify-content-md-center" style={{ paddingBottom: "1rem"}}>
               <Form.Group as={Row} controlId="searchQuery">
                 <Col sm={3}>
-
-                <Link to="/dash/cards/new">
                 <Button
                   variant="primary"
                   disabled={hasValidCard}
@@ -81,7 +79,6 @@ const CardsList = () => {
                 >
     Add Payment Method
   </Button>
-</Link>
                 </Col>
                 <Col sm={9} style={{ display: "flex", alignItems: "center"}}>
                   <Form.Control
