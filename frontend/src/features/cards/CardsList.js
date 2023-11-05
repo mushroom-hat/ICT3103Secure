@@ -10,6 +10,7 @@ import "../../style.css"; // Import your custom CSS for styling
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from "react-router-dom";
 import { useGetUserByUsernameQuery } from '../users/usersApiSlice';
+
 const CardsList = () => {
   const {
     data: cards,
@@ -21,35 +22,29 @@ const CardsList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
   const { id, username } = useAuth();
   const { data: userData, isLoading: isUserDataLoading, isError: isUserDataError, error: userDataError } = useGetUserByUsernameQuery(username);
 
   const hasValidCard = userData && userData?.card !== null;
-  console.log("Card", userData?.card)
-  console.log(hasValidCard)
-  console.log(!hasValidCard)
-  console.log()
+
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
   const handleAdd = () => {
     navigate("/dash/cards/new");
   };
+
   let content;
 
   if (isLoading) content = <p>Loading...</p>;
   if (isError) content = <p>Not Currently Available</p>;
-  
+
   if (isSuccess) {
     const { ids, entities } = cards;
-    const filteredIds = ids.filter((id) => {
-      const card = entities[id];
-      return (
-        (card.cardNumber?.toLowerCase() ?? "").includes(searchQuery.toLowerCase()) ||
-        (card.cardHolderName?.toLowerCase() ?? "").includes(searchQuery.toLowerCase()) ||
-        (card.expiryDate?.toLowerCase() ?? "").includes(searchQuery.toLowerCase()) ||
-        (card.cvc?.toLowerCase() ?? "").includes(searchQuery.toLowerCase())
-      );
-    });
+
+    // Filter the cards to only include those with matching user ID
+    const userCards = ids.filter((cardId) => userData?.card === cardId);
 
     content = (
       <>
@@ -68,8 +63,8 @@ const CardsList = () => {
         </Container>
         <Container>
           <Row className="justify-content-md-center" style={{ paddingBottom: "1rem"}}>
-              <Form.Group as={Row} controlId="searchQuery">
-                <Col sm={3}>
+            <Form.Group as={Row} controlId="searchQuery">
+              <Col sm={3}>
                 <Button
                   variant="primary"
                   disabled={hasValidCard}
@@ -77,18 +72,18 @@ const CardsList = () => {
                     handleAdd();
                   }}
                 >
-    Add Payment Method
-  </Button>
-                </Col>
-                <Col sm={9} style={{ display: "flex", alignItems: "center"}}>
-                  <Form.Control
-                    type="text"
-                    placeholder="Search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </Col>
-              </Form.Group>
+                  Add Payment Method
+                </Button>
+              </Col>
+              <Col sm={9} style={{ display: "flex", alignItems: "center"}}>
+                <Form.Control
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </Col>
+            </Form.Group>
           </Row>
           <Row className="justify-content-md-center">
             <Col sm={12}>
@@ -104,7 +99,7 @@ const CardsList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredIds.map((cardId) => (
+                    {userCards.map((cardId) => (
                       <tr key={cardId}>
                         <Card cardId={cardId} />
                       </tr>
