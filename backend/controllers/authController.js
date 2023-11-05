@@ -114,8 +114,8 @@ const verifyLogin = asyncHandler(async (req, res) => {
                 secured: true,
                 service: 'gmail',
                 auth: {
-                    user: 'ssdsecuresoftware@gmail.com',
-                    pass: 'xtyr bfet oftx jxtc'
+                    user: process.env.MAIL_USER,
+                    pass: process.env.MAIL_PASS
                 }
             });
 
