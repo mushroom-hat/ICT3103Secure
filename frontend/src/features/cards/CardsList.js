@@ -24,9 +24,6 @@ const CardsList = () => {
   const [deleteCard] = useDeleteCardMutation(); // Mutation hook for deleting a card
 
   const hasValidCard = userData && userData.card !== 'null';
-  console.log(userData?.card);
-  console.log(userData);
-  console.log("valid card", hasValidCard);
 
   const handleDelete = async () => {
     try {
