@@ -139,9 +139,14 @@ const Signup = () => {
                 setToastMsg(response.error.data.message);
                 setShowToast(true);
                 customerror = response.error;
+                console.log ("This is the customerror", customerror);
             } else {
                 // No error
                 accessToken = response;
+            }
+
+            if (customerror.status == 400) {
+                throw new Error(JSON.stringify(customerror))
             }
 
             if (customerror) {
@@ -184,17 +189,25 @@ const Signup = () => {
             console.log("This the thrown error", err);
              // Use a regular expression to extract the JSON part
             const jsonMatch = err.message.match(/(\{.*\})/);
+            console.log(jsonMatch);
             
             if (jsonMatch && jsonMatch[1]) {
                 try {
                 const errorObject = JSON.parse(jsonMatch[1]);
                 const status = errorObject.status;
+                const error2 = errorObject.data.error;
                 const errors = errorObject.errors;
 
                 console.log("Status:", status);
                 console.log("Errors:", errors);
+                console.log("Errors2:", error2);
 
-                combinedErrors = errors.join(' ');
+                if(status == 400){
+                    combinedErrors = error2
+                }
+                else{
+                    combinedErrors = errors.join(' ');
+                }
 
                 console.log("Combined Errors:", combinedErrors);
 
@@ -220,7 +233,7 @@ const Signup = () => {
                 setShowToast(true);
             } else if (parseInt(errorCode, 10) === 400) {
                 // Set toast message and make it visible
-                setToastMsg('Signup Failed');
+                setToastMsg(combinedErrors);
                 setShowToast(true);
             } else if (parseInt(errorCode, 10) === 422) {
                 // Set toast message and make it visible

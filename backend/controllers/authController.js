@@ -307,7 +307,7 @@ const signup = asyncHandler(async (req, res) => {
         const userExists = await User.findOne({ username });
         const userExistsEmail = await User.findOne({ email });
         if (userExists || userExistsEmail) {
-            return res.status(400).json({ message: 'Username already taken', error: 'Username already taken' });
+            return res.status(400).json({ message: 'Please check your entries again', error: 'Please check your entries again' });
         }
     } catch (error) {
         console.log("Error: " + error)
