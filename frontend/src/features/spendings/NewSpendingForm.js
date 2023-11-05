@@ -18,7 +18,7 @@ const NewSpendingForm = () => {
 
   const navigate = useNavigate();
   const { username, id } = useAuth();
-  console.log("userId", id);
+  // console.log("userId", id);
   const [organizationId, setOrganizationId] = useState(id);
   const [amount, setAmount] = useState(""); // Initialize with an empty string
   const [description, setDescription] = useState("");
@@ -55,7 +55,7 @@ const NewSpendingForm = () => {
   );
   const canSave =
     organizationId !== null && amount !== null && description !== null && !isLoading;
-  console.log(validAmount)
+  // console.log(validAmount)
   const onSaveSpendingClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
@@ -64,7 +64,7 @@ const NewSpendingForm = () => {
         amount,
         description,
       });
-      console.log("CANSAVE")
+      // console.log("CANSAVE")
     }
   };
 

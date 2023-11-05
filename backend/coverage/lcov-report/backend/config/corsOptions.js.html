@@ -96,7 +96,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const allowedOrigins = require('./allowedOrigins');
-console.log("Allowed Domains: " + allowedOrigins);
+// console.log("Allowed Domains: " + allowedOrigins);
 const corsOptions = {
     origin: (origin, callback) =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (allowedOrigins.includes('*') || <span class="branch-1 cbranch-no" title="branch not covered" >allowedOrigins.indexOf(origin) !== -1)</span> {

@@ -48,7 +48,7 @@ const AddUserForm = () => {
       const errorresponseData = response.error;
 
       // Do something with the responseData, e.g., display it
-      console.log("Response Data:", errorresponseData);
+      // console.log("Response Data:", errorresponseData);
       if (errorresponseData) {
         throw new Error(JSON.stringify(errorresponseData));
       }
@@ -59,7 +59,7 @@ const AddUserForm = () => {
       let errormessages = [];
 
       const jsonMatch = error.message.match(/(\{.*\})/);
-      console.log(error.message);
+      // console.log(error.message);
 
       if (jsonMatch && jsonMatch[1]) {
         try {
@@ -83,10 +83,10 @@ const AddUserForm = () => {
 
       if (errorCodeMatch) {
         errorCode = errorCodeMatch[0];
-        console.log("Error Code:", errorCode);
+        // console.log("Error Code:", errorCode);
       }
 
-      console.log(errorCode);
+      // console.log(errorCode);
 
       if (!errorCode) {
         // Set toast message and make it visible

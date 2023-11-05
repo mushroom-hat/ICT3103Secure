@@ -37,13 +37,13 @@ function NewDonationForm() {
   const organizations = organizationsQuery.data; // Access the organization data
 
   const handleCreateDonation = () => {
-    console.log("Button clicked");
+    // console.log("Button clicked");
 
     if (amount && userData?.card !== null && selectedOrganization) {
-      console.log("Amount, card data, and organization are valid");
+      // console.log("Amount, card data, and organization are valid");
       createDonation({ userId: id, amount: amount, organizationId: selectedOrganization });
     } else {
-      console.log("Amount, card data, or organization are invalid");
+      // console.log("Amount, card data, or organization are invalid");
       navigate('/dash/cards/new');
     }
   }

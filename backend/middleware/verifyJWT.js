@@ -4,7 +4,7 @@ function verifyJWT(req, res, next) {
     const authHeader = req.headers.authorization || req.headers.Authorization;
 
     if (!authHeader?.startsWith('Bearer ')) {
-        console.log("Verify JWT - No Bearer");
+        // console.log("Verify JWT - No Bearer");
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
@@ -16,10 +16,10 @@ function verifyJWT(req, res, next) {
         req.user = decoded.UserInfo.username;
         req.roles = decoded.UserInfo.roles;
         req.id = decoded.UserInfo.id;
-        console.log("In verifyJWT");
-        console.log("Req user", req.user);
-        console.log("Req roles", req.roles);
-        console.log("Req id", req.id);
+        // console.log("In verifyJWT");
+        // console.log("Req user", req.user);
+        // console.log("Req roles", req.roles);
+        // console.log("Req id", req.id);
         next();
     });
 }

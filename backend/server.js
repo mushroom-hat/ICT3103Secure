@@ -15,7 +15,7 @@ const { logEvents } = require('./middleware/logger')
 const credentials = require('./middleware/credentials')
 const PORT = process.env.PORT || 3500
 
-console.log(process.env.NODE_ENV)
+// console.log(process.env.NODE_ENV)
 
 connectDB()
 app.use(logger)
@@ -64,11 +64,11 @@ app.use(errorHandler)
 async function startServer() {
     try {
         mongoose.connection.once('open', () => {
-            console.log('Connected to MongoDB');
+            // console.log('Connected to MongoDB');
         });
         
         const server = app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
+            // console.log(`Server running on port ${PORT}`);
         });
     
         // Export the 'server' object if mongoose connection is successful
@@ -76,7 +76,7 @@ async function startServer() {
 
     } catch (error) {
         mongoose.connection.on('error', err => {
-            console.log(err)
+            // console.log(err)
             logEvents()
         })    }
 }

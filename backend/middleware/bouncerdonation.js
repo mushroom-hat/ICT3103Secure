@@ -15,7 +15,7 @@ const validateDonation = () => {
   
 
 const bouncerdonation = async (req, res, next) => {
-  console.log("the validation begins");
+  // console.log("the validation begins");
 
   const donationValidation = validateDonation();
 
@@ -29,7 +29,7 @@ const bouncerdonation = async (req, res, next) => {
     donationValidation(donationReq, res, () => {
       donationErrors = validationResult(donationReq);
       if (!donationErrors.isEmpty()) {
-        console.log("Donation validation errors:", donationErrors.array());
+        // console.log("Donation validation errors:", donationErrors.array());
       } else {
         donationValid = true;
       }

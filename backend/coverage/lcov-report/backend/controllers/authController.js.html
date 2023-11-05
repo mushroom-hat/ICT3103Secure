@@ -779,24 +779,24 @@ function <span class="fstat-no" title="function not covered" >generateActivation
 &nbsp;
 const signup = asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
     const { name, username, email, pwd, roles, captchaValue } = <span class="cstat-no" title="statement not covered" >req.body;</span>  // Only extract the username and pwd
-<span class="cstat-no" title="statement not covered" >    console.log("Value: " + req.body.pwd)</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Value Name: " + name)</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Value Username: " + username)</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Value Email: " + email)</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Value Pwd: " + pwd)</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Value Roles: " + roles)</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Value Captcha: " + captchaValue)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Value: " + req.body.pwd)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Value Name: " + name)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Value Username: " + username)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Value Email: " + email)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Value Pwd: " + pwd)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Value Roles: " + roles)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Value Captcha: " + captchaValue)</span>
 <span class="cstat-no" title="statement not covered" >    if (!name || !username || !email || !pwd) {</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(400).json({ message: 'All fields are required' });</span>
     }
 &nbsp;
     // Verify reCAPTCHA
     // if (!captchaValue) {
-    //     console.log("No reCAPTCHA...")
+    //     // console.log("No reCAPTCHA...")
     //     return res.status(400).send("reCAPTCHA error!");
     // }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    console.log("Validating reCAPTCHA...")</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Validating reCAPTCHA...")</span>
 &nbsp;
     const axios = <span class="cstat-no" title="statement not covered" >require('axios');</span>
     const verifyRecaptcha = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (recaptchaValue) =&gt; {</span>
@@ -810,7 +810,7 @@ const signup = asyncHandler(<span class="fstat-no" title="function not covered" 
     };
 &nbsp;
     const { success, score } = <span class="cstat-no" title="statement not covered" >await verifyRecaptcha(captchaValue);</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Captcha Success: " + success)</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Captcha Success: " + success)</span>
     // if (!success) {
     //     // reCAPTCHA validation failed
     //     return res.status(400).send("reCAPTCHA verification failed");
@@ -829,8 +829,8 @@ const signup = asyncHandler(<span class="fstat-no" title="function not covered" 
     const encryptedToken = <span class="cstat-no" title="statement not covered" >CryptoJS.AES.encrypt(unique_token, base64Key).toString();</span>
     const isActive = <span class="cstat-no" title="statement not covered" >false;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    console.log("Done validating reCAPTCHA...")</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Adding' user...")</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Done validating reCAPTCHA...")</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Adding' user...")</span>
 &nbsp;
     // Check if the user already exists
     const userExists = <span class="cstat-no" title="statement not covered" >await User.findOne({ username });</span>
@@ -870,7 +870,7 @@ const signup = asyncHandler(<span class="fstat-no" title="function not covered" 
             }
         });
         const activationURL = <span class="cstat-no" title="statement not covered" >`https://wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`;</span>
-<span class="cstat-no" title="statement not covered" >        console.log("Activation URL: " + activationURL);</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("Activation URL: " + activationURL);</span>
         const emailTemplate = <span class="cstat-no" title="statement not covered" >{</span>
             from: 'ssdsecuresoftware@gmail.com',
             to: email, // Replace with the user's email address
@@ -884,19 +884,19 @@ const signup = asyncHandler(<span class="fstat-no" title="function not covered" 
             `
           };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        console.log("Sending email...")</span>
-<span class="cstat-no" title="statement not covered" >        console.log("Email: " + emailTemplate.to)</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("Sending email...")</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("Email: " + emailTemplate.to)</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        transporter.sendMail(emailTemplate, <span class="fstat-no" title="function not covered" >(e</span>rror, info) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            if (error) {</span>
 <span class="cstat-no" title="statement not covered" >                console.error('Error sending email:', error);</span>
             } else {
-<span class="cstat-no" title="statement not covered" >                console.log('Email sent:', info.response);</span>
+<span class="cstat-no" title="statement not covered" >                // console.log('Email sent:', info.response);</span>
             }
         });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        console.log("Email sent successfully.")</span>
-<span class="cstat-no" title="statement not covered" >        console.log("User added successfully.")</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("Email sent successfully.")</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("User added successfully.")</span>
 &nbsp;
     }
 &nbsp;
@@ -906,42 +906,42 @@ const signup = asyncHandler(<span class="fstat-no" title="function not covered" 
 });
 &nbsp;
 const activate = asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    console.log("Activating user...");</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Activating user...");</span>
 &nbsp;
     // Extract the encryptedToken from the URL parameter and decode it
     const encryptedToken = <span class="cstat-no" title="statement not covered" >decodeURIComponent(req.body.encryptedToken);</span>
 &nbsp;
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    console.log("Decoded Encrypted Token: " + encryptedToken);</span>
-<span class="cstat-no" title="statement not covered" >    console.log("Finding user...");</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Decoded Encrypted Token: " + encryptedToken);</span>
+<span class="cstat-no" title="statement not covered" >    // console.log("Finding user...");</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    try {</span>
         const user = <span class="cstat-no" title="statement not covered" >await User.findOne({ token: encryptedToken }).select('token tokenKey username name');</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >            console.log("User not found.");</span>
+<span class="cstat-no" title="statement not covered" >            // console.log("User not found.");</span>
 <span class="cstat-no" title="statement not covered" >            return res.status(401).json({ message: 'Unauthorized' });</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        console.log("User found: " + user.username);</span>
-<span class="cstat-no" title="statement not covered" >        console.log("User token: " + user.token);</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("User found: " + user.username);</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("User token: " + user.token);</span>
 &nbsp;
         // Decrypt the token
         const CryptoJS = <span class="cstat-no" title="statement not covered" >require('crypto-js');</span>
         const base64Key = <span class="cstat-no" title="statement not covered" >Buffer.from(`${user.username}${user.name}`).toString('base64');</span>
         const decryptedToken = <span class="cstat-no" title="statement not covered" >CryptoJS.AES.decrypt(user.token, base64Key).toString(CryptoJS.enc.Utf8);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        console.log("Token key: " + user.tokenKey);</span>
-<span class="cstat-no" title="statement not covered" >        console.log("Decrypted token: " + decryptedToken);</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("Token key: " + user.tokenKey);</span>
+<span class="cstat-no" title="statement not covered" >        // console.log("Decrypted token: " + decryptedToken);</span>
 <span class="cstat-no" title="statement not covered" >        if (decryptedToken !== user.tokenKey) {</span>
-<span class="cstat-no" title="statement not covered" >            console.log("Invalid token.");</span>
+<span class="cstat-no" title="statement not covered" >            // console.log("Invalid token.");</span>
 <span class="cstat-no" title="statement not covered" >            return res.status(401).json({ message: 'Unauthorized' });</span>
         } else {
             // Activate the user
             // Check if the user is already activated
 <span class="cstat-no" title="statement not covered" >            if (user.isActive) {</span>
-<span class="cstat-no" title="statement not covered" >                console.log("User is already activated.");</span>
+<span class="cstat-no" title="statement not covered" >                // console.log("User is already activated.");</span>
 <span class="cstat-no" title="statement not covered" >                return res.status(200).json({ message: 'User is already activated.' });</span>
             }
             // Update the user's isActive attribute to true

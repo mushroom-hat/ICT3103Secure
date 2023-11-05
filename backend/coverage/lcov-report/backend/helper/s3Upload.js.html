@@ -184,10 +184,10 @@ async function <span class="fstat-no" title="function not covered" >uploadLogs(<
 &nbsp;
             // Upload file to AWS S3
             const data = <span class="cstat-no" title="statement not covered" >await client.send(command);</span>
-<span class="cstat-no" title="statement not covered" >            console.log(`Successfully uploaded data to ${BUCKET_NAME}/${filename}`);</span>
+<span class="cstat-no" title="statement not covered" >            // console.log(`Successfully uploaded data to ${BUCKET_NAME}/${filename}`);</span>
 <span class="cstat-no" title="statement not covered" >            return { message: `File uploaded successfully to Charsity S3 Bucket.` };</span>
         } else {
-<span class="cstat-no" title="statement not covered" >            console.log(`File ${logFile} does not exist. Skipped uploading.`);</span>
+<span class="cstat-no" title="statement not covered" >            // console.log(`File ${logFile} does not exist. Skipped uploading.`);</span>
 <span class="cstat-no" title="statement not covered" >            return { message: `File does not exist.` };</span>
         }
     } catch (error) {

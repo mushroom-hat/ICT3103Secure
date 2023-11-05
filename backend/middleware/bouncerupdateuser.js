@@ -26,7 +26,7 @@ const validateEmail = () => {
   };
 
 const bouncerupdateuser = async (req, res, next) => {
-console.log("the validation begins");
+// console.log("the validation begins");
 
 
 const usernameValidation = validateUsername();
@@ -44,7 +44,7 @@ await new Promise((resolve) => {
     usernameValidation(usernameReq, res, () => {
          usernameErrors = validationResult(usernameReq);
     if (!usernameErrors.isEmpty()) {
-        console.log("Username validation errors:", usernameErrors.array());
+        // console.log("Username validation errors:", usernameErrors.array());
     } else {
         usernameValid = true;
     }
@@ -58,7 +58,7 @@ await new Promise((resolve) => {
 
    const emailErrors = validationResult(emailReq);
    if (!emailErrors.isEmpty()){
-     console.log("Email validation errors:", emailErrors.array());
+     // console.log("Email validation errors:", emailErrors.array());
    } else {
      emailValid = true;
    }
@@ -69,7 +69,7 @@ await new Promise((resolve) => {
 
    const nameErrors = validationResult(nameReq);
    if (!nameErrors.isEmpty()){
-     console.log("name validation errors:", nameErrors.array());
+     // console.log("name validation errors:", nameErrors.array());
    } else {
      nameValid = true;
    }
@@ -86,7 +86,7 @@ await new Promise((resolve) => {
        ...nameErrors.array(),
      ];
 
-     console.log("this is the error", allErrors);
+     // console.log("this is the error", allErrors);
    
      return res.status(422).json({
        errors: allErrors,

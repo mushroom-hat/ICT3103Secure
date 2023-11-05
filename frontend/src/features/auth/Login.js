@@ -51,12 +51,12 @@ const Login = () => {
         e.preventDefault();
         try {
           const { accessToken, roles } = await login({ username, pwd }).unwrap();
-          console.log("Res Data: " + accessToken + " " + username + " " + roles);
+          // console.log("Res Data: " + accessToken + " " + username + " " + roles);
       
           if (accessToken !== null) {
             setIsLoadingUI(true);
             const backendAPI = process.env.REACT_APP_API_BASE_URL;
-            console.log("Backend API: " + backendAPI);
+            // console.log("Backend API: " + backendAPI);
             const response = await fetch(`${backendAPI}/auth/verify-login`, {
               method: 'POST',
               headers: {
@@ -77,13 +77,13 @@ const Login = () => {
               setIsLoadingUI(false);
               setErrMsg('Account Locked Out. Please contact administrator.');
             } else if (responseData.error === 445 || response.status === 445) {
-              console.log("Error: " + responseData.body);
+              // console.log("Error: " + responseData.body);
               setIsLoadingUI(false);
               dispatch(setCredentials({ username }));
               navigate('/sendemailverification');
             } else {
               // Console Log Response Entire in String, unpacked JSON
-              console.log("Error: " + JSON.stringify(responseData));
+              // console.log("Error: " + JSON.stringify(responseData));
               setUsername('');
               setPwd('');
               navigate('/login-error');
@@ -119,7 +119,7 @@ const Login = () => {
                 }
                 // Combine into one string
                 let combinedErrors = restructureError.errors.join(' ');
-                console.log(combinedErrors);
+                // console.log(combinedErrors);
                 setErrMsg(combinedErrors);
                 
           } else {

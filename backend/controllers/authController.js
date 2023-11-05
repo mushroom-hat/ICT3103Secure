@@ -20,13 +20,13 @@ const login = asyncHandler(async (req, res) => {
     }else{
         // Check if locked out
         if (foundUser.lockOutAttempts.passwordAttempts >= 5) {
-            console.log("User is locked out.")
+            // console.log("User is locked out.")
             return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
         }else if (foundUser.lockOutAttempts.emailVerificationAttempts >= 3) {
-            console.log("User is locked out.")
+            // console.log("User is locked out.")
             return res.status(444).json({ message: 'User is locked out.', error: "User is locked out." });
         }else if (foundUser.isActive === false) {
-            console.log("User is not activated.")
+            // console.log("User is not activated.")
             return res.status(445).json({ message: 'Unauthorized. User not activated.', error: 445 });
         }
     }
@@ -72,38 +72,38 @@ const login = asyncHandler(async (req, res) => {
     });
 
     // Send accessToken containing username and roles
-    console.log("Login success.")
+    // console.log("Login success.")
     res.json({ accessToken, username: foundUser.username, roles: foundUser.roles });
 });
 
 // Verify Login using 6 digit Email Verification
 const verifyLogin = asyncHandler(async (req, res) => {
     try {
-        console.log("Verifying login...")
+        // console.log("Verifying login...")
         // Generate a 6 digit code
         const crypto = require('crypto');
         const verificationCode = crypto.randomInt(100000, 999999);
-        console.log("Verification Code: " + verificationCode);
+        // console.log("Verification Code: " + verificationCode);
         // Get the user's email address from username
         const { username } = req.body;
-        console.log("Retrieving Username: " + username);
+        // console.log("Retrieving Username: " + username);
 
         const foundUser = await User.findOne({ username }).exec();
 
         // Check if the user exists
         if (!foundUser) {
-            console.log("User not found.")
+            // console.log("User not found.")
             return res.status(401).json({ message: 'User not found.', error: 401 });
         } else if (foundUser.isActive === false) {
-            console.log("User not activated.")
+            // console.log("User not activated.")
             return res.status(445).json({ message: 'User not activated.', error: 445 });
         } else if (foundUser.lockOutAttempts.emailVerificationAttempts >= 3 || foundUser.lockOutAttempts.passwordAttempts >= 5) {
-            console.log("User is locked out.")
+            // console.log("User is locked out.")
             return res.status(444).json({ message: 'User is locked out.',  error: 444 });
         } else {
-            console.log("Found User: " + foundUser.username);
+            // console.log("Found User: " + foundUser.username);
             const emailAddr = foundUser.email;
-            console.log("Email Address: " + emailAddr);
+            // console.log("Email Address: " + emailAddr);
 
             // Send the 6 digit code to the user's email address
             const nodemailer = require('nodemailer');
@@ -127,15 +127,15 @@ const verifyLogin = asyncHandler(async (req, res) => {
                         <p>Your Code: ${verificationCode}</p>`
             };
 
-            console.log("Sending email verification...")
-            console.log("Email: " + emailTemplate.to)
+            // console.log("Sending email verification...")
+            // console.log("Email: " + emailTemplate.to)
 
             transporter.sendMail(emailTemplate, (error, info) => {
                 if (error) {
                     console.error('Error sending email:', error);
                     return res.status(500).json({ message: 'Email Internal server error', error: 500 });
                 } else {
-                    console.log('Email Verification Code sent:', info.response);
+                    // console.log('Email Verification Code sent:', info.response);
 
                     // Save the verification code and expiration time to the database
                     foundUser.verificationCode.code = verificationCode;
@@ -147,8 +147,8 @@ const verifyLogin = asyncHandler(async (req, res) => {
                 }
             });
 
-            console.log("Email Verication Code sent successfully.")
-            console.log("Verification Code Sent.")
+            // console.log("Email Verication Code sent successfully.")
+            // console.log("Verification Code Sent.")
         }
 
     } catch (error) {
@@ -160,10 +160,10 @@ const verifyLogin = asyncHandler(async (req, res) => {
 
 // Verify 6 digit Email Verification Code
 const verifyLoginCode = asyncHandler(async (req, res) => {
-    console.log("Verifying login code...")
+    // console.log("Verifying login code...")
     // Get the user's email address from username
     const { username, verificationCode } = req.body;
-    console.log("Retrieving Username with Code: " + username + " " + verificationCode);
+    // console.log("Retrieving Username with Code: " + username + " " + verificationCode);
 
     // Find the user in the database
     const foundUser = await User.findOne({ username }).exec();
@@ -172,19 +172,19 @@ const verifyLoginCode = asyncHandler(async (req, res) => {
 
     // Check if the verification code is correct
     if (verificationCodeDB !== verificationCode) {
-        console.log("Invalid verification code.")
+        // console.log("Invalid verification code.")
         // Update user verification attempts
         foundUser.lockOutAttempts.emailVerificationAttempts = foundUser.lockOutAttempts.emailVerificationAttempts + 1;
         foundUser.save();
         return res.status(401).json({ message: 'Invalid verification code.', error: "Invalid verification code.", attempts: foundUser.lockOutAttempts.emailVerificationAttempts });
     } else if (Date.now() > expirationTime) {
-        console.log("Verification code expired.")
+        // console.log("Verification code expired.")
         // Update user verification attempts
         foundUser.lockOutAttempts.attempts = foundUser.lockOutAttempts.attempts + 1;
         foundUser.save();
         return res.status(401).json({ message: 'Verification code expired.', error: "Verification code expired.", attempts: foundUser.lockOutAttempts.emailVerificationAttempts });
     } else {
-        console.log("Verification code correct.")
+        // console.log("Verification code correct.")
         foundUser.lockOutAttempts.emailVerificationAttempts = 0;
         foundUser.save();
         return res.status(200).json({ message: 'Verification code verified successfully.', success: "Verification code correct." });
@@ -249,24 +249,24 @@ function generateActivationToken(userID, username, secretKey) {
 
 const signup = asyncHandler(async (req, res) => {
     const { name, username, email, pwd, roles, captchaValue } = req.body;  // Only extract the username and pwd
-    console.log("Value: " + req.body.pwd)
-    console.log("Value Name: " + name)
-    console.log("Value Username: " + username)
-    console.log("Value Email: " + email)
-    console.log("Value Pwd: " + pwd)
-    console.log("Value Roles: " + roles)
-    console.log("Value Captcha: " + captchaValue)
+    // console.log("Value: " + req.body.pwd)
+    // console.log("Value Name: " + name)
+    // console.log("Value Username: " + username)
+    // console.log("Value Email: " + email)
+    // console.log("Value Pwd: " + pwd)
+    // console.log("Value Roles: " + roles)
+    // console.log("Value Captcha: " + captchaValue)
     if (!name || !username || !email || !pwd) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Verify reCAPTCHA
     // if (!captchaValue) {
-    //     console.log("No reCAPTCHA...")
+    //     // console.log("No reCAPTCHA...")
     //     return res.status(400).send("reCAPTCHA error!");
     // }
 
-    console.log("Validating reCAPTCHA...")
+    // console.log("Validating reCAPTCHA...")
 
     const axios = require('axios');
     const verifyRecaptcha = async (recaptchaValue) => {
@@ -280,7 +280,7 @@ const signup = asyncHandler(async (req, res) => {
     };
 
     const { success, score } = await verifyRecaptcha(captchaValue);
-    console.log("Captcha Success: " + success)
+    // console.log("Captcha Success: " + success)
     // if (!success) {
     //     // reCAPTCHA validation failed
     //     return res.status(400).send("reCAPTCHA verification failed");
@@ -299,8 +299,8 @@ const signup = asyncHandler(async (req, res) => {
     const encryptedToken = CryptoJS.AES.encrypt(unique_token, base64Key).toString();
     const isActive = false;
 
-    console.log("Done validating reCAPTCHA...")
-    console.log("Adding' user...")
+    // console.log("Done validating reCAPTCHA...")
+    // console.log("Adding' user...")
 
     try {
         // Check if the user already exists
@@ -310,7 +310,7 @@ const signup = asyncHandler(async (req, res) => {
             return res.status(400).json({ message: 'Please check your entries again', error: 'Please check your entries again' });
         }
     } catch (error) {
-        console.log("Error: " + error)
+        // console.log("Error: " + error)
         return res.status(500).json({ message: 'Internal server error', error: "Internal server error" });
     }
 
@@ -345,7 +345,7 @@ const signup = asyncHandler(async (req, res) => {
             }
         });
         const activationURL = `https://wazpplabs.com/auth/activate/${encodeURIComponent(encryptedToken)}`;
-        console.log("Activation URL: " + activationURL);
+        // console.log("Activation URL: " + activationURL);
         const emailTemplate = {
             from: 'ssdsecuresoftware@gmail.com',
             to: email, // Replace with the user's email address
@@ -359,20 +359,20 @@ const signup = asyncHandler(async (req, res) => {
             `
         };
 
-        console.log("Sending email...")
-        console.log("Email: " + emailTemplate.to)
+        // console.log("Sending email...")
+        // console.log("Email: " + emailTemplate.to)
 
         transporter.sendMail(emailTemplate, (error, info) => {
             if (error) {
                 console.error('Error sending email:', error);
                 return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error" });
             } else {
-                console.log('Email sent:', info.response);
+                // console.log('Email sent:', info.response);
             }
         });
 
-        console.log("Email sent successfully.")
-        console.log("User added successfully.")
+        // console.log("Email sent successfully.")
+        // console.log("User added successfully.")
 
     }
     res.status(201).json({ message: 'User registered successfully', success: 'User registered successfully' });
@@ -382,8 +382,8 @@ const signup = asyncHandler(async (req, res) => {
 const sendActivationEmail = asyncHandler(async (req, res) => {
     // Get the user's email address from username, username will be in the request body
     const { username } = req.body;
-    console.log("Retrieving Username: " + username);
-    console.log("Finding user...");
+    // console.log("Retrieving Username: " + username);
+    // console.log("Finding user...");
 
 
     // Find the user in the database
@@ -392,7 +392,7 @@ const sendActivationEmail = asyncHandler(async (req, res) => {
         .lean() // Use .lean() to return plain JavaScript objects
         .then(user => {
             if (user) {
-                console.log('User Found:', user);
+                // console.log('User Found:', user);
                 // 'user' object now contains 'username', 'email', and 'name'
 
                 // Send Email
@@ -409,7 +409,7 @@ const sendActivationEmail = asyncHandler(async (req, res) => {
                     }
                 });
                 const activationURL = `https://wazpplabs.com/auth/activate/${encodeURIComponent(user.token)}`;
-                console.log("Activation URL: " + activationURL);
+                // console.log("Activation URL: " + activationURL);
                 const emailTemplate = {
                     from: 'ssdsecuresoftware@gmail.com',
                     to: user.email, // Replace with the user's email address
@@ -423,22 +423,22 @@ const sendActivationEmail = asyncHandler(async (req, res) => {
                 `
                 };
 
-                console.log("Sending email...")
-                console.log("Email: " + emailTemplate.to)
+                // console.log("Sending email...")
+                // console.log("Email: " + emailTemplate.to)
 
                 transporter.sendMail(emailTemplate, (error, info) => {
                     if (error) {
                         console.error('Error sending email:', error);
                         return res.status(500).json({ message: 'Email Internal server error', error: "Email Internal server error" });
                     } else {
-                        console.log('Email sent:', info.response);
+                        // console.log('Email sent:', info.response);
                     }
                 });
-                console.log("Activation Email sent successfully.")
+                // console.log("Activation Email sent successfully.")
                 return res.status(200).json({ message: 'Activation Email sent successfully', success: 'Activation Email sent successfully' });
 
             } else {
-                console.log('User not found');
+                // console.log('User not found');
                 // Handle the case where the user is not found
                 return res.status(404).json({ message: 'User not found', error: true });
 
@@ -462,42 +462,42 @@ const sendActivationEmail = asyncHandler(async (req, res) => {
 
 
 const activate = asyncHandler(async (req, res) => {
-    console.log("Activating user...");
+    // console.log("Activating user...");
 
     // Extract the encryptedToken from the URL parameter and decode it
     const encryptedToken = decodeURIComponent(req.body.encryptedToken);
 
 
 
-    console.log("Decoded Encrypted Token: " + encryptedToken);
-    console.log("Finding user...");
+    // console.log("Decoded Encrypted Token: " + encryptedToken);
+    // console.log("Finding user...");
 
     try {
         const user = await User.findOne({ token: encryptedToken }).select('token tokenKey username name');
 
         if (!user) {
-            console.log("User not found.");
+            // console.log("User not found.");
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        console.log("User found: " + user.username);
-        console.log("User token: " + user.token);
+        // console.log("User found: " + user.username);
+        // console.log("User token: " + user.token);
 
         // Decrypt the token
         const CryptoJS = require('crypto-js');
         const base64Key = Buffer.from(`${user.username}${user.name}`).toString('base64');
         const decryptedToken = CryptoJS.AES.decrypt(user.token, base64Key).toString(CryptoJS.enc.Utf8);
 
-        console.log("Token key: " + user.tokenKey);
-        console.log("Decrypted token: " + decryptedToken);
+        // console.log("Token key: " + user.tokenKey);
+        // console.log("Decrypted token: " + decryptedToken);
         if (decryptedToken !== user.tokenKey) {
-            console.log("Invalid token.");
+            // console.log("Invalid token.");
             return res.status(401).json({ message: 'Unauthorized' });
         } else {
             // Activate the user
             // Check if the user is already activated
             if (user.isActive) {
-                console.log("User is already activated.");
+                // console.log("User is already activated.");
                 return res.status(200).json({ message: 'User is already activated.' });
             }
             // Update the user's isActive attribute to true

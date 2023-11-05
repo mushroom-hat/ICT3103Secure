@@ -10,7 +10,7 @@ const DeleteModal = ({ userSelected, show, handleClose }) => {
         setShowDeleteToast(true);
         await deleteUser({ id: userSelected.id });
         if (isSuccess) {
-            console.log('Deleted user successfully');
+            // console.log('Deleted user successfully');
         }
         handleClose();
     };

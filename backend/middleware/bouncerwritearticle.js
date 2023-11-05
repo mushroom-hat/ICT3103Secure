@@ -1,6 +1,6 @@
 const { check, validationResult } = require('express-validator');
 
-console.log("it came to validate");
+// console.log("it came to validate");
 
 // Title Validation
 const validateTitle = () => {
@@ -19,7 +19,7 @@ const validateContent = () => {
   };
 
 const bouncerwritearticle = async (req, res, next) => {
-  console.log("the validation begins");
+  // console.log("the validation begins");
 
   const TitleValidation = validateTitle();
   const ContentValidation = validateContent();
@@ -31,12 +31,12 @@ const bouncerwritearticle = async (req, res, next) => {
   // Title validation
   const TitleReq = {...req};
   await new Promise((resolve) => {
-    console.log("It checked if title got issue");
+    // console.log("It checked if title got issue");
     TitleValidation(TitleReq, res, () => {
       TitleErrors = validationResult(TitleReq);
-      console.log(TitleErrors);
+      // console.log(TitleErrors);
       if (!TitleErrors.isEmpty()) {
-        console.log("Title validation errors:", TitleErrors.array());
+        // console.log("Title validation errors:", TitleErrors.array());
       } else {
         TitleValid = true;
       }
@@ -46,17 +46,17 @@ const bouncerwritearticle = async (req, res, next) => {
   // Content validation
   const ContentReq = {...req};
   ContentValidation(ContentReq, res, () => {
-    console.log("It checked if content got issue");
+    // console.log("It checked if content got issue");
     const ContentErrors = validationResult(ContentReq);
     if (!ContentErrors.isEmpty()) {
-      console.log("Content validation errors:", ContentErrors.array());
+      // console.log("Content validation errors:", ContentErrors.array());
     } else {
       ContentValid = true;
     }
-    console.log("runn ah u kns")
+    // console.log("runn ah u kns")
     if (!TitleValid && !ContentValid) {
         // Handle the case where both validations fail
-        console.log("both also got issue");
+        // console.log("both also got issue");
         return res.status(422).json({
         errors: [...TitleErrors.array(), ...ContentErrors.array()],
         });

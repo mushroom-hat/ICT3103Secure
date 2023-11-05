@@ -9,7 +9,7 @@ const SendEmailVerificationPage = () => {
     const [toastVariant, setToastVariant] = useState('success'); // Variant for the toast message
     const [toastMessage, setToastMessage] = useState(''); // Message for the toast
     const { username } = useSelector(state => state.auth);
-    console.log("SendEmailVerificationPage: " + username);
+    // console.log("SendEmailVerificationPage: " + username);
 
 
     const sendVerificationEmail = async () => {
@@ -28,9 +28,9 @@ const SendEmailVerificationPage = () => {
                 body: JSON.stringify({ "username": username }),
             });
             const responseBody = await response.json(); // Parse the response body as JSON
-            console.log("Waiting for response...")
-            console.log("Response: ", responseBody);
-            console.log("Done getting response.")
+            // console.log("Waiting for response...")
+            // console.log("Response: ", responseBody);
+            // console.log("Done getting response.")
 
             if (responseBody.success) {
                 // If the request is successful, set the success toast

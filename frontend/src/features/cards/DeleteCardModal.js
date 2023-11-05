@@ -6,14 +6,14 @@ const DeleteCardModal = ({ cardSelected, show, handleClose }) => {
     const [deleteCard, { isSuccess, isError }] = useDeleteCardMutation();
     const [showDeleteToast, setShowDeleteToast] = useState(false);
 
-    console.log(cardSelected);
+    // console.log(cardSelected);
     const handleDelete = async () => {
-        console.log("Handling");
+        // console.log("Handling");
 
         setShowDeleteToast(true);
         await deleteCard({ id: cardSelected.id });
         if (isSuccess) {
-            console.log('Deleted card successfully');
+            // console.log('Deleted card successfully');
         }
         handleClose();
     };

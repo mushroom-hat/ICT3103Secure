@@ -1,5 +1,5 @@
 const allowedOrigins = require('./allowedOrigins');
-console.log("Allowed Domains: " + allowedOrigins);
+// console.log("Allowed Domains: " + allowedOrigins);
 const corsOptions = {
     origin: (origin, callback) => {
         if (allowedOrigins.includes('*') || allowedOrigins.indexOf(origin) !== -1) {

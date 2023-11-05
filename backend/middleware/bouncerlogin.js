@@ -22,7 +22,7 @@ const validateUsername = () => {
 };
 
 const bouncerlogin = async (req, res, next) => {
-  console.log("the validation begins");
+  // console.log("the validation begins");
 
   const passwordValidation = validatePassword();
   const usernameValidation = validateUsername();
@@ -37,7 +37,7 @@ const bouncerlogin = async (req, res, next) => {
     passwordValidation(passwordReq, res, () => {
       passwordErrors = validationResult(passwordReq);
       if (!passwordErrors.isEmpty()) {
-        console.log("Password validation errors:", passwordErrors.array());
+        // console.log("Password validation errors:", passwordErrors.array());
       } else {
         passwordValid = true;
       }
@@ -51,7 +51,7 @@ const bouncerlogin = async (req, res, next) => {
     
     const usernameErrors = validationResult(usernameReq);
     if (!usernameErrors.isEmpty()) {
-      console.log("Username validation errors:", usernameErrors.array());
+      // console.log("Username validation errors:", usernameErrors.array());
     } else {
       usernameValid = true;
     }

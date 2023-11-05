@@ -34,7 +34,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
 const getUserByUsername = asyncHandler(async (req, res) => {
     const username = req.body.username;
-    console.log(username);
+    // console.log(username);
   
     // Check if the username from the request matches req.user
     if (username === req.user) {
@@ -45,11 +45,11 @@ const getUserByUsername = asyncHandler(async (req, res) => {
         .lean() // Use .lean() to return plain JavaScript objects
         .then(user => {
           if (user) {
-            console.log('User Found:', user);
+            // console.log('User Found:', user);
             // 'user' object now contains 'username', 'email', and 'name'
             return res.status(200).json({ message: 'User found', success: true, user: user });
           } else {
-            console.log('User not found');
+            // console.log('User not found');
             // Handle the case where the user is not found
             return res.status(404).json({ message: 'User not found', error: true });
           }
@@ -60,7 +60,7 @@ const getUserByUsername = asyncHandler(async (req, res) => {
           return res.status(500).json({ message: 'Internal Server Error With GetUserByUsername', error: true });
         });
     } else {
-      console.log('Username does not match req.user');
+      // console.log('Username does not match req.user');
       return res.status(403).json({ message: 'Access Denied', error: true });
     }
   });
@@ -82,7 +82,7 @@ const getAllOrganizations = asyncHandler(async (req, res) => {
 const createNewUsers = asyncHandler(async (req, res) => {
     const { name, username, email, pwd, roles, isActive } = req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
     const token = 'NA'
     const tokenKey = 'NA'
 
@@ -90,19 +90,19 @@ const createNewUsers = asyncHandler(async (req, res) => {
     if (!name || !username || !email || !pwd || !roles || !isActive) {
         return res.status(400).json({ message: 'All fields are required' });
     }
-    console.log("Checking for duplicate username")
+    // console.log("Checking for duplicate username")
     // Check for duplicate username
     const duplicate = await User.findOne({ username }).lean().exec();
     if (duplicate) {
         return res.status(409).json({ message: 'Duplicate user' });
     }
 
-    console.log("Done checking for duplicate username")
+    // console.log("Done checking for duplicate username")
 
     // Hash password
     const hashedPwd = await bcrypt.hash(pwd, 10); // salt rounds
     const userObject = { name, username, email, pwd: hashedPwd, roles, isActive, token, tokenKey };
-    console.log(userObject);
+    // console.log(userObject);
     // Create and store the new user
     const user = await User.create(userObject);
 
@@ -120,7 +120,7 @@ const createNewUsers = asyncHandler(async (req, res) => {
 //@route PUT /users/:id
 //@access Private
 const updateUser = asyncHandler(async (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     const { id, name, username, email, pwd, roles, card } = req.body; // Include 'card' in the destructuring
 
     // Check if the user exists to update based on the _id

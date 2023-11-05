@@ -126,7 +126,7 @@ const Signup = () => {
                 return;
             }
 
-            console.log("Route Handler: Try block begins");
+            // console.log("Route Handler: Try block begins");
 
             let accessToken;
             let customerror;
@@ -139,7 +139,7 @@ const Signup = () => {
                 setToastMsg(response.error.data.message);
                 setShowToast(true);
                 customerror = response.error;
-                console.log ("This is the customerror", customerror);
+                // console.log ("This is the customerror", customerror);
             }
 
             if (customerror) {
@@ -148,38 +148,38 @@ const Signup = () => {
                     throw new Error(JSON.stringify(customerror))
                 }
                 //Force an error
-                console.log(customerror);
-                console.log(customerror.data.errors.length)
+                // console.log(customerror);
+                // console.log(customerror.data.errors.length)
                 restructureError = {
                     status: null,
                     errors: []
                 };
 
                 restructureError.status = customerror.status;
-                console.log("To test restructure", restructureError);
+                // console.log("To test restructure", restructureError);
 
                 for (let i = 0; i < customerror.data.errors.length; i++){
                     restructureError.errors.push(customerror.data.errors[i].msg);
                 };
 
-                console.log(restructureError);
+                // console.log(restructureError);
 
 
                 throw new Error(JSON.stringify(restructureError));
                 
             }
 
-            console.log("Route Handler: Signup successful");
+            // console.log("Route Handler: Signup successful");
             navigate('/emailverification');
         } catch (err) {
             let errorCode;
             let combinedErrors
 
-            console.log("Route Handler: Catch block begins");
-            console.log("This the thrown error", err);
+            // console.log("Route Handler: Catch block begins");
+            // console.log("This the thrown error", err);
              // Use a regular expression to extract the JSON part
             const jsonMatch = err.message.match(/(\{.*\})/);
-            console.log(jsonMatch);
+            // console.log(jsonMatch);
             
             if (jsonMatch && jsonMatch[1]) {
                 try {
@@ -187,19 +187,19 @@ const Signup = () => {
                 const status = errorObject.status;
                 const errors = errorObject.errors;
 
-                console.log("Status:", status);
-                console.log("Errors:", errors);
+                // console.log("Status:", status);
+                // console.log("Errors:", errors);
 
                 if(status == 400){
                     const error2 = errorObject.data.error;
-                    console.log("Errors2:", error2);
+                    // console.log("Errors2:", error2);
                     combinedErrors = error2
                 }
                 else{
                     combinedErrors = errors.join(' ');
                 }
 
-                console.log("Combined Errors:", combinedErrors);
+                // console.log("Combined Errors:", combinedErrors);
 
                 } catch (parseError) {
                 // Handle parsing error if JSON message is not valid
@@ -212,10 +212,10 @@ const Signup = () => {
 
             if (errorCodeMatch) {
                 errorCode = errorCodeMatch[0];
-                console.log("Error Code:", errorCode);
+                // console.log("Error Code:", errorCode);
             }
 
-            console.log(errorCode);
+            // console.log(errorCode);
 
             if (!errorCode) {
                 // Set toast message and make it visible

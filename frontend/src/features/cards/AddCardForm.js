@@ -29,27 +29,27 @@ const AddCardForm = () => {
     // Check if the card number has 16 digits
     if (cardNumber.length !== 16) {
       isCardValid = false;
-      console.log("Card Number is invalid")
+      // console.log("Card Number is invalid")
     }
   
     // Check if the card holder name is not empty
     if (cardHolderName.trim() === '') {
       isCardValid = false;
-      console.log("cardHoldeName")
+      // console.log("cardHoldeName")
 
     }
   
     // Check if the expiry date matches MM/YY format
     if (!expiryDate.match(/^\d{2}\/\d{2}$/)) {
       isCardValid = false;
-      console.log("expiryDate")
+      // console.log("expiryDate")
 
     }
   
     // Check if CVC has 3 digits
     if (cvc.length !== 3) {
       isCardValid = false;
-      console.log("cvc")
+      // console.log("cvc")
 
     }
   
@@ -60,7 +60,7 @@ const AddCardForm = () => {
 
   const { username, id } = useAuth();
   const canSave = validCard && id && !isLoading;
-  console.log("Valid Card", validCard);
+  // console.log("Valid Card", validCard);
   const onSaveCardClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
@@ -71,13 +71,13 @@ const AddCardForm = () => {
         cvc,
       });
 
-      console.log("Card Response:", cardResponse);
+      // console.log("Card Response:", cardResponse);
 
       if (!cardResponse.error) {
         const newCardId = cardResponse.data.id;
         const updateUserResponse = await updateUser({ id, card: newCardId });
 
-        console.log("User Update Response:", updateUserResponse); // Log the response from updateUser function
+        // console.log("User Update Response:", updateUserResponse); // Log the response from updateUser function
 
         navigate("/dash/donations/new");
         window.location.reload();

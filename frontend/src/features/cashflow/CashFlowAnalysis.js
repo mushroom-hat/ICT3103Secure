@@ -28,7 +28,7 @@ const CashflowAnalysis = () => {
   let donationErrorContent;
   let spendingErrorContent;
 
-  console.log(spendingData);
+  // console.log(spendingData);
 
   if (donationsIsError) {
     donationErrorContent = (

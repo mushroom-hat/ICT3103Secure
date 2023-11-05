@@ -22,7 +22,7 @@ const EmailVerificationPage = () => {
     const [errorMessage, setErrMsg] = useState('');
 
     const { token, username, roles } = useSelector(state => state.auth);
-    console.log("EmailVerificationPage: " + username + " (" + roles + ") ");
+    // console.log("EmailVerificationPage: " + username + " (" + roles + ") ");
 
     const handleUserInput = (e) => setVerificationCode(e.target.value);
 
@@ -45,8 +45,8 @@ const EmailVerificationPage = () => {
             // If successful and valid, navigate the user to the dashboard or main app.
             // If the code is invalid, set an error message.
             // If the code is valid but expired, set an error message.
-            console.log("Done verifying user: " + username + " (" + roles + ") ");
-            console.log("Done verifying token: " + token);
+            // console.log("Done verifying user: " + username + " (" + roles + ") ");
+            // console.log("Done verifying token: " + token);
 
 
             const backendAPI = process.env.REACT_APP_API_BASE_URL;
@@ -58,17 +58,17 @@ const EmailVerificationPage = () => {
                 body: JSON.stringify({ "username": username, "verificationCode": verificationCode }),
             });
             const responseBody = await response.json(); // Parse the response body as JSON
-            console.log("Waiting for response...")
-            console.log("Response: ", responseBody);
-            console.log("Done getting response.")
+            // console.log("Waiting for response...")
+            // console.log("Response: ", responseBody);
+            // console.log("Done getting response.")
 
             if (responseBody.success) {
                 const accessToken = token;
-                console.log("Verification code verified successfully. Navigating to dashboard. Setting credentials: " + accessToken + " " + username + " " + roles);
+                // console.log("Verification code verified successfully. Navigating to dashboard. Setting credentials: " + accessToken + " " + username + " " + roles);
                 dispatch(setCredentials({ accessToken, username, roles }));
                 navigate('/dash');
             } else {
-                console.log("Failed verifying code. Message: ", responseBody.message);
+                // console.log("Failed verifying code. Message: ", responseBody.message);
                 // Set an error message
                 setErrMsg(responseBody.message)
                 setShowToast(true);

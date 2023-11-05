@@ -28,7 +28,7 @@ const renderCard = (link, imgSrc, title, isVisible) => {
 const Welcome = () => {
   const { username, roles } = useSelector(state => state.auth);
 
-  console.log("Welcome: " + username + " (" + roles + ")");
+  // console.log("Welcome: " + username + " (" + roles + ")");
 
   return (
     <>

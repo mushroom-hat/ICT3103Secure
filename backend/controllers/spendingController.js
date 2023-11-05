@@ -20,7 +20,7 @@ const getAllSpending = asyncHandler(async (req, res) => {
 //@access Private
 const createNewSpending = asyncHandler(async (req, res) => {
     const { organization, amount, description } = req.body;
-    console.log("req.body", req.body)
+    // console.log("req.body", req.body)
     // Confirm data
     if (!organization || !amount || !description) {
         return res.status(400).json({ message: 'Organization and amount are required' });

@@ -29,10 +29,10 @@ async function uploadLogs(logFile) {
 
             // Upload file to AWS S3
             const data = await client.send(command);
-            console.log(`Successfully uploaded data to ${BUCKET_NAME}/${filename}`);
+            // console.log(`Successfully uploaded data to ${BUCKET_NAME}/${filename}`);
             return { message: `File uploaded successfully to Charsity S3 Bucket.` };
         } else {
-            console.log(`File ${logFile} does not exist. Skipped uploading.`);
+            // console.log(`File ${logFile} does not exist. Skipped uploading.`);
             return { message: `File does not exist.` };
         }
     } catch (error) {

@@ -89,7 +89,7 @@
 &nbsp;
 const errorHandler = <span class="fstat-no" title="function not covered" >(e</span>rr, req, res, next) =&gt; {
 <span class="cstat-no" title="statement not covered" >    logEvents(`${err.name}: ${err.message}\t${req.method}\t${req.url}\t${req.headers.origin}`, 'errLog.log');</span>
-<span class="cstat-no" title="statement not covered" >    console.log(err.stack);</span>
+<span class="cstat-no" title="statement not covered" >    // console.log(err.stack);</span>
     const status = <span class="cstat-no" title="statement not covered" >res.statusCode ? res.statusCode : 500;</span> // Use res.statusCode instead of resStatusCode
 <span class="cstat-no" title="statement not covered" >    res.status(status);</span>
 <span class="cstat-no" title="statement not covered" >    res.json({ message: err.message });</span>

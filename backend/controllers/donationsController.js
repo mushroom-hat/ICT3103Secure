@@ -16,11 +16,11 @@ const getAllDonations = asyncHandler(async (req, res) => {
 //@route POST /donations
 //@access Private
 const createNewDonation = asyncHandler(async (req, res) => {
-    console.log("Inside createNewDonation");
+    // console.log("Inside createNewDonation");
     const { userId, organizationId, amount } = req.body;
-    console.log(userId);
-    console.log(organizationId);
-    console.log(amount);
+    // console.log(userId);
+    // console.log(organizationId);
+    // console.log(amount);
 
     // Confirm data
     if (!userId || !organizationId || !amount  ) {

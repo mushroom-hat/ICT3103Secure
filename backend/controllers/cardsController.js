@@ -17,7 +17,7 @@ const getAllCards = asyncHandler(async (req, res) => {
 //@route POST /cards
 //@access Private
 const createNewCard = asyncHandler(async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { cardNumber, cardHolderName, expiryDate, cvc } = req.body;
 
   // Confirm data
@@ -27,7 +27,7 @@ const createNewCard = asyncHandler(async (req, res) => {
 
   // Extract the user ID from the JWT token
   const authHeader = req.headers.authorization || req.headers.Authorization;
-  console.log("Req header", authHeader);
+  // console.log("Req header", authHeader);
   if (!authHeader?.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -36,7 +36,7 @@ const createNewCard = asyncHandler(async (req, res) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) return res.status(403).json({ message: "Forbidden" });
     userID = decoded.UserInfo.id;
-    console.log("UserID", userID);
+    // console.log("UserID", userID);
   });
 
   // Create and store the new card
@@ -53,9 +53,9 @@ const createNewCard = asyncHandler(async (req, res) => {
     if (user) {
       user.card = card._id;
       await user.save();
-      console.log("Before", user);
+      // console.log("Before", user);
     }
-    console.log("After", user);
+    // console.log("After", user);
 
     res.status(201).json({ message: "New card created" });
   } else {
@@ -98,14 +98,14 @@ const updateCard = asyncHandler(async (req, res) => {
 //@route DELETE /cards/:id
 //@access Private
 const deleteCard = asyncHandler(async (req, res) => {
-  console.log("req.body", req.body);
+  // console.log("req.body", req.body);
   const { id } = req.body;
   // Check if the card exists
   const card = await Card.findById(id).exec();
-  console.log("card", card);
+  // console.log("card", card);
 
   if (!card) {
-    console.log(card);
+    // console.log(card);
     return res.status(400).json({ message: "Card not found" });
   }
 
@@ -143,11 +143,11 @@ const getCardInfoByUserId = async (req, res) => {
     const card = await Card.findById(cardId).exec();
 
     if (!card) {
-      console.log("Card not found:", cardId); // Add this line for debugging
+      // console.log("Card not found:", cardId); // Add this line for debugging
       return res.status(404).json({ message: "Card not found" });
     }
 
-    console.log("Card found:", card); // Add this line for debugging
+    // console.log("Card found:", card); // Add this line for debugging
 
     return res.json(card);
   } catch (error) {

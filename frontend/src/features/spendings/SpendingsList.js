@@ -16,11 +16,11 @@ const SpendingsList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  console.log("myspendings", spendings);
-  console.log("isLoading: ", isLoading);
-  console.log("isSuccess: ", isSuccess);
-  console.log("isError: ", isError);
-  console.log("Hello: ");
+  // console.log("myspendings", spendings);
+  // console.log("isLoading: ", isLoading);
+  // console.log("isSuccess: ", isSuccess);
+  // console.log("isError: ", isError);
+  // console.log("Hello: ");
 
   let content;
 
@@ -38,7 +38,7 @@ const SpendingsList = () => {
           <Spending key={spendingId} spendingId={spendingId} />
         ))
       : null;
-    //console.log("mySpending:" , spendings)
+    //// console.log("mySpending:" , spendings)
 
     content = (
       <table className="table table--spendings">

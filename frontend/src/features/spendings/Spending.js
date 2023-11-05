@@ -16,7 +16,7 @@ const Spending = ({ spendingId }) => {
 
     // Check if spending.organization exists before accessing its properties
     const organizationUsername = spending.organization ? spending.organization.username : '';
-    console.log(organizationUsername)
+    // console.log(organizationUsername)
     return (
       <tr className="table__row spending">
         <td className={`table__cell ${cellStatus}`}>{organizationUsername}</td>

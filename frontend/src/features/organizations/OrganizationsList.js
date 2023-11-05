@@ -65,7 +65,7 @@ const OrganizationsList = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   const handleChange = (categoryName) => {
-    console.log("Category Name:" + categoryName);
+    // console.log("Category Name:" + categoryName);
     // Change the corresponding isChecked in the list of all categories
     setAllCategories((prevCategories) =>
       prevCategories.map((category) =>
@@ -85,7 +85,7 @@ const OrganizationsList = () => {
   }, [allCategories]);
 
   useEffect(() => {
-    console.log("Selected Categories:", selectedCategories);
+    // console.log("Selected Categories:", selectedCategories);
   }, [selectedCategories]);
 
   let content;

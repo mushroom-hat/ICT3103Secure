@@ -416,8 +416,8 @@ const getAllUsers = asyncHandler(async (req, res) =&gt; {
 const createNewUsers = asyncHandler(<span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
     const { name, username, email, pwd, roles } = <span class="cstat-no" title="statement not covered" >req.body;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    console.log(req.body);</span>
-<span class="cstat-no" title="statement not covered" >    console.log(req.body);</span>
+<span class="cstat-no" title="statement not covered" >    // console.log(req.body);</span>
+<span class="cstat-no" title="statement not covered" >    // console.log(req.body);</span>
 &nbsp;
 &nbsp;
     // Confirm data
@@ -435,7 +435,7 @@ const createNewUsers = asyncHandler(<span class="fstat-no" title="function not c
     // Hash password
     const hashedPwd = <span class="cstat-no" title="statement not covered" >await bcrypt.hash(pwd, 10);</span> // salt rounds
     const userObject = <span class="cstat-no" title="statement not covered" >{ name, username, email, pwd: hashedPwd, roles };</span>
-<span class="cstat-no" title="statement not covered" >    console.log(userObject);</span>
+<span class="cstat-no" title="statement not covered" >    // console.log(userObject);</span>
     // Create and store the new user
     const user = <span class="cstat-no" title="statement not covered" >await User.create(userObject);</span>
 &nbsp;

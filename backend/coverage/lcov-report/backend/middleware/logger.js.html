@@ -135,13 +135,13 @@ const logEvents = async (message,logFileName) =&gt; {
         }
         await fsPromises.appendFile(path.join(__dirname, '..', 'logs', logFileName), logItem)
     } catch(err){
-<span class="cstat-no" title="statement not covered" >        console.log(err)</span>
+<span class="cstat-no" title="statement not covered" >        // console.log(err)</span>
     }
 }
 &nbsp;
 const logger = (req,res,next) =&gt;{
     logEvents(`${req.method}\t${req.url}\t${req.headers.origin}`, 'reqLog.log')
-    console.log(`${req.method} ${req.path}`)
+    // console.log(`${req.method} ${req.path}`)
     next()
 }
 &nbsp;

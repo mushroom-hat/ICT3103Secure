@@ -262,7 +262,7 @@ const { logEvents } = require('./middleware/logger')
 const credentials = require('./middleware/credentials')
 const PORT = process.env.PORT || 3500
 &nbsp;
-console.log(process.env.NODE_ENV)
+// console.log(process.env.NODE_ENV)
 &nbsp;
 connectDB()
 app.use(logger)
@@ -311,11 +311,11 @@ app.use(errorHandler)
 async function startServer() {
     try {
         mongoose.connection.once('open', () =&gt; {
-            console.log('Connected to MongoDB');
+            // console.log('Connected to MongoDB');
         });
         
         const server = app.listen(PORT, () =&gt; {
-            console.log(`Server running on port ${PORT}`);
+            // console.log(`Server running on port ${PORT}`);
         });
     
         // Export the 'server' object if mongoose connection is successful
@@ -323,7 +323,7 @@ async function startServer() {
 &nbsp;
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >        mongoose.connection.on('error', <span class="fstat-no" title="function not covered" >er</span>r =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            console.log(err)</span>
+<span class="cstat-no" title="statement not covered" >            // console.log(err)</span>
 <span class="cstat-no" title="statement not covered" >            logEvents()</span>
         })    }
 }

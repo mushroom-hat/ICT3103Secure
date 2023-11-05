@@ -30,11 +30,11 @@ const EditModal = ({ userSelected, show, handleClose }) => {
 
     try{
         const response = await updateUser({ id, name, username, email, roles, isActive });
-        console.log("this is the result", response);
+        // console.log("this is the result", response);
 
         try{
           if (response.data.status == 200) {
-            console.log('Updated user successfully');
+            // console.log('Updated user successfully');
             setToastMsg('Updated user successful');
             setShowToast(true);
             handleClose(); // Close the modal
@@ -42,11 +42,11 @@ const EditModal = ({ userSelected, show, handleClose }) => {
           }
         }
         catch{
-          console.log("this works i guess")
+          // console.log("this works i guess")
         }
 
-          console.log("mate we have a problem");
-          console.log(response.error);
+          // console.log("mate we have a problem");
+          // console.log(response.error);
           customerror = response.error;
 
           if (response.error.status == 400){
@@ -55,21 +55,21 @@ const EditModal = ({ userSelected, show, handleClose }) => {
 
           if (customerror) {
             //Force an error
-            console.log(customerror);
-            console.log(customerror.data.errors.length)
+            // console.log(customerror);
+            // console.log(customerror.data.errors.length)
             restructureError = {
                 status: null,
                 errors: []
             };
 
             restructureError.status = customerror.status;
-            console.log("To test restructure", restructureError);
+            // console.log("To test restructure", restructureError);
 
             for (let i = 0; i < customerror.data.errors.length; i++){
                 restructureError.errors.push(customerror.data.errors[i].msg);
             };
 
-            console.log(restructureError);
+            // console.log(restructureError);
 
 
             throw new Error(JSON.stringify(restructureError));
@@ -82,12 +82,12 @@ const EditModal = ({ userSelected, show, handleClose }) => {
       let combinedErrors;
       let newbornerror;
 
-      console.log("Route Handler: Catch block begins");
+      // console.log("Route Handler: Catch block begins");
       newbornerror = JSON.stringify(err);
-      console.log("This the thrown error", newbornerror);
+      // console.log("This the thrown error", newbornerror);
        // Use a regular expression to extract the JSON part
       const jsonMatch = err.message.match(/(\{.*\})/);
-      console.log(jsonMatch);
+      // console.log(jsonMatch);
       
       if (jsonMatch && jsonMatch[1]) {
           try {
@@ -95,19 +95,19 @@ const EditModal = ({ userSelected, show, handleClose }) => {
           const status = errorObject.status;
           const errors = errorObject.errors;
 
-          console.log("Status:", status);
-          console.log("Errors:", errors);
+          // console.log("Status:", status);
+          // console.log("Errors:", errors);
 
           if(status == 400){
               const error2 = errorObject.data.error;
-              console.log("Errors2:", error2);
+              // console.log("Errors2:", error2);
               combinedErrors = error2
           }
           else{
               combinedErrors = errors.join(' ');
           }
 
-          console.log("Combined Errors:", combinedErrors);
+          // console.log("Combined Errors:", combinedErrors);
 
           } catch (parseError) {
           // Handle parsing error if JSON message is not valid
@@ -120,10 +120,10 @@ const EditModal = ({ userSelected, show, handleClose }) => {
 
       if (errorCodeMatch) {
           errorCode = errorCodeMatch[0];
-          console.log("Error Code:", errorCode);
+          // console.log("Error Code:", errorCode);
       }
 
-      console.log(errorCode);
+      // console.log(errorCode);
 
       if (!errorCode) {
           // Set toast message and make it visible

@@ -18,7 +18,7 @@ const Article = () => {
   const options = { year: "numeric", month: "long", day: "numeric" };
   const formattedDate = date.toLocaleDateString("en-SG", options);
 
-  console.log(article);
+  // console.log(article);
   return (
     <Container fluid className="project-section">
       <Particle />

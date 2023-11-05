@@ -93,7 +93,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       },
       
       transformResponse: (responseData) => {
-        console.log('Original response data:', responseData);
+        // console.log('Original response data:', responseData);
       
         // Define the structure of the data you expect in the response
         const expectedDataStructure = {
@@ -111,7 +111,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           card: responseData?.user?.card || expectedDataStructure.card,
         };
       
-        console.log('Transformed response data:', transformedData);
+        // console.log('Transformed response data:', transformedData);
       
         return transformedData;
       },
