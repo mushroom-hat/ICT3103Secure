@@ -15,8 +15,11 @@ function verifyJWT(req, res, next) {
 
         req.user = decoded.UserInfo.username;
         req.roles = decoded.UserInfo.roles;
-        console.log("Req user", req.roles);
-
+        req.id = decoded.UserInfo.id;
+        console.log("In verifyJWT");
+        console.log("Req user", req.user);
+        console.log("Req roles", req.roles);
+        console.log("Req id", req.id);
         next();
     });
 }

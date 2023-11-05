@@ -6,10 +6,10 @@ const verifyRole = require('../middleware/verifyRole')
 const bouncerdonation = require('../middleware/bouncerdonation.js');
 
 router.route('/')
-    .get(donationsController.getAllDonations) // READ
+    .get(verifyJWT,verifyRole(['Admin']),donationsController.getAllDonations) // READ
     .post(verifyJWT,verifyRole(['Donator']), bouncerdonation, donationsController.createNewDonation) // CREATE
-    .patch(donationsController.deleteDonation) // DELETE
+    .patch(verifyJWT,verifyRole(['Donator']),donationsController.deleteDonation) // DELETE
 
-router.post('/getByOrg', donationsController.getDonationsByOrganization);
+router.post('/getByOrg', verifyJWT,verifyRole(['Donator']),donationsController.getDonationsByOrganization);
 
 module.exports = router

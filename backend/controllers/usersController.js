@@ -35,31 +35,36 @@ const getUserById = asyncHandler(async (req, res) => {
 const getUserByUsername = asyncHandler(async (req, res) => {
     const username = req.body.username;
     console.log(username);
-    // Find user by username
-    // Find the user based on the username and select 'username', 'email', and 'name'
-    User.findOne({ username: username })
+  
+    // Check if the username from the request matches req.user
+    if (username === req.user) {
+      // Find user by username
+      // Find the user based on the username and select 'username', 'email', and 'name'
+      User.findOne({ username: username })
         .select('username email name card')
         .lean() // Use .lean() to return plain JavaScript objects
         .then(user => {
-            if (user) {
-                console.log('User Found:', user);
-                // 'user' object now contains 'username', 'email', and 'name'
-                return res.status(200).json({ message: 'User found', success: true, user: user });
-
-            } else {
-                console.log('User not found');
-                // Handle the case where the user is not found
-                return res.status(404).json({ message: 'User not found', error: true });
-
-            }
+          if (user) {
+            console.log('User Found:', user);
+            // 'user' object now contains 'username', 'email', and 'name'
+            return res.status(200).json({ message: 'User found', success: true, user: user });
+          } else {
+            console.log('User not found');
+            // Handle the case where the user is not found
+            return res.status(404).json({ message: 'User not found', error: true });
+          }
         })
         .catch(err => {
-            console.error('Error:', err);
-            // Handle the error appropriately
-            return res.status(500).json({ message: 'Internal Server Error With GetUserByUsername', error: true });
+          console.error('Error:', err);
+          // Handle the error appropriately
+          return res.status(500).json({ message: 'Internal Server Error With GetUserByUsername', error: true });
         });
-
-});
+    } else {
+      console.log('Username does not match req.user');
+      return res.status(403).json({ message: 'Access Denied', error: true });
+    }
+  });
+  
 //@desc Get all organizations
 //@route GET /users/organizations
 //@access Public

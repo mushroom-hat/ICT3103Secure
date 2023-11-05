@@ -1,6 +1,7 @@
 // Middleware function to check if the user has one of the required roles
 function verifyRole(requiredRoles) {
   return (req, res, next) => {
+    console.log("In verifyRoles");
     // Check if req.roles exists
     if (!req.roles) {
       console.log("VerifyRole - No req.roles");
