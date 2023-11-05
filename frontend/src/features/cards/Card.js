@@ -37,7 +37,7 @@ const Card = ({ cardId }) => {
 
   return (
     <>
-        <td className="table__cell">{card.cardNumber}</td>
+        <td className="table__cell">{card.cardNumber.slice(-4)}</td>
         <td className="table__cell">{card.cardHolderName}</td>
         <td className="table__cell">{card.expiryDate}</td>
         <td className="table__cell">{card.cvc}</td>
