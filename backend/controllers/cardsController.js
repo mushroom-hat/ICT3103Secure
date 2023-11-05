@@ -17,6 +17,7 @@ const getAllCards = asyncHandler(async (req, res) => {
 //@route POST /cards
 //@access Private
 const createNewCard = asyncHandler(async (req, res) => {
+    console.log(req.body)
     const { cardNumber, cardHolderName, expiryDate, cvc } = req.body;
 
     // Confirm data
@@ -93,12 +94,13 @@ const updateCard = asyncHandler(async (req, res) => {
 //@route DELETE /cards/:id
 //@access Private
 const deleteCard = asyncHandler(async (req, res) => {
-
+    console.log(req.body)
     const { id } = req.body;
     // Check if the card exists
     const card = await Card.findById(id).exec();
 
     if (!card) {
+        console.log(card)
         return res.status(400).json({ message: 'Card not found' });
     }
 
@@ -106,7 +108,11 @@ const deleteCard = asyncHandler(async (req, res) => {
     const associatedUsers = await User.find({ card: id }).lean().exec();
 
     if (associatedUsers && associatedUsers.length > 0) {
-        return res.status(400).json({ message: 'Card is associated with users' });
+        for (const user of associatedUsers) {
+            user.card = null;
+            user.save();
+          }
+          
     }
 
     const result = await card.deleteOne();
