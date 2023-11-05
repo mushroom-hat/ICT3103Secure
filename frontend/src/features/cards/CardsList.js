@@ -24,11 +24,6 @@ const CardsList = () => {
 
   let content;
 
-  const handleDelete = (cardId) => {
-    // Handle the card deletion logic here
-    // You can show a confirmation dialog or directly delete the card
-  };
-
   if (isLoading) content = <p>Loading...</p>;
   if (isError) content = <p>Not Currently Available</p>;
 
@@ -60,15 +55,14 @@ const CardsList = () => {
           </Container>
         </Container>
         <Container>
-          <Row className="justify-content-md-center">
-            <Col sm={8} md={8} lg={8} style={{ padding: "20px" }}>
+          <Row className="justify-content-md-center" style={{ paddingBottom: "1rem"}}>
               <Form.Group as={Row} controlId="searchQuery">
-                <Col sm={2}>
+                <Col sm={3}>
                   <Link to="/dash/cards/new">
                     <Button variant="primary">Add Payment Method</Button>
                   </Link>
                 </Col>
-                <Col sm={10}>
+                <Col sm={9} style={{ display: "flex", alignItems: "center"}}>
                   <Form.Control
                     type="text"
                     placeholder="Search"
@@ -77,7 +71,6 @@ const CardsList = () => {
                   />
                 </Col>
               </Form.Group>
-            </Col>
           </Row>
           <Row className="justify-content-md-center">
             <Col sm={12}>
@@ -96,9 +89,6 @@ const CardsList = () => {
                     {filteredIds.map((cardId) => (
                       <tr key={cardId}>
                         <Card cardId={cardId} />
-                        <td>
-                          <Button variant="danger" onClick={() => handleDelete(cardId)}>Delete</Button>
-                        </td>
                       </tr>
                     ))}
                   </tbody>

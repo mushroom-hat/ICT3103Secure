@@ -37,19 +37,15 @@ const Card = ({ cardId }) => {
 
   return (
     <>
-      <tr className="table__row card">
         <td className="table__cell">{card.cardNumber}</td>
         <td className="table__cell">{card.cardHolderName}</td>
         <td className="table__cell">{card.expiryDate}</td>
+        <td className="table__cell">{card.cvc}</td>
         <td className="table__cell">
-          <button className="icon-button table__button" onClick={handleShow}>
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </button>
           <button className="icon-button table__button" onClick={handleDeleteShow}>
             <FontAwesomeIcon icon={faTrash} />
           </button>
         </td>
-      </tr>
       <DeleteCardModal show={showDeleteCardModal} handleClose={handleDeleteClose} cardSelected={card} />  {/* Updated name to include "Card" */}
     </>
   );
