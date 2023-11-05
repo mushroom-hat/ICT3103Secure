@@ -94,16 +94,16 @@ const updateCard = asyncHandler(async (req, res) => {
 //@access Private
 const deleteCard = asyncHandler(async (req, res) => {
 
-    const { _id } = req.body;
+    const { id } = req.body;
     // Check if the card exists
-    const card = await Card.findById(_id).exec();
+    const card = await Card.findById(id).exec();
 
     if (!card) {
         return res.status(400).json({ message: 'Card not found' });
     }
 
     // Check if the card is associated with any users (you might need to adjust this based on your schema)
-    const associatedUsers = await User.find({ card: _id }).lean().exec();
+    const associatedUsers = await User.find({ card: id }).lean().exec();
 
     if (associatedUsers && associatedUsers.length > 0) {
         return res.status(400).json({ message: 'Card is associated with users' });

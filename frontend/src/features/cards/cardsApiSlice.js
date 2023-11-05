@@ -57,8 +57,9 @@ export const cardsApiSlice = apiSlice.injectEndpoints({
         }),
         deleteCard: builder.mutation({
             query: ({ id }) => ({
-                url: `/cards/${id}`,
+                url: `/cards`,
                 method: 'DELETE',
+                body: {id}
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: 'Card', id: arg.id }
