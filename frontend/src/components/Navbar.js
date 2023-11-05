@@ -64,25 +64,6 @@ function NavBar() {
       className={navColour ? "sticky" : "navbar"}
     >
       <Container>
-        {roles === "" ? (
-          <Navbar.Brand href="/" className="d-flex">
-            <img
-              src={logo}
-              className="img-logo"
-              alt="brand"
-              style={{ width: "30%", height: "30%" }}
-            />
-          </Navbar.Brand>
-        ) : (
-          <Navbar.Brand href="/dash" className="d-flex">
-            <img
-              src={logo}
-              className="img-logo"
-              alt="brand"
-              style={{ width: "30%", height: "30%" }}
-            />
-          </Navbar.Brand>
-        )}
         <Navbar.Toggle
           aria-controls="responsive-navbar-nav"
           onClick={() => {

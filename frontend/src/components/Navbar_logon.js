@@ -32,15 +32,7 @@ function NavBar() {
       expand="md"
       className={navColour ? "sticky" : "navbar"}
     >
-      <Container>
-        <Navbar.Brand href="/dash" className="d-flex">
-          <img
-            src={logo}
-            className="img-logo"
-            alt="brand"
-            style={{ width: "30%", height: "30%" }}
-          />
-        </Navbar.Brand>
+      <Container>s
         <Navbar.Toggle
           aria-controls="responsive-navbar-nav"
           onClick={() => {
