@@ -6,7 +6,7 @@ function Type() {
     <Typewriter
       options={{
         strings: [
-          "Singapore Insitute of Technolohgy Donation Drive",
+          "Singapore Insitute of Technology Donation Drive",
           "Looking for free items",
           "Charity",
           "Looking for Donations",
